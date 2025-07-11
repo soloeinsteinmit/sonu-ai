@@ -228,35 +228,6 @@ export function CameraCapture({
                 </p>
               </div>
 
-              {/* Camera Start Button */}
-              <Button
-                onClick={startCamera}
-                disabled={disabled || isProcessing || !isCameraAvailable()}
-                className="w-full h-12 text-base"
-                size="lg"
-              >
-                <Camera className="mr-2 h-5 w-5" />
-                {isProcessing
-                  ? "Opening Camera..."
-                  : !isCameraAvailable()
-                  ? "Camera Not Available"
-                  : "Open Camera"}
-              </Button>
-
-              {/* Camera availability info */}
-              {!isCameraAvailable() && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                  <p className="text-sm text-yellow-800">
-                    📱 <strong>Camera not available:</strong>{" "}
-                    {window.location.protocol !== "https:" &&
-                    window.location.hostname !== "localhost"
-                      ? "HTTPS required for camera access"
-                      : "Browser doesn't support camera"}
-                    . Please use the upload option below.
-                  </p>
-                </div>
-              )}
-
               {/* File Upload Alternative */}
               <div className="relative">
                 <Button
