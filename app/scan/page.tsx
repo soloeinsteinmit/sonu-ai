@@ -122,9 +122,9 @@ export default function ScanPage() {
               </Link>
               <div>
                 <h1 className="text-lg font-semibold">Disease Detection</h1>
-                <p className="text-sm text-muted-foreground">
+                {/* <p className="text-sm text-muted-foreground">
                   AI-powered crop disease analysis
-                </p>
+                </p> */}
               </div>
             </div>
           </div>

@@ -102,13 +102,6 @@ export function ScanResultsChat({
           text: "Severe",
           emoji: "⚠️",
         };
-      case "moderate":
-        return {
-          color: "text-yellow-700",
-          bgColor: "bg-yellow-100",
-          text: "Moderate",
-          emoji: "🟡",
-        };
       default:
         return {
           color: "text-green-700",
@@ -135,7 +128,7 @@ export function ScanResultsChat({
     <div className="w-full max-w-md mx-auto space-y-6">
       {/* Detection Summary Card */}
       <Card>
-        <CardHeader className="text-center pb-4">
+        <CardHeader className="text-center pb-1">
           <CardTitle className="flex items-center justify-center space-x-2 text-lg">
             <Brain className="h-6 w-6 text-primary" />
             <span>Disease Detected</span>
@@ -143,6 +136,11 @@ export function ScanResultsChat({
         </CardHeader>
 
         <CardContent className="space-y-6">
+          <div className="text-center">
+            <Badge variant="outline" className="text-xs">
+              Processed in {detectionResult.processingTime}ms
+            </Badge>
+          </div>
           {/* Analyzed Image */}
           <div className="relative">
             <img
@@ -169,45 +167,64 @@ export function ScanResultsChat({
             </div>
 
             {/* Confidence and Severity Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              <div
-                className={`p-4 rounded-lg ${confidenceDisplay.bgColor} text-center`}
-              >
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  {confidenceDisplay.icon}
-                  <span
-                    className={`text-sm font-medium ${confidenceDisplay.color}`}
-                  >
-                    {confidenceDisplay.text}
-                  </span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {detectionResult.confidence}%
-                </div>
-              </div>
 
-              <div
-                className={`p-4 rounded-lg ${severityDisplay.bgColor} text-center`}
-              >
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <span className="text-lg">{severityDisplay.emoji}</span>
-                  <span
-                    className={`text-sm font-medium ${severityDisplay.color}`}
-                  >
-                    {severityDisplay.text}
-                  </span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {detectionResult.affectedArea}%
-                </div>
-                <div className="text-xs text-muted-foreground">affected</div>
+            <div
+              className={`p-4 rounded-lg ${confidenceDisplay.bgColor} text-center`}
+            >
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                {confidenceDisplay.icon}
+                <span
+                  className={`text-sm font-medium ${confidenceDisplay.color}`}
+                >
+                  {confidenceDisplay.text}
+                </span>
+              </div>
+              <div className="text-2xl font-bold">
+                {detectionResult.confidence}%
               </div>
             </div>
           </div>
 
           {/* Quick Disease Summary */}
           <div className="bg-muted/50 rounded-lg p-4">
-            <p className="text-sm text-center mb-3">{disease.description}</p>
+            <div className="text-center mb-3">
+              <h4 className="font-medium text-sm mb-2">🔬 Disease Overview</h4>
+              <p className="text-sm leading-relaxed">
+                {disease.name === "Cashew healthy" &&
+                  "The cashew plant appears to be healthy and free from common diseases."}
+                {disease.name === "Cassava healthy" &&
+                  "The cassava plant shows no signs of disease and appears to be in good condition."}
+                {disease.name === "Maize healthy" &&
+                  "The maize plant is healthy with no visible disease symptoms."}
+                {disease.name === "Tomato healthy" &&
+                  "The tomato plant appears to be healthy and free from common diseases."}
+                {disease.name.includes("anthracnose") &&
+                  "Anthracnose is a fungal disease that causes dark, sunken lesions on leaves and fruits. It thrives in warm, humid conditions."}
+                {disease.name.includes("mosaic") &&
+                  "Mosaic virus causes yellow and green mottled patterns on leaves, often stunting plant growth."}
+                {disease.name.includes("blight") &&
+                  "Blight is a serious fungal disease that causes rapid browning and death of plant tissues."}
+                {disease.name.includes("armyworm") &&
+                  "Fall armyworm is a destructive pest that feeds on leaves, creating large holes and can severely damage crops."}
+                {disease.name.includes("wilt") &&
+                  "Wilt disease affects the plant's vascular system, causing leaves to droop and eventually die."}
+                {disease.name.includes("rust") &&
+                  "Rust disease appears as orange or brown pustules on leaves and can spread rapidly in humid conditions."}
+                {!disease.name.includes("healthy") &&
+                  !disease.name.includes("anthracnose") &&
+                  !disease.name.includes("mosaic") &&
+                  !disease.name.includes("blight") &&
+                  !disease.name.includes("armyworm") &&
+                  !disease.name.includes("wilt") &&
+                  !disease.name.includes("rust") &&
+                  `This is a ${disease.name
+                    .toLowerCase()
+                    .replace(
+                      /_/g,
+                      " "
+                    )} affecting your crop. Early detection and proper treatment are key to preventing spread.`}
+              </p>
+            </div>
             <div className="flex items-center justify-center space-x-4 text-xs text-muted-foreground">
               <span>📍 Affects: {disease.affectedCrops.join(", ")}</span>
               <span>📊 Prevalence: {disease.prevalence}%</span>
@@ -215,58 +232,6 @@ export function ScanResultsChat({
           </div>
         </CardContent>
       </Card>
-
-      {/* AI Chat Invitation */}
-      <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="p-6 text-center space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-center">
-              <div className="bg-primary/10 p-3 rounded-full">
-                <MessageCircle className="h-8 w-8 text-primary" />
-              </div>
-            </div>
-            <h3 className="text-lg font-semibold">Ask AI Assistant</h3>
-            <p className="text-sm text-muted-foreground">
-              Get personalized treatment advice, cost estimates, and farming
-              tips in English or Twi
-            </p>
-          </div>
-
-          <Button
-            onClick={() => setShowChat(true)}
-            className="w-full h-12 text-base"
-            size="lg"
-          >
-            <MessageCircle className="mr-2 h-5 w-5" />
-            Chat with AI Assistant
-          </Button>
-
-          {/* Quick Preview of AI Capabilities */}
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-background/50 rounded p-2">
-              <span className="font-medium">🗣️ Voice Support</span>
-              <br />
-              Twi & English
-            </div>
-            <div className="bg-background/50 rounded p-2">
-              <span className="font-medium">💬 Smart Chat</span>
-              <br />
-              Ask anything
-            </div>
-            <div className="bg-background/50 rounded p-2">
-              <span className="font-medium">💰 Cost Info</span>
-              <br />
-              Ghana Cedis
-            </div>
-            <div className="bg-background/50 rounded p-2">
-              <span className="font-medium">🌱 Local Tips</span>
-              <br />
-              Ghana farming
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Action Buttons */}
       <div className="grid grid-cols-1 gap-4">
         <Button onClick={onNewScan} variant="outline" className="h-12">
@@ -281,6 +246,31 @@ export function ScanResultsChat({
           </Button>
         )}
       </div>
+      {/* AI Chat Invitation */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="p-4 text-center space-y-3">
+          <div className="flex items-center justify-center space-x-3">
+            <div className="bg-primary/10 p-2 rounded-full">
+              <MessageCircle className="h-6 w-6 text-primary" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-base font-semibold">Ask AI Assistant</h3>
+              <p className="text-sm text-muted-foreground">
+                Get treatment advice & farming tips
+              </p>
+            </div>
+          </div>
+
+          <Button
+            onClick={() => setShowChat(true)}
+            className="w-full h-10"
+            size="default"
+          >
+            <MessageCircle className="mr-2 h-4 w-4" />
+            Chat with AI
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Low Confidence Warning */}
       {detectionResult.confidenceLevel === "low" && (
@@ -297,7 +287,7 @@ export function ScanResultsChat({
       {/* Processing Info */}
       <div className="text-center">
         <Badge variant="outline" className="text-xs">
-          Processed in {detectionResult.processingTime}ms • Ghana AI Focused
+          Ghana AI Focused
         </Badge>
       </div>
     </div>

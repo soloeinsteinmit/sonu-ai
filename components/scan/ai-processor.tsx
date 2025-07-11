@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * AgriSentry AI - AI Processing Component
+ * AgriSentry AI - Real-Time AI Processor Component
  *
- * Simulates AI disease detection processing with realistic timing
- * and progress feedback. In production, this would integrate with
- * the actual ML model API.
+ * This component orchestrates the real-time, client-side disease detection.
+ * It uses the ONNX runtime to perform inference directly in the browser,
+ * providing a truly offline-capable experience.
  *
  * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
@@ -16,12 +16,14 @@ import { Brain, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ScanStatus, ScanResult } from "@/lib/types/disease";
+import { ScanStatus, ScanResult, ConfidenceLevel } from "@/lib/types/disease";
 import {
   DISEASES,
   TREATMENTS,
   DISEASE_TREATMENTS,
+  PREVENTION_TIPS,
 } from "@/lib/constants/diseases";
+import { predict } from "@/lib/utils/predict"; // Using the real prediction pipeline
 
 interface AIProcessorProps {
   imageFile: File;
@@ -29,28 +31,16 @@ interface AIProcessorProps {
   onError: (error: string) => void;
 }
 
-/**
- * AI Processing stages with realistic timing
- */
 const PROCESSING_STAGES = [
-  { stage: "upload", message: "Uploading image...", duration: 1000 },
-  { stage: "analyzing", message: "Analyzing image quality...", duration: 1500 },
+  { stage: "analyzing", message: "Preprocessing image...", progress: 25 },
   {
     stage: "processing",
     message: "AI model detecting diseases...",
-    duration: 3000,
+    progress: 75,
   },
-  { stage: "complete", message: "Analysis complete!", duration: 500 },
+  { stage: "complete", message: "Analysis complete!", progress: 100 },
 ] as const;
 
-/**
- * AI Processor component with realistic simulation
- * Features:
- * - Progressive loading states
- * - Realistic processing timing
- * - Error handling simulation
- * - Visual progress feedback
- */
 export function AIProcessor({
   imageFile,
   onComplete,
@@ -59,69 +49,65 @@ export function AIProcessor({
   const [status, setStatus] = useState<ScanStatus>({
     isProcessing: true,
     progress: 0,
-    stage: "upload",
+    stage: "analyzing",
     message: "Initializing AI analysis...",
   });
 
-  /**
-   * Simulate AI processing with realistic stages and timing
-   */
   useEffect(() => {
     const processImage = async () => {
       try {
-        let totalProgress = 0;
-        const progressPerStage = 100 / PROCESSING_STAGES.length;
+        const startTime = Date.now();
 
-        for (const stageInfo of PROCESSING_STAGES) {
-          setStatus((prev) => ({
-            ...prev,
-            stage: stageInfo.stage,
-            message: stageInfo.message,
-            progress: totalProgress,
-          }));
-
-          // Simulate processing time with progress updates
-          await new Promise((resolve) => {
-            const interval = setInterval(() => {
-              totalProgress += progressPerStage / (stageInfo.duration / 100);
-              setStatus((prev) => ({
-                ...prev,
-                progress: Math.min(
-                  totalProgress,
-                  (PROCESSING_STAGES.indexOf(stageInfo) + 1) * progressPerStage
-                ),
-              }));
-            }, 100);
-
-            setTimeout(() => {
-              clearInterval(interval);
-              resolve(void 0);
-            }, stageInfo.duration);
-          });
-        }
-
-        // Generate realistic scan result
-        const result = generateScanResult(imageFile);
-
+        // Stage 1: Preprocessing
         setStatus((prev) => ({
           ...prev,
-          progress: 100,
-          stage: "complete",
-          message: "Analysis complete!",
-          isProcessing: false,
+          stage: "analyzing",
+          message: PROCESSING_STAGES[0].message,
+          progress: 10,
         }));
 
-        // Delay before showing results for better UX
+        // The actual prediction function handles preprocessing and inference
+        const prediction = await predict(imageFile);
+
+        // Stage 2: Inference
+        setStatus((prev) => ({
+          ...prev,
+          stage: "processing",
+          message: PROCESSING_STAGES[1].message,
+          progress: 50,
+        }));
+
+        // Simulate some time for the progress bar to feel natural
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Stage 3: Formatting results
+        setStatus((prev) => ({
+          ...prev,
+          stage: "complete",
+          message: PROCESSING_STAGES[2].message,
+          progress: 100,
+        }));
+
+        // Map the prediction result to our ScanResult type
+        const scanResult = mapPredictionToScanResult(
+          prediction,
+          imageFile,
+          startTime
+        );
+
         setTimeout(() => {
-          onComplete(result);
+          onComplete(scanResult);
         }, 500);
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Processing failed";
+          error instanceof Error
+            ? error.message
+            : "An unknown error occurred during processing.";
+        console.error("Inference Error in AIProcessor:", error);
         setStatus((prev) => ({
           ...prev,
           stage: "error",
-          message: errorMessage,
+          message: "Analysis Failed",
           isProcessing: false,
           error: errorMessage,
         }));
@@ -132,53 +118,52 @@ export function AIProcessor({
     processImage();
   }, [imageFile, onComplete, onError]);
 
-  /**
-   * Generate realistic scan result based on mock data
-   */
-  const generateScanResult = (file: File): ScanResult => {
-    // Randomly select a disease for demonstration
-    const randomDisease = DISEASES[Math.floor(Math.random() * DISEASES.length)];
-    const treatmentIds = DISEASE_TREATMENTS[randomDisease.id] || [];
+  const mapPredictionToScanResult = (
+    prediction: { className: string; confidence: number },
+    file: File,
+    startTime: number
+  ): ScanResult => {
+    const { className, confidence } = prediction;
+
+    // Convert model class name (e.g., 'Cassava_mosaic') to disease ID ('cassava-mosaic')
+    const diseaseId = className.toLowerCase().replace(/_/g, "-");
+    const detectedDisease = DISEASES.find((d) => d.id === diseaseId);
+
+    if (!detectedDisease) {
+      throw new Error(`Disease ID "${diseaseId}" not found in the database.`);
+    }
+
+    const treatmentIds = DISEASE_TREATMENTS[detectedDisease.id] || [];
     const treatments = TREATMENTS.filter((t) => treatmentIds.includes(t.id));
 
-    // Generate realistic confidence based on image quality simulation
-    const confidence = Math.floor(Math.random() * 25) + 75; // 75-100%
-    const confidenceLevel =
-      confidence >= 90 ? "high" : confidence >= 75 ? "medium" : "low";
+    let confidenceLevel: ConfidenceLevel = "low";
+    if (confidence >= 0.9) confidenceLevel = "high";
+    else if (confidence >= 0.7) confidenceLevel = "medium";
 
-    const scanResult: ScanResult = {
+    return {
       id: `scan-${Date.now()}`,
       imageUrl: URL.createObjectURL(file),
       detectionResult: {
-        diseaseId: randomDisease.id,
-        confidence,
-        confidenceLevel,
-        severity: randomDisease.severity,
-        affectedArea: Math.floor(Math.random() * 40) + 20, // 20-60%
+        diseaseId: detectedDisease.id,
+        confidence: Math.round(confidence * 100 * 100) / 100, // Round to 2 decimal places
+        confidenceLevel: confidenceLevel,
+        severity: detectedDisease.severity, // Using mock severity for now
+        affectedArea: Math.floor(Math.random() * 40) + 20, // Mock affected area
         detectedAt: new Date(),
-        processingTime: 4000, // Total processing time
+        processingTime: Date.now() - startTime,
       },
-      disease: randomDisease,
+      disease: detectedDisease,
       treatments,
       recommendations: {
-        primary: treatments[0],
+        primary: treatments[0] || TREATMENTS[0],
         alternatives: treatments.slice(1),
-        prevention: [
-          "Use certified disease-free planting material",
-          "Maintain proper field sanitation",
-          "Monitor crops regularly for early detection",
-          "Ensure adequate plant spacing",
-        ],
+        prevention: PREVENTION_TIPS,
       },
       createdAt: new Date(),
     };
-
-    return scanResult;
   };
 
-  /**
-   * Get status icon based on current stage
-   */
+  // --- UI Rendering (mostly unchanged) ---
   const getStatusIcon = () => {
     switch (status.stage) {
       case "complete":
@@ -186,21 +171,7 @@ export function AIProcessor({
       case "error":
         return <AlertCircle className="h-5 w-5 text-red-500" />;
       default:
-        return <Loader2 className="h-5 w-5 animate-spin text-blue-500" />;
-    }
-  };
-
-  /**
-   * Get progress bar color based on stage
-   */
-  const getProgressColor = () => {
-    switch (status.stage) {
-      case "complete":
-        return "bg-green-500";
-      case "error":
-        return "bg-red-500";
-      default:
-        return "bg-blue-500";
+        return <Loader2 className="h-5 w-5 animate-spin text-green-500" />;
     }
   };
 
@@ -209,18 +180,16 @@ export function AIProcessor({
       <CardHeader className="text-center pb-4">
         <CardTitle className="flex items-center justify-center space-x-2">
           <Brain className="h-6 w-6 text-primary" />
-          <span>AI Analysis</span>
+          <span>Real-Time AI Analysis</span>
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* Processing Status */}
         <div className="text-center space-y-3">
           <div className="flex items-center justify-center space-x-2">
             {getStatusIcon()}
             <span className="text-sm font-medium">{status.message}</span>
           </div>
-
           <div className="space-y-2">
             <Progress value={status.progress} className="h-2" />
             <div className="flex justify-between text-xs text-muted-foreground">
@@ -229,62 +198,27 @@ export function AIProcessor({
             </div>
           </div>
         </div>
-
-        {/* Current Stage Indicator */}
-        <div className="flex justify-center space-x-2">
-          {PROCESSING_STAGES.map((stage, index) => {
-            const isActive = stage.stage === status.stage;
-            const isCompleted =
-              PROCESSING_STAGES.findIndex((s) => s.stage === status.stage) >
-              index;
-
-            return (
-              <Badge
-                key={stage.stage}
-                variant={
-                  isActive ? "default" : isCompleted ? "secondary" : "outline"
-                }
-                className={`text-xs ${isActive ? "animate-pulse" : ""}`}
-              >
-                {stage.stage.charAt(0).toUpperCase() + stage.stage.slice(1)}
-              </Badge>
-            );
-          })}
-        </div>
-
-        {/* Processing Details */}
         <div className="bg-muted/50 rounded-lg p-4">
           <h4 className="text-sm font-medium mb-2 flex items-center">
-            🧠 AI Processing Details
+            🧠 ONNX Model Details
           </h4>
           <ul className="text-xs text-muted-foreground space-y-1">
-            <li>• Using EfficientNet-B0 model</li>
-            <li>• Analyzing 24 disease types</li>
-            <li>• Processing {imageFile.name}</li>
-            <li>• Size: {(imageFile.size / 1024 / 1024).toFixed(1)} MB</li>
+            <li>• Running inference directly in your browser</li>
+            <li>• Model: `agrisentry_model.onnx`</li>
+            <li>• This works 100% offline!</li>
+            <li>
+              • File: {imageFile.name} (
+              {(imageFile.size / 1024 / 1024).toFixed(1)} MB)
+            </li>
           </ul>
         </div>
-
-        {/* Error State */}
         {status.stage === "error" && status.error && (
           <div className="text-center">
             <p className="text-sm text-red-600 mb-2">
               Processing failed: {status.error}
             </p>
             <p className="text-xs text-muted-foreground">
-              Please try again with a different image or check your connection.
-            </p>
-          </div>
-        )}
-
-        {/* Success State */}
-        {status.stage === "complete" && (
-          <div className="text-center space-y-2">
-            <Badge variant="secondary" className="text-green-700 bg-green-50">
-              ✓ Disease Detection Complete
-            </Badge>
-            <p className="text-xs text-muted-foreground">
-              Preparing detailed analysis results...
+              Please try another image or ensure your browser is up-to-date.
             </p>
           </div>
         )}
