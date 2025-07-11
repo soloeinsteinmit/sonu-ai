@@ -5,17 +5,19 @@
  *
  * This component orchestrates the real-time, client-side disease detection.
  * It uses the ONNX runtime to perform inference directly in the browser,
- * providing a truly offline-capable experience.
+ * providing a truly offline-capable experience with beautiful animations.
  *
  * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 
 import { useState, useEffect } from "react";
-import { Brain, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Brain, CheckCircle, AlertCircle, Loader2, X, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScanStatus, ScanResult, ConfidenceLevel } from "@/lib/types/disease";
 import {
   DISEASES,
@@ -52,6 +54,17 @@ export function AIProcessor({
     stage: "analyzing",
     message: "Initializing AI analysis...",
   });
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [showModal, setShowModal] = useState(false);
+  const [result, setResult] = useState<ScanResult | null>(null);
+
+  useEffect(() => {
+    // Create image URL for preview
+    const url = URL.createObjectURL(imageFile);
+    setImageUrl(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [imageFile]);
 
   useEffect(() => {
     const processImage = async () => {
@@ -94,11 +107,12 @@ export function AIProcessor({
           imageFile,
           startTime
         );
+        setResult(scanResult);
 
         setTimeout(() => {
           onComplete(scanResult);
-        }, 500);
-      } catch (error) {
+        }, 1000);
+      } catch (error: unknown) {
         const errorMessage =
           error instanceof Error
             ? error.message
@@ -163,7 +177,6 @@ export function AIProcessor({
     };
   };
 
-  // --- UI Rendering (mostly unchanged) ---
   const getStatusIcon = () => {
     switch (status.stage) {
       case "complete":
@@ -175,54 +188,202 @@ export function AIProcessor({
     }
   };
 
-  return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center pb-4">
-        <CardTitle className="flex items-center justify-center space-x-2">
-          <Brain className="h-6 w-6 text-primary" />
-          <span>Real-Time AI Analysis</span>
-        </CardTitle>
-      </CardHeader>
+  const isProcessing = status.stage !== "complete" && status.stage !== "error";
 
-      <CardContent className="space-y-6">
-        <div className="text-center space-y-3">
-          <div className="flex items-center justify-center space-x-2">
-            {getStatusIcon()}
-            <span className="text-sm font-medium">{status.message}</span>
-          </div>
-          <div className="space-y-2">
-            <Progress value={status.progress} className="h-2" />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Progress</span>
-              <span>{Math.round(status.progress)}%</span>
+  return (
+    <>
+      <Card className="w-full max-w-md mx-auto overflow-hidden">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="flex items-center justify-center space-x-2">
+            <Brain className="h-6 w-6 text-primary" />
+            <span>Real-Time AI Analysis</span>
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          {/* Enhanced Image with Loading Animation */}
+          <motion.div className="relative overflow-hidden rounded-lg border">
+            {imageUrl && (
+              <motion.img
+                src={imageUrl}
+                alt="Analyzing crop"
+                className="w-full h-48 object-cover cursor-pointer"
+                style={{
+                  filter: isProcessing ? "blur(4px)" : "blur(0px)",
+                }}
+                animate={{
+                  filter: isProcessing ? "blur(4px)" : "blur(0px)",
+                }}
+                transition={{ duration: 0.5 }}
+                onClick={() => !isProcessing && result && setShowModal(true)}
+              />
+            )}
+
+            {/* Simple Loading Overlay */}
+            <AnimatePresence>
+              {isProcessing && (
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center bg-black/20"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <div className="bg-primary/90 p-4 rounded-full shadow-lg">
+                    <Loader2 className="h-8 w-8 text-white animate-spin" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Click hint for completed analysis */}
+            {!isProcessing && result && (
+              <motion.div
+                className="absolute top-2 right-2"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Badge className="bg-black/70 text-white border-none cursor-pointer">
+                  <Eye className="w-3 h-3 mr-1" />
+                  Click to expand
+                </Badge>
+              </motion.div>
+            )}
+          </motion.div>
+
+          {/* Status and Progress */}
+          <motion.div
+            className="text-center space-y-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              {getStatusIcon()}
+              <span className="text-sm font-medium">{status.message}</span>
             </div>
-          </div>
-        </div>
-        <div className="bg-muted/50 rounded-lg p-4">
-          <h4 className="text-sm font-medium mb-2 flex items-center">
-            🧠 ONNX Model Details
-          </h4>
-          <ul className="text-xs text-muted-foreground space-y-1">
-            <li>• Running inference directly in your browser</li>
-            <li>• Model: `agrisentry_model.onnx`</li>
-            <li>• This works 100% offline!</li>
-            <li>
-              • File: {imageFile.name} (
-              {(imageFile.size / 1024 / 1024).toFixed(1)} MB)
-            </li>
-          </ul>
-        </div>
-        {status.stage === "error" && status.error && (
-          <div className="text-center">
-            <p className="text-sm text-red-600 mb-2">
-              Processing failed: {status.error}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Please try another image or ensure your browser is up-to-date.
-            </p>
-          </div>
+            <div className="space-y-2">
+              <Progress value={status.progress} className="h-2" />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Progress</span>
+                <span>{Math.round(status.progress)}%</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Model Info */}
+          <motion.div
+            className="bg-muted/50 rounded-lg p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h4 className="text-sm font-medium mb-2 flex items-center">
+              🧠 ONNX Model Details
+            </h4>
+            <ul className="text-xs text-muted-foreground space-y-1">
+              <li>• Running inference directly in your browser</li>
+              <li>• Model: `agrisentry_model.onnx`</li>
+              <li>• This works 100% offline!</li>
+              <li>
+                • File: {imageFile.name} (
+                {(imageFile.size / 1024 / 1024).toFixed(1)} MB)
+              </li>
+            </ul>
+          </motion.div>
+
+          {/* Error Display */}
+          {status.stage === "error" && status.error && (
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <p className="text-sm text-red-600 mb-2">
+                Processing failed: {status.error}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Please try another image or ensure your browser is up-to-date.
+              </p>
+            </motion.div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {showModal && result && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowModal(false)}
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+
+            {/* Modal Content */}
+            <motion.div
+              className="relative bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative">
+                <img
+                  src={imageUrl}
+                  alt="Full size analysis"
+                  className="w-full h-auto rounded-t-lg"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 bg-black/50 text-white hover:bg-black/70"
+                  onClick={() => setShowModal(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div className="text-center">
+                  <h3 className="text-xl font-bold mb-2">
+                    {result.disease.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground italic mb-4">
+                    {result.disease.scientificName}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="bg-muted/50 rounded-lg p-3">
+                      <div className="text-lg font-bold text-primary">
+                        {result.detectionResult.confidence}%
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Confidence
+                      </div>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-3">
+                      <div className="text-lg font-bold text-orange-600">
+                        {result.detectionResult.affectedArea}%
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Affected Area
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-sm leading-relaxed">
+                    {result.disease.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
-      </CardContent>
-    </Card>
+      </AnimatePresence>
+    </>
   );
 }
