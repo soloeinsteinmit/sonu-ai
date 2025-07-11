@@ -49,12 +49,35 @@ export function CameraCapture({
   const streamRef = useRef<MediaStream | null>(null);
 
   /**
+   * Check if camera is available in the current environment
+   */
+  const isCameraAvailable = useCallback(() => {
+    return (
+      (typeof navigator !== "undefined" &&
+        navigator.mediaDevices &&
+        typeof navigator.mediaDevices.getUserMedia === "function" &&
+        window.location.protocol === "https:") ||
+      window.location.hostname === "localhost"
+    );
+  }, []);
+
+  /**
    * Initialize camera with mobile-optimized constraints
    */
   const startCamera = useCallback(async () => {
     try {
       setCameraError(null);
       setIsProcessing(true);
+
+      // Check if camera is available
+      if (!isCameraAvailable()) {
+        throw new Error(
+          window.location.protocol !== "https:" &&
+          window.location.hostname !== "localhost"
+            ? "Camera access requires HTTPS. Please use file upload instead."
+            : "Camera not supported in this browser. Please use file upload instead."
+        );
+      }
 
       // Request camera with mobile-first constraints
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -78,7 +101,7 @@ export function CameraCapture({
     } finally {
       setIsProcessing(false);
     }
-  }, [onError]);
+  }, [onError, isCameraAvailable]);
 
   /**
    * Stop camera and clean up resources
@@ -208,13 +231,31 @@ export function CameraCapture({
               {/* Camera Start Button */}
               <Button
                 onClick={startCamera}
-                disabled={disabled || isProcessing}
+                disabled={disabled || isProcessing || !isCameraAvailable()}
                 className="w-full h-12 text-base"
                 size="lg"
               >
                 <Camera className="mr-2 h-5 w-5" />
-                {isProcessing ? "Opening Camera..." : "Open Camera"}
+                {isProcessing
+                  ? "Opening Camera..."
+                  : !isCameraAvailable()
+                  ? "Camera Not Available"
+                  : "Open Camera"}
               </Button>
+
+              {/* Camera availability info */}
+              {!isCameraAvailable() && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <p className="text-sm text-yellow-800">
+                    📱 <strong>Camera not available:</strong>{" "}
+                    {window.location.protocol !== "https:" &&
+                    window.location.hostname !== "localhost"
+                      ? "HTTPS required for camera access"
+                      : "Browser doesn't support camera"}
+                    . Please use the upload option below.
+                  </p>
+                </div>
+              )}
 
               {/* File Upload Alternative */}
               <div className="relative">
