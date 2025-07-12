@@ -57,23 +57,18 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isMapReady, setIsMapReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Initialize Leaflet map
-   */
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: '/leaflet/marker-icon-2x.png',
-      iconUrl: '/leaflet/marker-icon.png',
-      shadowUrl: '/leaflet/marker-shadow.png',
-    });
-
     if (mapRef.current && !mapInstanceRef.current) {
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+        iconUrl: '/leaflet/marker-icon.png',
+        shadowUrl: '/leaflet/marker-shadow.png',
+      });
+
       try {
         const map = L.map(mapRef.current, {
           zoomControl: true,
@@ -87,30 +82,14 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
           minZoom: 6,
         }).addTo(map);
 
-        map.on('locationfound', (e: L.LocationEvent) => {
-          map.setView(e.latlng, 13);
-          L.marker(e.latlng).addTo(map)
-            .bindPopup("You are here!").openPopup();
-          L.circle(e.latlng, e.accuracy).addTo(map);
-        });
-
-        map.on('locationerror', () => {
-          // If location fails, default to Ghana view
-          map.setView([7.9465, -1.0232], 7);
-        });
-
-        // Request user's location
-        map.locate({ setView: false }); // setView is false because we handle it in the event
-
         if (window.innerWidth <= 768) {
           map.zoomControl.setPosition('bottomright');
         }
 
+        setIsMapReady(true);
       } catch (err) {
         console.error('Failed to initialize map:', err);
         setError('Failed to load map');
-      } finally {
-        setIsLoading(false);
       }
     }
 
@@ -118,9 +97,10 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
+        setIsMapReady(false);
       }
     };
-  }, []);
+  }, [mapRef]);
 
   /**
    * Update markers when outbreaks change
@@ -206,25 +186,40 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
     }
   }, [selectedOutbreak]);
 
-  /**
-   * Handle map resize and initial layout stabilization
-   */
   useEffect(() => {
     const map = mapInstanceRef.current;
-    if (!map) return;
+    if (!isMapReady || !map) return;
 
-    const handleResize = () => {
-      setTimeout(() => map.invalidateSize(), 100);
-    };
+    // Use ResizeObserver to detect container size changes
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    if (mapRef.current) {
+      observer.observe(mapRef.current);
+    }
 
-    window.addEventListener('resize', handleResize);
-    const timer = setTimeout(handleResize, 150); // For initial render
+    // Set initial view with geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latlng: L.LatLngTuple = [position.coords.latitude, position.coords.longitude];
+          map.setView(latlng, 13);
+          L.marker(latlng).addTo(map).bindPopup("You are here!").openPopup();
+        },
+        () => {
+          map.setView([7.9465, -1.0232], 7); // Default to Ghana
+        }
+      );
+    } else {
+      map.setView([7.9465, -1.0232], 7); // Default to Ghana
+    }
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(timer);
+      if (mapRef.current) {
+        observer.unobserve(mapRef.current);
+      }
     };
-  }, [!isLoading]); // Rerun when loading is finished
+  }, [isMapReady]);
 
   if (error) {
     return (
@@ -242,7 +237,7 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
         className="w-full h-full rounded-lg bg-muted/30"
       />
 
-      {isLoading && (
+      {!isMapReady && !error && (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-lg">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
