@@ -56,7 +56,7 @@ export interface OutbreakData {
   crop: string;
   severity: "low" | "medium" | "high" | "critical";
   reportedDate: string;
-  affectedArea: number; // in hectares
+  
   reportedBy: string;
   status: "active" | "contained" | "resolved";
   description?: string;
@@ -97,82 +97,25 @@ export default function MapPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   /**
-   * Load outbreak data (mock data for now)
+   * Load outbreak data
    */
   useEffect(() => {
     const loadOutbreaks = async () => {
       setIsLoading(true);
-      
-      // Mock data - in production, this would come from your API
-      const mockOutbreaks: OutbreakData[] = [
-        {
-          id: "1",
-          location: { lat: 5.6037, lng: -0.1870, name: "Accra", region: "Greater Accra" },
-          disease: "Leaf Spot",
-          crop: "Tomato",
-          severity: "medium",
-          reportedDate: "2024-01-15",
-          affectedArea: 2.5,
-          reportedBy: "John Mensah",
-          status: "active",
-          description: "Brown spots appearing on tomato leaves"
-        },
-        {
-          id: "2",
-          location: { lat: 6.6885, lng: -1.6244, name: "Kumasi", region: "Ashanti" },
-          disease: "Cassava Mosaic Disease",
-          crop: "Cassava",
-          severity: "high",
-          reportedDate: "2024-01-12",
-          affectedArea: 5.2,
-          reportedBy: "Mary Asante",
-          status: "active",
-          description: "Yellowing and mosaic patterns on cassava leaves"
-        },
-        {
-          id: "3",
-          location: { lat: 9.4034, lng: -0.8424, name: "Tamale", region: "Northern" },
-          disease: "Corn Borer",
-          crop: "Maize",
-          severity: "low",
-          reportedDate: "2024-01-10",
-          affectedArea: 1.8,
-          reportedBy: "Ibrahim Yakubu",
-          status: "contained",
-          description: "Small holes in maize stalks"
-        },
-        {
-          id: "4",
-          location: { lat: 7.9465, lng: -1.0232, name: "Sunyani", region: "Bono" },
-          disease: "Anthracnose",
-          crop: "Cashew",
-          severity: "critical",
-          reportedDate: "2024-01-08",
-          affectedArea: 8.7,
-          reportedBy: "Akosua Boateng",
-          status: "active",
-          description: "Dark lesions on cashew fruits and leaves"
-        },
-        {
-          id: "5",
-          location: { lat: 5.1357, lng: 0.0951, name: "Tema", region: "Greater Accra" },
-          disease: "Bacterial Wilt",
-          crop: "Tomato",
-          severity: "medium",
-          reportedDate: "2024-01-05",
-          affectedArea: 3.1,
-          reportedBy: "Francis Tetteh",
-          status: "resolved",
-          description: "Wilting of tomato plants"
+      try {
+        const response = await fetch('/api/predictions');
+        if (!response.ok) {
+          throw new Error('Failed to fetch outbreak data');
         }
-      ];
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setOutbreaks(mockOutbreaks);
-      setFilteredOutbreaks(mockOutbreaks);
-      setIsLoading(false);
+        const data = await response.json();
+        setOutbreaks(data);
+        setFilteredOutbreaks(data);
+      } catch (error) {
+        console.error(error);
+        // Handle error state in UI
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadOutbreaks();
@@ -281,61 +224,32 @@ export default function MapPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Stats Section */}
-        <div className="mb-6">
-          <OutbreakStats outbreaks={filteredOutbreaks} />
-        </div>
-
-        {/* Filters */}
-        {showFilters && (
-          <div className="mb-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Filter Outbreaks</span>
-                  <Button variant="ghost" size="sm" onClick={clearFilters}>
-                    Clear All
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <MapFilters
-                  filters={filters}
-                  onFiltersChange={setFilters}
-                  availableData={outbreaks}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {/* Map and Details */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Map */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-lg h-[calc(100vh-180px)]">
-              <CardContent className="p-0 h-full">
-                {isLoading ? (
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center">
-                      <MapPin className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-muted-foreground">Loading map...</p>
-                    </div>
-                  </div>
-                ) : (
-                  <OutbreakMap
-                    outbreaks={filteredOutbreaks}
-                    selectedOutbreak={selectedOutbreak}
-                    onOutbreakSelect={handleOutbreakSelect}
+      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Filters */}
+            {showFilters && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Filter Outbreaks</span>
+                    <Button variant="ghost" size="sm" onClick={clearFilters}>
+                      Clear All
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <MapFilters
+                    filters={filters}
+                    onFiltersChange={setFilters}
+                    availableData={outbreaks}
                   />
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            )}
 
-          {/* Details Sidebar */}
-          <div className="space-y-4">
+            {/* Details or Guide */}
             {selectedOutbreak ? (
               <OutbreakDetails
                 outbreak={selectedOutbreak}
@@ -406,24 +320,34 @@ export default function MapPage() {
                     <Badge variant="secondary">{filteredOutbreaks.length}</Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Active Cases</span>
+                    <span className="text-sm text-muted-foreground">Active / Resolved</span>
                     <Badge variant="destructive">
-                      {filteredOutbreaks.filter(o => o.status === 'active').length}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Resolved</span>
-                    <Badge variant="secondary">
-                      {filteredOutbreaks.filter(o => o.status === 'resolved').length}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Affected Area</span>
-                    <Badge variant="outline">
-                      {filteredOutbreaks.reduce((acc, o) => acc + o.affectedArea, 0).toFixed(1)} ha
+                      {filteredOutbreaks.filter(o => o.status === 'active').length} / {filteredOutbreaks.filter(o => o.status === 'resolved').length}
                     </Badge>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Map */}
+          <div className="lg:col-span-3">
+            <Card className="shadow-lg h-[calc(100vh-120px)]">
+              <CardContent className="p-0 h-full">
+                {isLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <MapPin className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground">Loading map...</p>
+                    </div>
+                  </div>
+                ) : (
+                  <OutbreakMap
+                    outbreaks={filteredOutbreaks}
+                    selectedOutbreak={selectedOutbreak}
+                    onOutbreakSelect={handleOutbreakSelect}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>

@@ -73,14 +73,13 @@ function StatCard({ title, value, icon, description, trend, color = "default" }:
 /**
  * Main outbreak stats component
  */
+
 export function OutbreakStats({ outbreaks }: OutbreakStatsProps) {
   // Calculate statistics
   const totalOutbreaks = outbreaks.length;
   const activeOutbreaks = outbreaks.filter(o => o.status === 'active').length;
   const resolvedOutbreaks = outbreaks.filter(o => o.status === 'resolved').length;
   const containedOutbreaks = outbreaks.filter(o => o.status === 'contained').length;
-  
-  const totalAffectedArea = outbreaks.reduce((sum, outbreak) => sum + outbreak.affectedArea, 0);
   
   // Severity distribution
   const severityCount = {
@@ -116,7 +115,7 @@ export function OutbreakStats({ outbreaks }: OutbreakStatsProps) {
   return (
     <div className="space-y-4">
       {/* Main stats grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           title="Total Outbreaks"
           value={totalOutbreaks}
@@ -131,14 +130,6 @@ export function OutbreakStats({ outbreaks }: OutbreakStatsProps) {
           icon={<AlertTriangle className="h-4 w-4 text-destructive" />}
           description="Requiring attention"
           trend={{ value: 8, isPositive: false }}
-        />
-        
-        <StatCard
-          title="Affected Area"
-          value={`${totalAffectedArea.toFixed(1)} ha`}
-          icon={<Activity className="h-4 w-4 text-muted-foreground" />}
-          description="Total hectares affected"
-          trend={{ value: 15, isPositive: false }}
         />
         
         <StatCard
@@ -287,15 +278,6 @@ export function OutbreakStats({ outbreaks }: OutbreakStatsProps) {
             )}
             
             <div>
-              <span className="font-medium">Average Affected Area:</span>
-              <div className="mt-1">
-                <Badge variant="outline">
-                  {totalOutbreaks > 0 ? (totalAffectedArea / totalOutbreaks).toFixed(1) : 0} ha per outbreak
-                </Badge>
-              </div>
-            </div>
-            
-            <div>
               <span className="font-medium">Resolution Rate:</span>
               <div className="mt-1">
                 <Badge variant="outline">
@@ -308,4 +290,5 @@ export function OutbreakStats({ outbreaks }: OutbreakStatsProps) {
       </Card>
     </div>
   );
-} 
+}
+ 

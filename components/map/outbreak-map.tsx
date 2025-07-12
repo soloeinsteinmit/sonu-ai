@@ -150,7 +150,7 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
           <div><strong>Location:</strong> ${outbreak.location.name}, ${outbreak.location.region}</div>
           <div><strong>Crop:</strong> ${outbreak.crop}</div>
           <div><strong>Severity:</strong> <span style="text-transform: capitalize;">${outbreak.severity}</span></div>
-          <div><strong>Affected Area:</strong> ${outbreak.affectedArea} ha</div>
+          
           <div><strong>Status:</strong> <span style="text-transform: capitalize;">${outbreak.status}</span></div>
           <div><strong>Reported:</strong> ${new Date(outbreak.reportedDate).toLocaleDateString()}</div>
         </div>

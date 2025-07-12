@@ -18,6 +18,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "copy-webpack-plugin": "^13.0.0",
+    "csv": "^6.4.0",
+    "csv-parser": "^3.2.0",
     "framer-motion": "^12.23.3",
     "jimp": "^1.6.0",
     "leaflet": "^1.9.4",
