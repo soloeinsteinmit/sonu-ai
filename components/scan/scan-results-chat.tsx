@@ -133,19 +133,14 @@ export function ScanResultsChat({
       <div className="w-full max-w-md mx-auto space-y-6">
         {/* Detection Summary Card */}
         <Card>
-          <CardHeader className="text-center pb-4">
+          {/* <CardHeader className="text-center pb-4">
             <CardTitle className="flex items-center justify-center space-x-2 text-lg">
               <Brain className="h-6 w-6 text-primary" />
               <span>Disease Detected</span>
             </CardTitle>
-          </CardHeader>
+          </CardHeader> */}
 
           <CardContent className="space-y-6">
-            <div className="text-center">
-              <Badge variant="outline" className="text-xs">
-                Processed in {detectionResult.processingTime}ms
-              </Badge>
-            </div>
             {/* Analyzed Image with Click to Expand */}
             <div className="relative">
               <motion.img
@@ -202,58 +197,10 @@ export function ScanResultsChat({
                 </div>
               </div>
             </div>
-
-            {/* Quick Disease Summary */}
-            <div className="bg-muted/50 rounded-lg p-4">
-              <div className="text-center mb-3">
-                <h4 className="font-medium text-sm mb-2">
-                  🔬 Disease Overview
-                </h4>
-                <p className="text-sm leading-relaxed">
-                  {disease.name === "Cashew healthy" &&
-                    "The cashew plant appears to be healthy and free from common diseases."}
-                  {disease.name === "Cassava healthy" &&
-                    "The cassava plant shows no signs of disease and appears to be in good condition."}
-                  {disease.name === "Maize healthy" &&
-                    "The maize plant is healthy with no visible disease symptoms."}
-                  {disease.name === "Tomato healthy" &&
-                    "The tomato plant appears to be healthy and free from common diseases."}
-                  {disease.name.includes("anthracnose") &&
-                    "Anthracnose is a fungal disease that causes dark, sunken lesions on leaves and fruits. It thrives in warm, humid conditions."}
-                  {disease.name.includes("mosaic") &&
-                    "Mosaic virus causes yellow and green mottled patterns on leaves, often stunting plant growth."}
-                  {disease.name.includes("blight") &&
-                    "Blight is a serious fungal disease that causes rapid browning and death of plant tissues."}
-                  {disease.name.includes("armyworm") &&
-                    "Fall armyworm is a destructive pest that feeds on leaves, creating large holes and can severely damage crops."}
-                  {disease.name.includes("wilt") &&
-                    "Wilt disease affects the plant's vascular system, causing leaves to droop and eventually die."}
-                  {disease.name.includes("rust") &&
-                    "Rust disease appears as orange or brown pustules on leaves and can spread rapidly in humid conditions."}
-                  {!disease.name.includes("healthy") &&
-                    !disease.name.includes("anthracnose") &&
-                    !disease.name.includes("mosaic") &&
-                    !disease.name.includes("blight") &&
-                    !disease.name.includes("armyworm") &&
-                    !disease.name.includes("wilt") &&
-                    !disease.name.includes("rust") &&
-                    `This is a ${disease.name
-                      .toLowerCase()
-                      .replace(
-                        /_/g,
-                        " "
-                      )} affecting your crop. Early detection and proper treatment are key to preventing spread.`}
-                </p>
-              </div>
-              <div className="flex items-center justify-center space-x-4 text-xs text-muted-foreground">
-                <span>📍 Affects: {disease.affectedCrops.join(", ")}</span>
-                <span>📊 Prevalence: {disease.prevalence}%</span>
-              </div>
-            </div>
           </CardContent>
         </Card>
         {/* Action Buttons */}
-        <div className="grid grid-cols-1 gap-4">
+        <div className="flex justify-center gap-4 ">
           <Button onClick={onNewScan} variant="outline" className="h-12">
             <Camera className="mr-2 h-4 w-4" />
             Scan Another Plant
@@ -266,54 +213,19 @@ export function ScanResultsChat({
               className="h-12"
             >
               <MapPin className="mr-2 h-4 w-4" />
-              Report to Community Map
+              Report to Map
             </Button>
           )}
         </div>
+        <Button
+          onClick={() => setShowChat(true)}
+          className="w-full h-10"
+          size="default"
+        >
+          <MessageCircle className="mr-2 h-4 w-4" />
+          Chat with AI
+        </Button>
         {/* AI Chat Invitation */}
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-4 text-center space-y-3">
-            <div className="flex items-center justify-center space-x-3">
-              <div className="bg-primary/10 p-2 rounded-full">
-                <MessageCircle className="h-6 w-6 text-primary" />
-              </div>
-              <div className="text-left">
-                <h3 className="text-base font-semibold">Ask AI Assistant</h3>
-                <p className="text-sm text-muted-foreground">
-                  Get treatment advice & farming tips
-                </p>
-              </div>
-            </div>
-
-            <Button
-              onClick={() => setShowChat(true)}
-              className="w-full h-10"
-              size="default"
-            >
-              <MessageCircle className="mr-2 h-4 w-4" />
-              Chat with AI
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Low Confidence Warning */}
-        {detectionResult.confidenceLevel === "low" && (
-          <Alert>
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              <strong>Low confidence detection.</strong> Consider taking another
-              photo with better lighting or ask the AI assistant for advice on
-              improving image quality.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Processing Info */}
-        <div className="text-center">
-          <Badge variant="outline" className="text-xs">
-            Ghana AI Focused
-          </Badge>
-        </div>
       </div>
 
       {/* Image Modal */}
@@ -360,69 +272,13 @@ export function ScanResultsChat({
                     {disease.scientificName}
                   </p>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-muted/50 rounded-lg p-3">
-                      <div className="text-lg font-bold text-primary">
-                        {detectionResult.confidence}%
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Confidence
-                      </div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-lg font-bold text-primary">
+                      {detectionResult.confidence}%
                     </div>
-                    <div className="bg-muted/50 rounded-lg p-3">
-                      <div className="text-lg font-bold text-orange-600">
-                        {detectionResult.affectedArea}%
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Affected Area
-                      </div>
+                    <div className="text-xs text-muted-foreground">
+                      Confidence
                     </div>
-                  </div>
-
-                  <div className="bg-muted/50 rounded-lg p-4 mb-4">
-                    <h4 className="font-medium text-sm mb-2">
-                      🔬 Disease Overview
-                    </h4>
-                    <p className="text-sm leading-relaxed">
-                      {disease.name === "Cashew healthy" &&
-                        "The cashew plant appears to be healthy and free from common diseases."}
-                      {disease.name === "Cassava healthy" &&
-                        "The cassava plant shows no signs of disease and appears to be in good condition."}
-                      {disease.name === "Maize healthy" &&
-                        "The maize plant is healthy with no visible disease symptoms."}
-                      {disease.name === "Tomato healthy" &&
-                        "The tomato plant appears to be healthy and free from common diseases."}
-                      {disease.name.includes("anthracnose") &&
-                        "Anthracnose is a fungal disease that causes dark, sunken lesions on leaves and fruits. It thrives in warm, humid conditions."}
-                      {disease.name.includes("mosaic") &&
-                        "Mosaic virus causes yellow and green mottled patterns on leaves, often stunting plant growth."}
-                      {disease.name.includes("blight") &&
-                        "Blight is a serious fungal disease that causes rapid browning and death of plant tissues."}
-                      {disease.name.includes("armyworm") &&
-                        "Fall armyworm is a destructive pest that feeds on leaves, creating large holes and can severely damage crops."}
-                      {disease.name.includes("wilt") &&
-                        "Wilt disease affects the plant's vascular system, causing leaves to droop and eventually die."}
-                      {disease.name.includes("rust") &&
-                        "Rust disease appears as orange or brown pustules on leaves and can spread rapidly in humid conditions."}
-                      {!disease.name.includes("healthy") &&
-                        !disease.name.includes("anthracnose") &&
-                        !disease.name.includes("mosaic") &&
-                        !disease.name.includes("blight") &&
-                        !disease.name.includes("armyworm") &&
-                        !disease.name.includes("wilt") &&
-                        !disease.name.includes("rust") &&
-                        `This is a ${disease.name
-                          .toLowerCase()
-                          .replace(
-                            /_/g,
-                            " "
-                          )} affecting your crop. Early detection and proper treatment are key to preventing spread.`}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-center space-x-4 text-xs text-muted-foreground">
-                    <span>📍 Affects: {disease.affectedCrops.join(", ")}</span>
-                    <span>📊 Prevalence: {disease.prevalence}%</span>
                   </div>
                 </div>
               </div>
