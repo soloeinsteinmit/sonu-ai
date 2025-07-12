@@ -23,6 +23,7 @@ import {
   Leaf,
   X,
   Eye,
+  Volume2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -53,8 +54,23 @@ export function ScanResultsChat({
 }: ScanResultsChatProps) {
   const [showChat, setShowChat] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const { detectionResult, disease } = result;
+
+  const playAudio = () => {
+    if (audio) {
+      audio.pause();
+      setAudio(null);
+    } else {
+      const newAudio = new Audio(
+        `/audio/${disease.name.replace(/ /g, "_")}.wav`
+      );
+      setAudio(newAudio);
+      newAudio.play();
+      newAudio.onended = () => setAudio(null);
+    }
+  };
 
   /**
    * Get confidence level styling and icon
@@ -172,9 +188,18 @@ export function ScanResultsChat({
             {/* Disease Information */}
             <div className="text-center space-y-3">
               <div>
-                <h3 className="text-xl font-bold text-primary mb-1">
-                  {disease.name}
-                </h3>
+                <div className="flex items-center justify-center space-x-2">
+                  <h3 className="text-xl font-bold text-primary mb-1">
+                    {disease.name}
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={playAudio}>
+                    {audio ? (
+                      <Volume2 className="h-6 w-6 text-primary" />
+                    ) : (
+                      <Volume2 className="h-6 w-6" />
+                    )}
+                  </Button>
+                </div>
                 <p className="text-sm text-muted-foreground italic">
                   {disease.scientificName}
                 </p>

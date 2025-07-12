@@ -23,6 +23,7 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  Volume2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -55,6 +56,7 @@ export function ScanResults({
     null
   );
   const [showAllTreatments, setShowAllTreatments] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const { detectionResult, disease, recommendations } = result;
 
@@ -148,6 +150,17 @@ export function ScanResults({
     );
   };
 
+  const playAudio = () => {
+    if (audio) {
+      audio.pause();
+      setAudio(null);
+    } else {
+      const newAudio = new Audio(`/audio/${disease.name.replace(/ /g, "_")}.wav`);
+      setAudio(newAudio);
+      newAudio.play();
+    }
+  };
+
   const confidenceDisplay = getConfidenceDisplay();
   const severityDisplay = getSeverityDisplay();
 
@@ -175,9 +188,18 @@ export function ScanResults({
                 <h2 className="text-xl font-bold text-foreground mb-2">
                   Disease Detected
                 </h2>
-                <h3 className="text-lg font-semibold text-primary">
-                  {disease.name}
-                </h3>
+                <div className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-primary">
+                    {disease.name}
+                  </h3>
+                  <Button variant="ghost" size="icon" onClick={playAudio}>
+                    {audio ? (
+                      <Volume2 className="h-5 w-5 text-primary" />
+                    ) : (
+                      <Volume2 className="h-5 w-5" />
+                    )}
+                  </Button>
+                </div>
                 <p className="text-sm text-muted-foreground italic">
                   {disease.scientificName}
                 </p>

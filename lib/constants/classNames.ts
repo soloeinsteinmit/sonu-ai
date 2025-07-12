@@ -20,7 +20,7 @@ export const MODEL_CLASS_NAMES = [
   "Cassava_healthy",
   "Cassava_mosaic",
   "Maize_fall_armyworm",
-  "Maize_grasshoper",
+  "Maize_grasshopper",
   "Maize_healthy",
   "Maize_leaf_beetle",
   "Maize_leaf_blight",
