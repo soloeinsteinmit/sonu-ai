@@ -76,8 +76,46 @@ export default function ScanPage() {
    * Handle outbreak reporting (placeholder for future implementation)
    */
   const handleReportOutbreak = () => {
-    // TODO: Implement outbreak reporting
-    console.log("Report outbreak functionality coming soon");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          if (scanResult) {
+            savePrediction(latitude, longitude, scanResult.disease.name);
+          }
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+          // Handle error - maybe show a message to the user
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      // Handle case where geolocation is not supported
+    }
+  };
+
+  const savePrediction = async (latitude: number, longitude: number, disease: string) => {
+    try {
+      const response = await fetch('/api/report-outbreak', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ latitude, longitude, disease }),
+      });
+
+      if (response.ok) {
+        console.log('Prediction saved successfully');
+        // Optionally, show a success message to the user
+      } else {
+        console.error('Failed to save prediction');
+        // Optionally, show an error message to the user
+      }
+    } catch (error) {
+      console.error('Error saving prediction:', error);
+      // Optionally, show an error message to the user
+    }
   };
 
   /**
