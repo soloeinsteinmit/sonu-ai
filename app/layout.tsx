@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Merriweather, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],

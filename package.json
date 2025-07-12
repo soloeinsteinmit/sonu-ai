@@ -19,6 +19,7 @@
     "copy-webpack-plugin": "^13.0.0",
     "framer-motion": "^12.23.3",
     "jimp": "^1.6.0",
+    "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "lucide-react": "^0.525.0",
     "ndarray": "^1.0.19",
