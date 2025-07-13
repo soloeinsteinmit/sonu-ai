@@ -32,6 +32,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ScanResult } from "@/lib/types/disease";
 import { AIChat } from "./ai-chat";
+import { YouTubeVideos } from "./youtube-videos";
 
 interface ScanResultsChatProps {
   result: ScanResult;
@@ -224,9 +225,17 @@ export function ScanResultsChat({
             </div>
           </CardContent>
         </Card>
+
+        {/* YouTube Educational Videos */}
+        <YouTubeVideos diseaseId={result.disease.id} />
+
         {/* Action Buttons */}
-        <div className="flex justify-center gap-4 ">
-          <Button onClick={onNewScan} variant="outline" className="h-12">
+        <div className="flex flex-row justify-between gap-2 w-full max-w-md">
+          <Button
+            onClick={onNewScan}
+            variant="outline"
+            className="h-12 w-full max-w-[220px]"
+          >
             <Camera className="mr-2 h-4 w-4" />
             Scan Another Plant
           </Button>
@@ -235,7 +244,7 @@ export function ScanResultsChat({
             <Button
               variant="outline"
               onClick={onReportOutbreak}
-              className="h-12"
+              className="h-12 w-full max-w-[220px]"
             >
               <MapPin className="mr-2 h-4 w-4" />
               Report to Map

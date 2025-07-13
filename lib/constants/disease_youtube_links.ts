@@ -3,32 +3,36 @@ export const cashew = {
     "https://www.youtube.com/watch?v=If-YQLJYmdg",
     "https://youtu.be/F5uq70ITY-Q?si=-m8REDRwXWuI5T_B",
     "https://www.youtube.com/watch?v=zTZ_oya3HP4",
+    "https://www.youtube.com/watch?v=D4geWo_4Xls",
   ],
   gumosis: [
     "https://www.youtube.com/watch?v=If-YQLJYmdg",
+    "https://www.youtube.com/watch?v=D4geWo_4Xls",
     "https://youtu.be/MfACkBjQyV0?si=NjZa2vGl1brklsPH",
     "https://www.youtube.com/watch?v=D4geWo_4Xls",
   ],
   healthy: [
+    "https://www.youtube.com/watch?v=D4geWo_4Xls",
     "http://www.youtube.com/watch?v=zbhuVcbTHsU",
     "http://www.youtube.com/watch?v=D4geWo_4Xls",
     "http://www.youtube.com/watch?v=e6mdroPV0yg",
     "https://www.youtube.com/watch?v=If-YQLJYmdg",
   ],
   leaf_miner: [
-    "https://youtu.be/XnRl37DLrHs?si=El09XR9Rd1cH2aOf",
-    "https://www.youtube.com/watch?v=If-YQLJYmdg",
     "https://www.youtube.com/watch?v=D4geWo_4Xls",
+    "https://youtu.be/XnRl37DLrHs?si=El09XR9Rd1cH2aOf",
     "https://www.youtube.com/watch?v=C8JjPLoY-ps",
     "https://www.youtube.com/watch?v=bTHHdalc7hQ&pp=0gcJCfwAo7VqN5tD",
     "https://www.youtube.com/watch?v=eMFGZTJ6sKM&pp=ygUMI2xlYWZ5dHJhaWxz",
+    "https://www.youtube.com/watch?v=If-YQLJYmdg",
   ],
 
   red_rust: [
-    "https://www.youtube.com/watch?v=If-YQLJYmdg",
+    "https://www.youtube.com/watch?v=D4geWo_4Xls",
     "https://www.youtube.com/watch?v=czB4Za0mby8&pp=0gcJCfwAo7VqN5tD",
     "https://www.youtube.com/shorts/9MBlhV7i0Sk",
     "https://www.youtube.com/watch?v=Z0qpWlYJwPs&pp=ugMICgJrbxABGAE%3D",
+    "https://www.youtube.com/watch?v=If-YQLJYmdg",
   ],
 };
 
@@ -75,11 +79,10 @@ export const maize = {
     "https://www.tiktok.com/@mudhumeni_mukuru/video/7419432635908345094",
   ],
   grasshopper: [
-    "https://www.youtube.com/watch?v=QcUHu8vmvhw",
     "https://www.youtube.com/watch?v=__VQHJ4gqig",
     "https://www.youtube.com/watch?v=gLIhLvcuRjM",
     "https://www.youtube.com/watch?v=lXgXQwebSzs",
-    "https://www.youtube.com/watch?v=__VQHJ4gqig",
+    "https://www.youtube.com/watch?v=QcUHu8vmvhw",
   ],
   healthy: [
     "https://www.youtube.com/watch?v=LgEyPG0msMM",

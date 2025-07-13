@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ScanResult, Treatment } from "@/lib/types/disease";
+import { YouTubeVideos } from "./youtube-videos";
 
 interface ScanResultsProps {
   result: ScanResult;
@@ -155,7 +156,9 @@ export function ScanResults({
       audio.pause();
       setAudio(null);
     } else {
-      const newAudio = new Audio(`/audio/${disease.name.replace(/ /g, "_")}.wav`);
+      const newAudio = new Audio(
+        `/audio/${disease.name.replace(/ /g, "_")}.wav`
+      );
       setAudio(newAudio);
       newAudio.play();
     }
@@ -345,8 +348,11 @@ export function ScanResults({
         </CardContent>
       </Card>
 
+      {/* YouTube Educational Videos */}
+      <YouTubeVideos diseaseId={result.disease.id} />
+
       {/* Action Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex gap-4 w-full max-w-md">
         <Button onClick={onNewScan} className="h-12">
           <Leaf className="mr-2 h-4 w-4" />
           Scan Another Plant

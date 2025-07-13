@@ -12,7 +12,12 @@
 export type CropType = "cashew" | "cassava" | "maize" | "tomato";
 
 // Disease severity levels
-export type SeverityLevel = "none" | "mild" | "severe" | "critical";
+export type SeverityLevel =
+  | "none"
+  | "mild"
+  | "severe"
+  | "critical"
+  | "moderate";
 
 // Treatment types available
 export type TreatmentType = "organic" | "chemical" | "cultural" | "biological";
