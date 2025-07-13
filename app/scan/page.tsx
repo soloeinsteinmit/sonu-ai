@@ -108,17 +108,18 @@ export default function ScanPage() {
   const handleReportOutbreak = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const { latitude, longitude } = position.coords;
+
           if (scanResult) {
-            savePrediction(latitude, longitude, scanResult.disease.name);
+            // Single result
+            await savePrediction(latitude, longitude, scanResult.disease.name);
           } else if (multipleScanResult) {
-            // Report the most common disease from multiple results
-            savePrediction(
-              latitude,
-              longitude,
-              multipleScanResult.summary.mostCommonDisease
+            // Report EACH disease detected in the batch
+            const promises = multipleScanResult.results.map((r) =>
+              savePrediction(latitude, longitude, r.disease.name)
             );
+            await Promise.all(promises);
           }
         },
         (error) => {
