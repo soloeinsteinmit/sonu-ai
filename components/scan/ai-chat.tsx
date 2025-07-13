@@ -15,17 +15,18 @@
  */
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Send,
   Mic,
   MicOff,
-  Volume2,
-  VolumeX,
-  Languages,
   Bot,
   User,
   Loader2,
   MessageCircle,
+  History,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,9 +38,16 @@ interface Message {
   id: string;
   type: "user" | "ai";
   content: string;
-  contentTwi?: string;
   timestamp: Date;
-  isTranslated?: boolean;
+}
+
+interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+  scanResult: ScanResult;
+  timestamp: Date;
+  diseaseName: string;
 }
 
 interface AIChatProps {
@@ -55,27 +63,61 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<"en" | "tw">("en");
-  const [isTranslationMode, setIsTranslationMode] = useState(false);
+  const [userLocation, setUserLocation] = useState<string>("");
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   /**
+   * Fetch user location on component mount
+   */
+  useEffect(() => {
+    fetchUserLocation();
+    loadChatHistory();
+  }, []);
+
+  /**
+   * Load chat history from localStorage
+   */
+  const loadChatHistory = () => {
+    try {
+      const savedHistory = localStorage.getItem('agrisentry-chat-history');
+      if (savedHistory) {
+        setChatHistory(JSON.parse(savedHistory));
+      }
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    }
+  };
+
+  /**
+   * Save chat history to localStorage
+   */
+  const saveChatHistory = (history: ChatSession[]) => {
+    try {
+      localStorage.setItem('agrisentry-chat-history', JSON.stringify(history));
+    } catch (error) {
+      console.error('Error saving chat history:', error);
+    }
+  };
+
+  /**
    * Initialize chat with welcome message
    */
   useEffect(() => {
+    const locationText = userLocation ? ` in ${userLocation}` : "";
     const welcomeMessage: Message = {
       id: `msg-${Date.now()}`,
       type: "ai",
-      content: `Hello! I'm your AgriSentry AI assistant. I can see you've detected ${scanResult.disease.name} in your crop. Feel free to ask me any questions about this disease, treatment options, or general farming advice. How can I help you today?`,
-      contentTwi: `Akwaaba! Me ne AgriSentry AI ɔboafoɔ. Mehunu sɛ woahunu ${scanResult.disease.name} wɔ w'afuo mu. Wobɛtumi abisa me nsɛm biara fa saa yadeɛ yi, aduroɔ anaa akuafoɔ afotuo ho. Ɛdeɛn na metumi ayɛ ama wo ɛnnɛ?`,
+      content: `Hello! I'm your AgriSentry AI assistant. I can see you've detected ${scanResult.disease.name} in your crop. ${locationText}. Feel free to ask me any questions about this disease, treatment options, or general farming advice. How can I help you today?`,
       timestamp: new Date(),
     };
 
     setMessages([welcomeMessage]);
-  }, [scanResult]);
+  }, [scanResult, userLocation]);
 
   /**
    * Auto scroll to bottom when new messages arrive
@@ -89,108 +131,239 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
   };
 
   /**
-   * Generate AI response based on user input and scan results
+   * Fetch user location
    */
-  const generateAIResponse = (userMessage: string): Message => {
-    const diseaseInfo = scanResult.disease;
-    const detectionResult = scanResult.detectionResult;
-
-    // Simple pattern matching for demo (in production, this would use a proper AI API)
-    const lowerMessage = userMessage.toLowerCase();
-
-    let response = "";
-    let responseTwi = "";
-
-    if (
-      lowerMessage.includes("treatment") ||
-      lowerMessage.includes("cure") ||
-      lowerMessage.includes("medicine")
-    ) {
-      const primaryTreatment = scanResult.recommendations.primary;
-      response = `For ${diseaseInfo.name}, I recommend ${primaryTreatment.name}. This ${primaryTreatment.type} treatment costs between GHS ${primaryTreatment.cost.min}-${primaryTreatment.cost.max} and has ${primaryTreatment.effectiveness}% effectiveness. Apply ${primaryTreatment.frequency} for ${primaryTreatment.duration}. Would you like detailed application instructions?`;
-      responseTwi = `${diseaseInfo.name} ho no, mekamfo ${primaryTreatment.name}. Saa ${primaryTreatment.type} aduro yi bo yɛ GHS ${primaryTreatment.cost.min}-${primaryTreatment.cost.max} na ɛyɛ adwuma ${primaryTreatment.effectiveness}%. Fa di dwuma ${primaryTreatment.frequency} ma ${primaryTreatment.duration}. Wopɛ sɛ mekyerɛ wo sɛdeɛ wobɛfa adi dwuma anaa?`;
-    } else if (
-      lowerMessage.includes("cost") ||
-      lowerMessage.includes("price") ||
-      lowerMessage.includes("money")
-    ) {
-      const primaryTreatment = scanResult.recommendations.primary;
-      response = `The recommended treatment (${primaryTreatment.name}) costs between GHS ${primaryTreatment.cost.min}-${primaryTreatment.cost.max}. This is quite affordable and very effective at ${primaryTreatment.effectiveness}%. There are also alternative treatments available if you need different price ranges.`;
-      responseTwi = `Aduro a mekamfo no (${primaryTreatment.name}) bo yɛ GHS ${primaryTreatment.cost.min}-${primaryTreatment.cost.max}. Ɛnyɛ den sɛ wobɛtɔ na ɛyɛ adwuma yie ${primaryTreatment.effectiveness}%. Aduro foforɔ nso wɔ hɔ sɛ wohwehwɛ bo foforɔ a.`;
-    } else if (
-      lowerMessage.includes("prevent") ||
-      lowerMessage.includes("avoid")
-    ) {
-      response = `To prevent ${diseaseInfo.name} in the future: 1) Use certified disease-free planting material, 2) Maintain proper field sanitation, 3) Practice crop rotation, 4) Monitor crops regularly. Early detection is key! The disease currently affects ${diseaseInfo.prevalence}% of crops in Ghana.`;
-      responseTwi = `Sɛdeɛ wobɛsi ${diseaseInfo.name} kwan no: 1) Fa nnua a yadeɛ nni mu a wɔasiɛ, 2) Ma w'afuo mu nyɛ fi, 3) Sesa nnɔbaeɛ ahoroɔ, 4) Hwɛ wo nnɔbaeɛ berɛ biara. Ntɛm a wobɛhunu no yɛ adwo! Seesei yadeɛ yi ka nnɔbaeɛ ${diseaseInfo.prevalence}% wɔ Ghana.`;
-    } else if (
-      lowerMessage.includes("severe") ||
-      lowerMessage.includes("serious") ||
-      lowerMessage.includes("bad")
-    ) {
-      response = `Your plant shows ${detectionResult.severity} level infection with ${detectionResult.affectedArea}% of the area affected. With ${detectionResult.confidence}% confidence, this is ${diseaseInfo.name}. Don't worry - this is treatable! Start treatment immediately for best results.`;
-      responseTwi = `Wo nnua no anya yadeɛ a emu yɛ ${detectionResult.severity} na ɛka nneɛma ${detectionResult.affectedArea}%. ${detectionResult.confidence}% mu no, ɛyɛ ${diseaseInfo.name}. Mma w'ani nnwane - wobɛtumi asa! Fi aseɛ ntɛm ara na ɛbɛyɛ yie.`;
-    } else if (
-      lowerMessage.includes("how long") ||
-      lowerMessage.includes("time")
-    ) {
-      const primaryTreatment = scanResult.recommendations.primary;
-      response = `Treatment typically takes ${primaryTreatment.duration} with ${primaryTreatment.frequency} applications. You should see improvement within 1-2 weeks if applied correctly. Full recovery depends on the severity - your case shows ${detectionResult.severity} level infection.`;
-      responseTwi = `Aduro no gye ${primaryTreatment.duration} na wode di dwuma ${primaryTreatment.frequency}. Sɛ wode di dwuma yie a, wobɛhunu nsakraeɛ wɔ dapɛn 1-2 mu. Sɛ ɛbɛyɛ yie koraa no gyina sɛdeɛ yadeɛ no mu teɛ so - wo deɛ no mu yɛ ${detectionResult.severity}.`;
-    } else if (
-      lowerMessage.includes("safe") ||
-      lowerMessage.includes("danger") ||
-      lowerMessage.includes("harm")
-    ) {
-      const primaryTreatment = scanResult.recommendations.primary;
-      const safetyLevel = primaryTreatment.safety.level;
-      response = `The recommended treatment has ${safetyLevel} safety risk. ${
-        primaryTreatment.safety.warnings.length > 0
-          ? "Important warnings: " +
-            primaryTreatment.safety.warnings.join(", ") +
-            "."
-          : "It's generally safe to use."
-      } Always follow the application instructions carefully.`;
-      responseTwi = `Aduro no mu asiane yɛ ${safetyLevel}. ${
-        primaryTreatment.safety.warnings.length > 0
-          ? "Kɔkɔbɔ a ɛho hia: " +
-            primaryTreatment.safety.warnings.join(", ") +
-            "."
-          : "Ɛnyɛ asiane biara."
-      } Kae sɛ wobɛdi akwankyerɛ no so pɛpɛɛpɛ.`;
-    } else {
-      // General response
-      response = `I understand you're asking about ${
-        diseaseInfo.name
-      }. This disease affects ${diseaseInfo.affectedCrops.join(
-        ", "
-      )} crops and shows symptoms like: ${diseaseInfo.symptoms
-        .slice(0, 2)
-        .join(
-          ", "
-        )}. Is there a specific aspect you'd like to know more about - treatment, prevention, or cost?`;
-      responseTwi = `Mete aseɛ sɛ worebisa ${
-        diseaseInfo.name
-      } ho asɛm. Saa yadeɛ yi ka ${diseaseInfo.affectedCrops.join(
-        ", "
-      )} nnɔbaeɛ na ɛda nsɛnkyerɛnneɛ te sɛ: ${diseaseInfo.symptoms
-        .slice(0, 2)
-        .join(
-          ", "
-        )} adi. Asɛm bɛn pɔtee na wopɛ sɛ mehwɛ - aduro, siakwan, anaa bo?`;
+  const fetchUserLocation = async () => {
+    if (!navigator.geolocation) {
+      console.warn('Geolocation not supported');
+      return;
     }
 
-    return {
-      id: `msg-${Date.now()}`,
-      type: "ai",
-      content: response,
-      contentTwi: responseTwi,
-      timestamp: new Date(),
-    };
+    setLocationLoading(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const response = await fetch(`/api/location?lat=${latitude}&lon=${longitude}`);
+          const data = await response.json();
+          
+          if (data.location) {
+            setUserLocation(data.location);
+          }
+        } catch (error) {
+          console.error('Error fetching location:', error);
+        } finally {
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        setLocationLoading(false);
+      }
+    );
   };
 
   /**
-   * Handle sending message
+   * Generate AI response using Perplexity API with streaming
+   */
+  const generateAIResponse = async (userMessage: string): Promise<Message | null> => {
+    const diseaseInfo = scanResult.disease;
+    const detectionResult = scanResult.detectionResult;
+    const primaryTreatment = scanResult.recommendations.primary;
+    
+    if (!process.env.NEXT_PUBLIC_OPENROUTER_API_KEY) {
+      console.error('OpenRouter API key not configured');
+      const errorMessage: Message = {
+        id: `msg-${Date.now()}`,
+        type: "ai",
+        content: "AI service is not properly configured. Please contact support or check your configuration.",
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      return null;
+    }
+
+    // Create system prompt with location context
+    const locationContext = userLocation ? `The farmer is located in ${userLocation}. ` : "";
+    const systemPrompt = `You are AgriSentry AI, an expert agricultural assistant helping farmers. ${locationContext}. You have diagnosed ${diseaseInfo.name} in their crop. Be helpful, concise, and provide practical advice. Always respond in English only. 
+
+When asked about where to buy the treatment, search the web for nearest location. Never give a general answer. Mention shops or place near by and their info if possible.`;
+
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'perplexity/sonar-pro',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMessage }
+          ],
+          stream: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Response body is not readable');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullContent = '';
+
+      // Create streaming message
+      const streamingMessage: Message = {
+        id: `msg-${Date.now()}`,
+        type: "ai",
+        content: '',
+        timestamp: new Date(),
+      };
+
+      // Add empty message to start streaming
+      setMessages(prev => [...prev, streamingMessage]);
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices?.[0]?.delta?.content || '';
+                
+                if (content) {
+                  fullContent += content;
+                  
+                  // Update the streaming message in real-time
+                  setMessages(prev => 
+                    prev.map(msg => 
+                      msg.id === streamingMessage.id 
+                        ? { ...msg, content: fullContent }
+                        : msg
+                    )
+                  );
+                  
+                  // Scroll to bottom as content streams
+                  scrollToBottom();
+                }
+              } catch (e) {
+                // Skip invalid JSON
+                console.warn('Invalid JSON in stream:', e);
+              }
+            }
+          }
+        }
+
+        // Final message with full content
+        const finalMessage: Message = {
+          ...streamingMessage,
+          content: fullContent,
+          timestamp: new Date(),
+        };
+
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === streamingMessage.id ? finalMessage : msg
+          )
+        );
+
+        return finalMessage;
+
+      } finally {
+        reader.releaseLock();
+      }
+
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      
+      let errorMessage = "I'm experiencing technical difficulties. Please try again.";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('401')) {
+          errorMessage = "Authentication failed. Please check your API configuration.";
+        } else if (error.message.includes('429')) {
+          errorMessage = "Service is temporarily busy. Please try again in a moment.";
+        } else if (error.message.includes('network')) {
+          errorMessage = "Network connection issue. Please check your internet connection.";
+        }
+      }
+
+      // Fallback response if API fails
+      const fallbackMessage: Message = {
+        id: `msg-${Date.now()}`,
+        type: "ai",
+        content: errorMessage,
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, fallbackMessage]);
+      return fallbackMessage;
+    }
+  };
+
+  /**
+   * Save current chat to history
+   */
+  const saveCurrentChat = () => {
+    if (messages.length <= 1) return; // Only save if there are actual conversations
+
+    const title = messages.find(m => m.type === 'user')?.content
+      ?.substring(0, 50) + '...' || 
+      `Chat about ${scanResult.disease.name}`;
+
+    const newSession: ChatSession = {
+      id: `chat-${Date.now()}`,
+      title,
+      messages: [...messages],
+      scanResult,
+      timestamp: new Date(),
+      diseaseName: scanResult.disease.name,
+    };
+
+    const updatedHistory = [newSession, ...chatHistory].slice(0, 20); // Keep last 20 chats
+    setChatHistory(updatedHistory);
+    saveChatHistory(updatedHistory);
+  };
+
+  /**
+   * Load a chat session from history
+   */
+  const loadChatSession = (session: ChatSession) => {
+    setMessages(session.messages);
+    setShowHistory(false);
+  };
+
+  /**
+   * Clear chat history
+   */
+  const clearChatHistory = () => {
+    setChatHistory([]);
+    saveChatHistory([]);
+    setShowHistory(false);
+  };
+
+  /**
+   * Handle sending message with streaming AI response
    */
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -206,12 +379,13 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     setInputMessage("");
     setIsLoading(true);
 
-    // Simulate API delay
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(inputMessage);
-      setMessages((prev) => [...prev, aiResponse]);
+    try {
+      await generateAIResponse(inputMessage);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   /**
@@ -229,36 +403,15 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     }
   };
 
-  /**
-   * Handle text-to-speech
-   */
-  const handleSpeak = (text: string, language: "en" | "tw" = "en") => {
-    if ("speechSynthesis" in window) {
-      setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language === "tw" ? "ak-GH" : "en-GB"; // Akan (Twi) or English
-      utterance.rate = 0.8;
-      utterance.onend = () => setIsSpeaking(false);
-      speechSynthesis.speak(utterance);
-    }
-  };
-
-  /**
-   * Toggle translation mode
-   */
-  const toggleTranslation = () => {
-    setIsTranslationMode(!isTranslationMode);
-    setCurrentLanguage(currentLanguage === "en" ? "tw" : "en");
-  };
 
   /**
    * Quick question buttons for common queries
    */
   const quickQuestions = [
-    { en: "How do I treat this?", tw: "Mɛyɛ dɛn asa?" },
-    { en: "How much will it cost?", tw: "Ɛbɛboa sɛn?" },
-    { en: "Is it serious?", tw: "Ɛmu yɛ den anaa?" },
-    { en: "How to prevent it?", tw: "Mɛyɛ dɛn asi kwan?" },
+    "How do I treat this?",
+    "How much will it cost?",
+    "Is it serious?",
+    "How to prevent it?",
   ];
 
   return (
@@ -271,19 +424,32 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
             <span className="text-lg">AI Assistant</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTranslation}
-              className={isTranslationMode ? "bg-primary/10" : ""}
-            >
-              <Languages className="h-4 w-4" />
-            </Button>
+            {locationLoading && (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}
+            {userLocation && (
+              <Badge variant="outline" className="text-xs">
+                📍 {userLocation.split(',')[0]}
+              </Badge>
+            )}
             {onClose && (
               <Button variant="ghost" size="sm" onClick={onClose}>
                 ×
               </Button>
             )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHistory(!showHistory)}
+              className="relative"
+            >
+              <History className="h-4 w-4" />
+              {chatHistory.length > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-[10px] flex items-center justify-center">
+                  {chatHistory.length}
+                </Badge>
+              )}
+            </Button>
           </div>
         </CardTitle>
 
@@ -291,11 +457,61 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
           <Badge variant="secondary" className="text-xs">
             Disease: {scanResult.disease.name}
           </Badge>
-          <Badge variant="outline" className="text-xs">
-            {currentLanguage === "en" ? "English" : "Twi"}
-          </Badge>
         </div>
       </CardHeader>
+
+      {/* History Sidebar */}
+      {showHistory && (
+        <div className="absolute top-0 left-0 w-full h-full bg-background border-r z-10 flex flex-col">
+          <div className="p-4 border-b flex items-center justify-between">
+            <h3 className="font-semibold">Chat History</h3>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearChatHistory}
+                className="h-8 w-8 p-0"
+                title="Clear history"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHistory(false)}
+                className="h-8 w-8 p-0"
+              >
+                ×
+              </Button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2">
+            {chatHistory.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center p-4">
+                No chat history yet
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {chatHistory.map((session) => (
+                  <Button
+                    key={session.id}
+                    variant="ghost"
+                    className="w-full justify-start text-left h-auto p-3 hover:bg-muted"
+                    onClick={() => loadChatSession(session)}
+                  >
+                    <div className="text-sm">
+                      <div className="font-medium truncate">{session.title}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {session.diseaseName} • {new Date(session.timestamp).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Messages Area */}
       <CardContent className="flex-1 overflow-hidden p-0">
@@ -324,56 +540,22 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
                   {message.type === "user" && (
                     <User className="h-4 w-4 mt-1 flex-shrink-0" />
                   )}
-                  <div className="flex-1">
-                    <p className="text-sm">
-                      {isTranslationMode &&
-                      message.contentTwi &&
-                      currentLanguage === "tw"
-                        ? message.contentTwi
-                        : message.content}
-                    </p>
-
-                    {message.type === "ai" && (
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            handleSpeak(
-                              isTranslationMode &&
-                                message.contentTwi &&
-                                currentLanguage === "tw"
-                                ? message.contentTwi
-                                : message.content,
-                              currentLanguage
-                            )
-                          }
-                          disabled={isSpeaking}
-                          className="h-6 px-2"
-                        >
-                          {isSpeaking ? (
-                            <VolumeX className="h-3 w-3" />
-                          ) : (
-                            <Volume2 className="h-3 w-3" />
-                          )}
-                        </Button>
-
-                        {message.contentTwi && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              setCurrentLanguage(
-                                currentLanguage === "en" ? "tw" : "en"
-                              )
-                            }
-                            className="h-6 px-2 text-xs"
-                          >
-                            {currentLanguage === "en" ? "Twi" : "Eng"}
-                          </Button>
-                        )}
-                      </div>
-                    )}
+                  <div className="flex-1 text-sm">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+                      h1: ({children}) => <h1 className="text-lg font-semibold mt-2 mb-1">{children}</h1>,
+                      h2: ({children}) => <h2 className="text-base font-semibold mt-2 mb-1">{children}</h2>,
+                      h3: ({children}) => <h3 className="text-sm font-semibold mt-2 mb-1">{children}</h3>,
+                      p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                      ul: ({children}) => <ul className="list-disc list-inside my-2 space-y-1 pl-4">{children}</ul>,
+                      ol: ({children}) => <ol className="list-decimal list-inside my-2 space-y-1 pl-4">{children}</ol>,
+                      li: ({children}) => <li className="mb-1">{children}</li>,
+                      code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs">{children}</code>,
+                      pre: ({children}) => <pre className="bg-muted p-2 rounded text-xs overflow-auto">{children}</pre>,
+                      blockquote: ({children}) => <blockquote className="border-l-2 border-muted-foreground pl-3 italic">{children}</blockquote>,
+                      strong: ({children}) => <strong className="font-semibold">{children}</strong>,
+                      em: ({children}) => <em className="italic">{children}</em>,
+                      a: ({children, href}) => <a href={href} className="text-primary underline hover:no-underline">{children}</a>,
+                    }}>{message.content}</ReactMarkdown>
                   </div>
                 </div>
               </div>
@@ -398,18 +580,28 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
 
       {/* Quick Questions */}
       <div className="p-4 border-t">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-sm font-medium">Quick Questions</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={saveCurrentChat}
+            className="text-xs h-6 px-2"
+            disabled={messages.length <= 1}
+          >
+            Save Chat
+          </Button>
+        </div>
         <div className="grid grid-cols-2 gap-2 mb-4">
           {quickQuestions.map((q, index) => (
             <Button
               key={index}
               variant="outline"
               size="sm"
-              onClick={() =>
-                setInputMessage(currentLanguage === "tw" ? q.tw : q.en)
-              }
+              onClick={() => setInputMessage(q)}
               className="text-xs h-8 px-2"
             >
-              {currentLanguage === "tw" ? q.tw : q.en}
+              {q}
             </Button>
           ))}
         </div>
@@ -420,11 +612,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder={
-                currentLanguage === "tw"
-                  ? "Kyerɛw wo nsɛm..."
-                  : "Ask me anything..."
-              }
+              placeholder="Ask me anything..."
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               className="pr-10"
             />
