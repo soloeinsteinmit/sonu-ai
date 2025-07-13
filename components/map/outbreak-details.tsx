@@ -14,7 +14,7 @@
  * @version 1.0.0
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   X, 
   MapPin, 
@@ -106,9 +106,27 @@ const getStatusInfo = (status: string) => {
  */
 export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
   const [isSharing, setIsSharing] = useState(false);
+  const [location, setLocation] = useState("Unknown");
   
   const severityInfo = getSeverityInfo(outbreak.severity);
   const statusInfo = getStatusInfo(outbreak.status);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const response = await fetch(`/api/location?lat=${outbreak.location.lat}&lon=${outbreak.location.lng}`);
+        const data = await response.json();
+        setLocation(data.location || "Unknown");
+      } catch (error) {
+        console.error('Error fetching location:', error);
+        setLocation("Unknown");
+      }
+    };
+
+    if (outbreak.location.lat && outbreak.location.lng) {
+      fetchLocation();
+    }
+  }, [outbreak.location.lat, outbreak.location.lng]);
 
   /**
    * Handle sharing outbreak information
@@ -118,7 +136,7 @@ export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
     
     const shareData = {
       title: `Disease Outbreak: ${outbreak.disease}`,
-      text: `${outbreak.disease} outbreak in ${outbreak.location.name}, ${outbreak.location.region}. Severity: ${outbreak.severity}. Affected area: ${outbreak.affectedArea} hectares.`,
+      text: `${outbreak.disease} outbreak in ${location}. Severity: ${outbreak.severity}. Affected area: ${outbreak.affectedArea} hectares.`,
       url: window.location.href
     };
 
@@ -178,10 +196,11 @@ export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
           <div className="flex items-center space-x-2">
             <MapPin className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className="font-medium">{outbreak.location.name}</p>
+              <p className="font-medium">{location}</p>
               <p className="text-sm text-muted-foreground">{outbreak.location.region} Region</p>
             </div>
           </div>
+
           
           <div className="flex items-center space-x-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />

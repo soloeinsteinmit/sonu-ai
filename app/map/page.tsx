@@ -49,7 +49,7 @@ export interface OutbreakData {
   location: {
     lat: number;
     lng: number;
-    name: string;
+    name?: string;
     region: string;
   };
   disease: string;

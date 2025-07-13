@@ -144,20 +144,32 @@ export function OutbreakMap({ outbreaks, selectedOutbreak, onOutbreakSelect }: O
         icon: customIcon,
       }).addTo(map);
 
-      const popupContent = `
-        <div style="min-width: 200px;">
-          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">${outbreak.disease}</h3>
-          <div><strong>Location:</strong> ${outbreak.location.name}, ${outbreak.location.region}</div>
-          <div><strong>Crop:</strong> ${outbreak.crop}</div>
-          <div><strong>Severity:</strong> <span style="text-transform: capitalize;">${outbreak.severity}</span></div>
-          
-          <div><strong>Status:</strong> <span style="text-transform: capitalize;">${outbreak.status}</span></div>
-          <div><strong>Reported:</strong> ${new Date(outbreak.reportedDate).toLocaleDateString()}</div>
-        </div>
-      `;
-
-      marker.bindPopup(popupContent, { maxWidth: 300, className: 'custom-popup' });
-      marker.on('click', () => onOutbreakSelect(outbreak));
+      
+      marker.on('click', async () => {
+        onOutbreakSelect(outbreak);
+        if (!outbreak.location.name) {
+          try {
+            const response = await fetch(`/api/location?lat=${outbreak.location.lat}&lon=${outbreak.location.lng}`);
+            const data = await response.json();
+            outbreak.location.name = data.location || "Unknown";
+          } catch (error) {
+            console.error('Error fetching location:', error);
+            outbreak.location.name = "Unknown";
+          }
+        }
+        const popupContent = `
+          <div style="min-width: 200px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">${outbreak.disease}</h3>
+            <div><strong>Location:</strong> ${outbreak.location.name}, ${outbreak.location.region}</div>
+            <div><strong>Crop:</strong> ${outbreak.crop}</div>
+            <div><strong>Severity:</strong> <span style="text-transform: capitalize;">${outbreak.severity}</span></div>
+            
+            <div><strong>Status:</strong> <span style="text-transform: capitalize;">${outbreak.status}</span></div>
+            <div><strong>Reported:</strong> ${new Date(outbreak.reportedDate).toLocaleDateString()}</div>
+          </div>
+        `;
+        marker.bindPopup(popupContent, { maxWidth: 300, className: 'custom-popup' }).openPopup();
+      });
       markersRef.current.push(marker);
     });
 
