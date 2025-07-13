@@ -101,6 +101,23 @@ export interface ScanResult {
 }
 
 /**
+ * Multiple scan results for batch processing
+ */
+export interface MultipleScanResult {
+  id: string;
+  results: ScanResult[];
+  totalImages: number;
+  processedImages: number;
+  summary: {
+    diseases: string[];
+    averageConfidence: number;
+    mostCommonDisease: string;
+    highestConfidence: ScanResult;
+  };
+  createdAt: Date;
+}
+
+/**
  * Scan process status for UI state management
  */
 export interface ScanStatus {

@@ -230,17 +230,21 @@ export function ScanResultsChat({
         <YouTubeVideos diseaseId={result.disease.id} />
 
         {/* Action Buttons */}
-        <div className="flex flex-row justify-between gap-2 w-full max-w-md">
-          <Button onClick={onNewScan} variant="outline" className="h-12">
+        <div className="flex gap-4 justify-between w-full max-w-md ">
+          <Button
+            onClick={onNewScan}
+            variant="outline"
+            className="h-12 w-[48%]"
+          >
             <Camera className="mr-2 h-4 w-4" />
-            Scan Another Plant
+            New Scan
           </Button>
 
           {onReportOutbreak && (
             <Button
               variant="outline"
               onClick={onReportOutbreak}
-              className="h-12"
+              className="h-12 w-[48%]"
             >
               <MapPin className="mr-2 h-4 w-4" />
               Report to Map

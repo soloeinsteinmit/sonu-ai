@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface CameraCaptureProps {
   onImageCapture: (file: File) => void;
+  onImagesCapture: (files: File[]) => void;
   onError: (error: string) => void;
   disabled?: boolean;
 }
@@ -35,11 +36,15 @@ interface CameraCaptureProps {
  */
 export function CameraCapture({
   onImageCapture,
+  onImagesCapture,
   onError,
   disabled = false,
 }: CameraCaptureProps) {
   const [isCamera, setIsCamera] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [capturedImages, setCapturedImages] = useState<
+    { url: string; file: File }[]
+  >([]);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -173,24 +178,43 @@ export function CameraCapture({
    */
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
+      const files = Array.from(event.target.files || []);
+
+      if (files.length === 0) return;
+
+      // Validate files
+      const validFiles: File[] = [];
+      for (const file of files) {
         // Validate file type
         if (!file.type.startsWith("image/")) {
-          onError("Please select a valid image file");
-          return;
+          onError(`${file.name} is not a valid image file`);
+          continue;
         }
 
         // Validate file size (max 10MB)
         if (file.size > 10 * 1024 * 1024) {
-          onError("Image file is too large. Please select a file under 10MB");
-          return;
+          onError(`${file.name} is too large. Please select files under 10MB`);
+          continue;
         }
 
-        onImageCapture(file);
+        validFiles.push(file);
+      }
+
+      if (validFiles.length === 0) return;
+
+      if (validFiles.length > 1) {
+        // Multiple files mode
+        const imageData = validFiles.map((file) => ({
+          url: URL.createObjectURL(file),
+          file: file,
+        }));
+        setCapturedImages(imageData);
+      } else {
+        // Single file mode
+        onImageCapture(validFiles[0]);
       }
     },
-    [onImageCapture, onError]
+    [onImageCapture, onImagesCapture, onError]
   );
 
   /**
@@ -198,6 +222,39 @@ export function CameraCapture({
    */
   const retakePhoto = useCallback(() => {
     setCapturedImage(null);
+  }, []);
+
+  /**
+   * Remove image from multiple images array
+   */
+  const removeImage = useCallback((index: number) => {
+    setCapturedImages((prev) => {
+      const newImages = prev.filter((_, i) => i !== index);
+      // Clean up URL
+      URL.revokeObjectURL(prev[index].url);
+      return newImages;
+    });
+  }, []);
+
+  /**
+   * Confirm multiple images and convert to files
+   */
+  const confirmMultipleImages = useCallback(() => {
+    if (capturedImages.length === 0) return;
+
+    const files = capturedImages.map((img) => img.file);
+    onImagesCapture(files);
+
+    // Clean up URLs
+    capturedImages.forEach((img) => URL.revokeObjectURL(img.url));
+    setCapturedImages([]);
+  }, [capturedImages, onImagesCapture]);
+
+  /**
+   * Add another image in multiple mode
+   */
+  const addAnotherImage = useCallback(() => {
+    fileInputRef.current?.click();
   }, []);
 
   return (
@@ -238,12 +295,13 @@ export function CameraCapture({
                   size="lg"
                 >
                   <Upload className="mr-2 h-5 w-5" />
-                  Upload from Gallery
+                  Upload Images
                 </Button>
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleFileUpload}
                   className="hidden"
                 />
@@ -340,6 +398,75 @@ export function CameraCapture({
               <div className="text-center">
                 <Badge variant="secondary" className="text-xs">
                   Image ready for AI analysis
+                </Badge>
+              </div>
+            </div>
+          )}
+
+          {capturedImages.length > 0 && (
+            /* Multiple Images Preview and Management */
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  {capturedImages.length} Images Selected
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Review your images and add more if needed
+                </p>
+              </div>
+
+              {/* Images Grid */}
+              <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                {capturedImages.map((image, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={image.url}
+                      alt={`Captured crop ${index + 1}`}
+                      className="w-full h-24 object-cover rounded-lg border"
+                    />
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 p-0"
+                      onClick={() => removeImage(index)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                    <div className="absolute bottom-1 left-1">
+                      <Badge variant="secondary" className="text-xs">
+                        {index + 1}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex space-x-3">
+                <Button
+                  variant="outline"
+                  onClick={addAnotherImage}
+                  className="flex-1"
+                  disabled={disabled || capturedImages.length >= 10}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Add More
+                </Button>
+
+                <Button
+                  onClick={confirmMultipleImages}
+                  className="flex-1"
+                  disabled={disabled || capturedImages.length === 0}
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Analyze All ({capturedImages.length})
+                </Button>
+              </div>
+
+              <div className="text-center">
+                <Badge variant="secondary" className="text-xs">
+                  {capturedImages.length} image
+                  {capturedImages.length !== 1 ? "s" : ""} ready for AI analysis
                 </Badge>
               </div>
             </div>

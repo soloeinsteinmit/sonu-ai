@@ -20,8 +20,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CameraCapture } from "@/components/scan/camera-capture";
 import { AIProcessor } from "@/components/scan/ai-processor";
+import { MultiImageProcessor } from "@/components/scan/multi-image-processor";
 import { ScanResultsChat } from "@/components/scan/scan-results-chat";
-import { ScanResult } from "@/lib/types/disease";
+import { MultipleScanResults } from "@/components/scan/multiple-scan-results";
+import { ScanResult, MultipleScanResult } from "@/lib/types/disease";
 
 /**
  * Scan workflow stages
@@ -34,23 +36,48 @@ type ScanStage = "capture" | "processing" | "results";
 export default function ScanPage() {
   const [currentStage, setCurrentStage] = useState<ScanStage>("capture");
   const [capturedImage, setCapturedImage] = useState<File | null>(null);
+  const [capturedImages, setCapturedImages] = useState<File[]>([]);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [multipleScanResult, setMultipleScanResult] =
+    useState<MultipleScanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isMultipleMode, setIsMultipleMode] = useState(false);
 
   /**
-   * Handle image capture from camera component
+   * Handle image(s) capture from camera component - auto-detect single vs multiple
    */
   const handleImageCapture = (file: File) => {
     setCapturedImage(file);
+    setCapturedImages([]);
+    setIsMultipleMode(false);
     setCurrentStage("processing");
     setError(null);
   };
 
   /**
-   * Handle AI processing completion
+   * Handle multiple images capture from camera component
+   */
+  const handleImagesCapture = (files: File[]) => {
+    setCapturedImages(files);
+    setCapturedImage(null);
+    setIsMultipleMode(files.length > 1);
+    setCurrentStage("processing");
+    setError(null);
+  };
+
+  /**
+   * Handle single AI processing completion
    */
   const handleProcessingComplete = (result: ScanResult) => {
     setScanResult(result);
+    setCurrentStage("results");
+  };
+
+  /**
+   * Handle multiple AI processing completion
+   */
+  const handleMultipleProcessingComplete = (result: MultipleScanResult) => {
+    setMultipleScanResult(result);
     setCurrentStage("results");
   };
 
@@ -68,7 +95,10 @@ export default function ScanPage() {
   const startNewScan = () => {
     setCurrentStage("capture");
     setCapturedImage(null);
+    setCapturedImages([]);
     setScanResult(null);
+    setMultipleScanResult(null);
+    setIsMultipleMode(false);
     setError(null);
   };
 
@@ -82,6 +112,13 @@ export default function ScanPage() {
           const { latitude, longitude } = position.coords;
           if (scanResult) {
             savePrediction(latitude, longitude, scanResult.disease.name);
+          } else if (multipleScanResult) {
+            // Report the most common disease from multiple results
+            savePrediction(
+              latitude,
+              longitude,
+              multipleScanResult.summary.mostCommonDisease
+            );
           }
         },
         (error) => {
@@ -95,25 +132,29 @@ export default function ScanPage() {
     }
   };
 
-  const savePrediction = async (latitude: number, longitude: number, disease: string) => {
+  const savePrediction = async (
+    latitude: number,
+    longitude: number,
+    disease: string
+  ) => {
     try {
-      const response = await fetch('/api/report-outbreak', {
-        method: 'POST',
+      const response = await fetch("/api/report-outbreak", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ latitude, longitude, disease }),
       });
 
       if (response.ok) {
-        console.log('Prediction saved successfully');
+        console.log("Prediction saved successfully");
         // Optionally, show a success message to the user
       } else {
-        console.error('Failed to save prediction');
+        console.error("Failed to save prediction");
         // Optionally, show an error message to the user
       }
     } catch (error) {
-      console.error('Error saving prediction:', error);
+      console.error("Error saving prediction:", error);
       // Optionally, show an error message to the user
     }
   };
@@ -231,7 +272,7 @@ export default function ScanPage() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 max-[1024px]:max-w-md">
         {/* Error Display */}
         {error && (
           <Card className="mb-6 border-red-200 bg-red-50">
@@ -247,26 +288,41 @@ export default function ScanPage() {
         {/* Stage Content */}
         <div className="flex justify-center">
           {currentStage === "capture" && (
-            <div className="w-full max-w-md">
+            <div className="w-full max-w-md space-y-4">
               <CameraCapture
                 onImageCapture={handleImageCapture}
+                onImagesCapture={handleImagesCapture}
                 onError={handleError}
                 disabled={false}
               />
             </div>
           )}
 
-          {currentStage === "processing" && capturedImage && (
-            <div className="w-full max-w-md">
-              <AIProcessor
-                imageFile={capturedImage}
-                onComplete={handleProcessingComplete}
-                onError={handleError}
-              />
-            </div>
-          )}
+          {currentStage === "processing" &&
+            capturedImage &&
+            !isMultipleMode && (
+              <div className="w-full max-w-md">
+                <AIProcessor
+                  imageFile={capturedImage}
+                  onComplete={handleProcessingComplete}
+                  onError={handleError}
+                />
+              </div>
+            )}
 
-          {currentStage === "results" && scanResult && (
+          {currentStage === "processing" &&
+            capturedImages.length > 0 &&
+            isMultipleMode && (
+              <div className="w-full max-w-2xl">
+                <MultiImageProcessor
+                  imageFiles={capturedImages}
+                  onComplete={handleMultipleProcessingComplete}
+                  onError={handleError}
+                />
+              </div>
+            )}
+
+          {currentStage === "results" && scanResult && !isMultipleMode && (
             <div className="w-full">
               <ScanResultsChat
                 result={scanResult}
@@ -275,6 +331,18 @@ export default function ScanPage() {
               />
             </div>
           )}
+
+          {currentStage === "results" &&
+            multipleScanResult &&
+            isMultipleMode && (
+              <div className="w-full">
+                <MultipleScanResults
+                  result={multipleScanResult}
+                  onNewScan={startNewScan}
+                  onReportOutbreak={handleReportOutbreak}
+                />
+              </div>
+            )}
         </div>
 
         {/* Help Section */}
