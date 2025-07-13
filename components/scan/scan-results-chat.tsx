@@ -231,11 +231,7 @@ export function ScanResultsChat({
 
         {/* Action Buttons */}
         <div className="flex flex-row justify-between gap-2 w-full max-w-md">
-          <Button
-            onClick={onNewScan}
-            variant="outline"
-            className="h-12 w-full max-w-[220px]"
-          >
+          <Button onClick={onNewScan} variant="outline" className="h-12">
             <Camera className="mr-2 h-4 w-4" />
             Scan Another Plant
           </Button>
@@ -244,7 +240,7 @@ export function ScanResultsChat({
             <Button
               variant="outline"
               onClick={onReportOutbreak}
-              className="h-12 w-full max-w-[220px]"
+              className="h-12"
             >
               <MapPin className="mr-2 h-4 w-4" />
               Report to Map
