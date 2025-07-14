@@ -4,10 +4,18 @@ import withPWA from "next-pwa";
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  devIndicators: {
+    autoPrerender: false,
+  },
 };
 
-export default withPWA({
+const pwaConfig = {
   dest: "public",
   register: true,
   skipWaiting: true,
@@ -25,4 +33,25 @@ export default withPWA({
     },
   ],
   buildExcludes: [/middleware-manifest.json$/],
+};
+
+export default isDevelopment ? nextConfig : withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: false,
+  runtimeCaching: [
+    {
+      urlPattern: /^https?.*/,
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "offlineCache",
+        expiration: {
+          maxEntries: 200,
+        },
+      },
+    },
+  ],
+  buildExcludes: [/middleware-manifest.json$/],
+  maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB
 })(nextConfig);

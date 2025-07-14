@@ -38,7 +38,6 @@ const OutbreakMap = dynamic(
   }
 );
 import { MapFilters } from "@/components/map/map-filters";
-import { OutbreakStats } from "@/components/map/outbreak-stats";
 import { OutbreakDetails } from "@/components/map/outbreak-details";
 
 /**

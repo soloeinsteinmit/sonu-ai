@@ -140,6 +140,108 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen bg-background font-sans">
         {children}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            // PWA Install Prompt
+            let deferredPrompt = null;
+            
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                  function(registration) {
+                    console.log('Service Worker registration successful with scope: ', registration.scope);
+                  },
+                  function(error) {
+                    console.log('Service Worker registration failed: ', error);
+                  }
+                );
+              });
+            }
+            
+            // Handle install prompt
+            window.addEventListener('beforeinstallprompt', function(e) {
+              e.preventDefault();
+              deferredPrompt = e;
+              
+              // Show install button after 2 seconds
+              setTimeout(() => {
+                const installButton = document.createElement('div');
+                installButton.innerHTML = \`
+                  <div id="pwa-install-prompt" style="
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: white;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    padding: 16px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    z-index: 1000;
+                    max-width: 300px;
+                    font-family: system-ui, sans-serif;
+                  ">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                      <strong style="color: #16a34a;">Install AgriSentry AI</strong>
+                      <button onclick="dismissInstallPrompt()" style="
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        font-size: 18px;
+                      ">×</button>
+                    </div>
+                    <p style="margin: 0 0 12px 0; font-size: 14px; color: #666;">
+                      Install our app for quick access and offline functionality
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                      <button onclick="installPWA()" style="
+                        background: #16a34a;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        flex: 1;
+                      ">Install</button>
+                      <button onclick="dismissInstallPrompt()" style="
+                        background: white;
+                        color: #666;
+                        border: 1px solid #ccc;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        flex: 1;
+                      ">Later</button>
+                    </div>
+                  </div>
+                \`;
+                
+                document.body.appendChild(installButton);
+              }, 2000);
+            });
+            
+            function installPWA() {
+              if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                  if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                  } else {
+                    console.log('User dismissed the install prompt');
+                  }
+                  deferredPrompt = null;
+                  dismissInstallPrompt();
+                });
+              }
+            }
+            
+            function dismissInstallPrompt() {
+              const prompt = document.getElementById('pwa-install-prompt');
+              if (prompt) {
+                prompt.remove();
+              }
+            }
+          `
+        }} />
       </body>
     </html>
   );

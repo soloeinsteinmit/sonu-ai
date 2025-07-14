@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate PWA Icons</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .icon-display { margin: 20px 0; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PWA Icon Generator</h1>
+        <p>Right-click and save each generated icon to your public/icons/ folder</p>
+        
+        <div class="icon-display">
+            <h3>Standard Icons</h3>
+            <canvas id="canvas192" width="192" height="192"></canvas>
+            <canvas id="canvas512" width="512" height="512"></canvas>
+        </div>
+        
+        <div class="icon-display">
+            <h3>Maskable Icons (with safe zone indicator)</h3>
+            <canvas id="canvasMask192" width="192" height="192"></canvas>
+            <canvas id="canvasMask512" width="512" height="512"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Create icons from the existing 192x192 icon
+        const originalIcon = new Image();
+        originalIcon.crossOrigin = 'anonymous';
+        
+        originalIcon.onload = function() {
+            createStandardIcons();
+            createMaskableIcons();
+        };
+        
+        function createStandardIcons() {
+            // 192x192 standard icon
+            const canvas192 = document.getElementById('canvas192');
+            const ctx192 = canvas192.getContext('2d');
+            ctx192.fillStyle = '#16a34a';
+            ctx192.fillRect(0, 0, 192, 192);
+            ctx192.drawImage(originalIcon, 20, 20, 152, 152);
+            
+            // 512x512 standard icon
+            const canvas512 = document.getElementById('canvas512');
+            const ctx512 = canvas512.getContext('2d');
+            ctx512.fillStyle = '#16a34a';
+            ctx512.fillRect(0, 0, 512, 512);
+            ctx512.drawImage(originalIcon, 56, 56, 400, 400);
+        }
+        
+        function createMaskableIcons() {
+            // 192x192 maskable icon
+            const canvasMask192 = document.getElementById('canvasMask192');
+            const ctxMask192 = canvasMask192.getContext('2d');
+            ctxMask192.fillStyle = '#16a34a';
+            ctxMask192.fillRect(0, 0, 192, 192);
+            ctxMask192.drawImage(originalIcon, 19, 19, 154, 154);
+            ctxMask192.strokeStyle = '#ffffff';
+            ctxMask192.lineWidth = 2;
+            ctxMask192.strokeRect(19, 19, 154, 154);
+            
+            // 512x512 maskable icon
+            const canvasMask512 = document.getElementById('canvasMask512');
+            const ctxMask512 = canvasMask512.getContext('2d');
+            ctxMask512.fillStyle = '#16a34a';
+            ctxMask512.fillRect(0, 0, 512, 512);
+            ctxMask512.drawImage(originalIcon, 51, 51, 410, 410);
+            ctxMask512.strokeStyle = '#ffffff';
+            ctxMask512.lineWidth = 5;
+            ctxMask512.strokeRect(51, 51, 410, 410);
+        }
+        
+        // Load the original icon
+        originalIcon.src = '/icons/icon-192x192.png';
+        
+        // Add download links
+        function addDownloadLink(canvas, filename) {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = filename;
+            link.textContent = `Download ${filename}`;
+            link.style.display = 'block';
+            link.style.margin = '10px';
+            canvas.parentNode.appendChild(link);
+        }
+        
+        // Wait for icons to be drawn, then add download links
+        setTimeout(() => {
+            addDownloadLink(document.getElementById('canvas192'), 'icon-192x192.png');
+            addDownloadLink(document.getElementById('canvas512'), 'icon-512x512.png');
+            addDownloadLink(document.getElementById('canvasMask192'), 'maskable-192x192.png');
+            addDownloadLink(document.getElementById('canvasMask512'), 'maskable-512x512.png');
+        }, 100);
+    </script>
+</body>
+</html>
