@@ -196,9 +196,9 @@ export default function MapPage() {
               </Link>
               <div>
                 <h1 className="text-lg font-semibold">Disease Outbreak Map</h1>
-                <p className="text-sm text-muted-foreground hidden sm:block">
+                {/* <p className="text-sm text-muted-foreground hidden sm:block">
                   Track disease outbreaks across Ghana
-                </p>
+                </p> */}
               </div>
             </div>
 

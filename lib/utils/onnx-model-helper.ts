@@ -43,7 +43,6 @@ export async function createInferenceSession(): Promise<ort.InferenceSession> {
         graphOptimizationLevel: "all",
       }
     );
-    console.log("✅ ONNX Inference session created successfully.");
     return session;
   } catch (e) {
     console.error(`❌ Failed to create ONNX inference session: ${e}`);

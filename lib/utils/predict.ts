@@ -30,19 +30,14 @@ export async function predict(imageFile: File): Promise<Prediction> {
   try {
     // Load the inference session if it hasn't been loaded yet.
     if (!session) {
-      console.log("Session not found, creating a new one...");
       session = await createInferenceSession();
     } else {
       console.log("Using existing session.");
     }
 
-    console.log("Preprocessing image...");
     const preprocessedImage = await preprocessImage(imageFile);
-    console.log("Image preprocessed successfully.");
 
-    console.log("Running inference...");
     const prediction = await runInference(session, preprocessedImage);
-    console.log("Inference completed.", prediction);
 
     return prediction;
   } catch (error) {
