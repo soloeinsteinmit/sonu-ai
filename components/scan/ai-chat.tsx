@@ -40,7 +40,8 @@ interface Message {
   type: "user" | "ai";
   content: string;
   timestamp: Date;
-}
+} 
+
 
 interface ChatSession {
   id: string;
