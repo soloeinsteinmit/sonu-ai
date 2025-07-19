@@ -268,6 +268,11 @@ export function OutbreakDetails({
       }
 
       onClose();
+
+      // Refresh the browser to show updated data
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Small delay to let the success toast show
     } catch (error) {
       const errorMessage =
         error instanceof Error
