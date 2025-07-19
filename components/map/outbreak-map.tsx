@@ -17,7 +17,10 @@
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import { OutbreakData } from "@/app/map/page";
-import { getDiseaseMarkerInfo } from "@/lib/utils/map-helpers";
+import {
+  getDiseaseMarkerInfo,
+  buildCircularMarkerHtml,
+} from "@/lib/utils/map-helpers";
 import { MapLegend } from "@/components/map/map-legend";
 
 /**
@@ -97,28 +100,15 @@ export function OutbreakMap({
 
     outbreaks.forEach((outbreak) => {
       const diseaseInfo = getDiseaseMarkerInfo(outbreak.disease);
-      const size = 20; // Fixed size for consistency
+      const size = 20;
 
       const customIcon = L.divIcon({
         className: "custom-marker",
-        html: `
-          <div style="
-            width: ${size}px;
-            height: ${size}px;
-            background-color: ${diseaseInfo.color};
-            border: 2px solid white;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-          ">
-            ${diseaseInfo.icon}
-          </div>
-        `,
+        html: buildCircularMarkerHtml(
+          diseaseInfo.color,
+          diseaseInfo.icon,
+          size
+        ),
         iconSize: [size, size],
         iconAnchor: [size / 2, size / 2],
       });
@@ -223,38 +213,11 @@ export function OutbreakMap({
 
           // Create custom current location marker with traditional pin shape
           const currentLocationIcon = L.divIcon({
-            className: "current-location-marker",
+            className: "current-location-pin-wrapper",
             html: `
-              <div style="
-                width: 30px;
-                height: 40px;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              ">
-                <div style="
-                  width: 30px;
-                  height: 30px;
-                  background-color: #3b82f6;
-                  border: 3px solid white;
-                  border-radius: 50% 50% 50% 0;
-                  transform: rotate(-45deg);
-                  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-                  position: absolute;
-                  top: 0;
-                "></div>
-                <div style="
-                  color: white;
-                  font-size: 16px;
-                  z-index: 10;
-                  position: relative;
-                  transform: rotate(0deg);
-                  margin-top: -5px;
-                  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                ">
-                  📍
-                </div>
+              <div class="current-location-pin">
+                <div class="pin-body"></div>
+                <div class="pin-icon">📍</div>
               </div>
             `,
             iconSize: [30, 40],

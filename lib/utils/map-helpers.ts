@@ -180,3 +180,34 @@ export const getDiseaseMarkerInfo = (disease: string): DiseaseMarkerInfo => {
   // Default
   return { color: "#6b7280", icon: "❓", category: "Unknown" };
 };
+
+/**
+ * Build HTML string for a circular Leaflet DivIcon marker using the provided colour and emoji/icon.
+ * @param color Background colour of the marker circle.
+ * @param icon Emoji or HTML string to render inside the circle.
+ * @param size Diameter in pixels (defaults to 20).
+ */
+export function buildCircularMarkerHtml(
+  color: string,
+  icon: string,
+  size = 20
+): string {
+  return `
+    <div style="
+      width: ${size}px;
+      height: ${size}px;
+      background-color: ${color};
+      border: 2px solid white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: ${Math.round(size * 0.6)}px;
+      font-weight: bold;
+    ">
+      ${icon}
+    </div>
+  `;
+}
