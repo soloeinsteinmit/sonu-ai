@@ -1,0 +1,26 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="leafGrad192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a"/>
+      <stop offset="100%" style="stop-color:#15803d"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="96" cy="96" r="92" fill="#16a34a"/>
+  
+  <!-- Shield -->
+  <path d="M96 18 L54 36 L54 84 C54 120 75 149 96 174 C117 149 138 120 138 84 L138 36 L96 18 Z" 
+        fill="white" opacity="0.9"/>
+  
+  <!-- Leaf -->
+  <path d="M96 48 C78 48 66 66 66 84 C66 102 78 120 96 120 C114 120 126 102 126 84 C126 66 114 48 96 48 Z
+           M96 48 C96 48 90 60 90 78 C90 96 93 102 96 102 C99 102 102 96 102 78 C102 60 96 48 96 48 Z"
+        fill="url(#leafGrad192)"/>
+  
+  <!-- Simple circuit -->
+  <circle cx="72" cy="84" r="3" fill="#15803d"/>
+  <circle cx="120" cy="84" r="3" fill="#15803d"/>
+  <line x1="75" y1="84" x2="93" y2="81" stroke="#15803d" stroke-width="1"/>
+  <line x1="117" y1="84" x2="99" y2="81" stroke="#15803d" stroke-width="1"/>
+</svg>
