@@ -84,11 +84,7 @@ graph TB
     SW --> IDB
     UI --> LOCAL
     
-    classDef frontend fill:#e1f5fe
-    classDef ai fill:#f3e5f5
-    classDef data fill:#e8f5e8
-    classDef geo fill:#fff3e0
-    classDef storage fill:#fce4ec
+
     
     class PWA,UI,SW frontend
     class ONNX,MODEL,PROC ai
@@ -501,8 +497,8 @@ const ScanPage = () => {
 **Category**: Agriculture & Food Security  
 **Technology**: AI/ML, Computer Vision, PWA, Geospatial Analysis  
 
-**Live Demo**: [https://agrisentry-ai.vercel.app](https://agrisentry-ai.vercel.app)  
-**GitHub**: [https://github.com/your-username/agrisentry-ai-frontend](https://github.com/your-username/agrisentry-ai-frontend)
+**Live Demo**: [https://agrisentry.vercel.app](https://agrisentry.vercel.app)  
+**GitHub**: [https://github.com/soloeinsteinmit/agrisentry-ai-frontend](https://github.com/soloeinsteinmit/agrisentry-ai-frontend)
 
 ### Judging Criteria Alignment
 
