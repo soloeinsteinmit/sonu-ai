@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,11 +8,14 @@ export async function POST(req: NextRequest) {
     const { latitude, longitude, disease } = body;
 
     if (!latitude || !longitude || !disease) {
-      return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const csvLine = `${new Date().toISOString()},${latitude},${longitude},${disease}\n`;
-    const filePath = path.join(process.cwd(), 'server', 'predictions.csv');
+    const filePath = path.join(process.cwd(), "server", "predictions.csv");
 
     // Ensure the directory exists
     const dirPath = path.dirname(filePath);
@@ -22,13 +25,18 @@ export async function POST(req: NextRequest) {
 
     // Write to the file
     if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, 'timestamp,latitude,longitude,disease\n');
+      fs.writeFileSync(filePath, "timestamp,latitude,longitude,disease\n");
     }
     fs.appendFileSync(filePath, csvLine);
 
-    return NextResponse.json({ message: 'Prediction saved successfully' }, { status: 200 });
+    return NextResponse.json(
+      { message: "Prediction saved successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('Error writing to CSV file:', error);
-    return NextResponse.json({ message: 'Error saving prediction' }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error saving prediction" },
+      { status: 500 }
+    );
   }
 }

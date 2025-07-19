@@ -45,7 +45,6 @@ export async function createInferenceSession(): Promise<ort.InferenceSession> {
     );
     return session;
   } catch (e) {
-    console.error(`❌ Failed to create ONNX inference session: ${e}`);
     throw e;
   }
 }

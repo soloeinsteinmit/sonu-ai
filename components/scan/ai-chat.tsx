@@ -33,6 +33,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScanResult } from "@/lib/types/disease";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -89,7 +90,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
         setChatHistory(JSON.parse(savedHistory));
       }
     } catch (error) {
-      console.error('Error loading chat history:', error);
+      toast.error("Error loading chat history");
     }
   };
 
@@ -100,7 +101,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     try {
       localStorage.setItem('agrisentry-chat-history', JSON.stringify(history));
     } catch (error) {
-      console.error('Error saving chat history:', error);
+      toast.error("Error saving chat history");
     }
   };
 
@@ -152,13 +153,13 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
             setUserLocation(data.location);
           }
         } catch (error) {
-          console.error('Error fetching location:', error);
+          toast.error("Error fetching location");
         } finally {
           setLocationLoading(false);
         }
       },
       (error) => {
-        console.error('Error getting location:', error);
+        toast.error("Error getting location");
         setLocationLoading(false);
       }
     );
@@ -173,7 +174,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     const primaryTreatment = scanResult.recommendations.primary;
     
     if (!process.env.NEXT_PUBLIC_OPENROUTER_API_KEY) {
-      console.error('OpenRouter API key not configured');
+      toast.error("OpenRouter API key not configured");
       const errorMessage: Message = {
         id: `msg-${Date.now()}`,
         type: "ai",
@@ -294,7 +295,7 @@ When asked about where to buy the treatment, search the web for nearest location
       }
 
     } catch (error) {
-      console.error('Error generating AI response:', error);
+      toast.error("Error generating AI response");
       
       let errorMessage = "I'm experiencing technical difficulties. Please try again.";
       
@@ -382,7 +383,7 @@ When asked about where to buy the treatment, search the web for nearest location
     try {
       await generateAIResponse(inputMessage);
     } catch (error) {
-      console.error('Error sending message:', error);
+      toast.error("Error sending message");
     } finally {
       setIsLoading(false);
     }

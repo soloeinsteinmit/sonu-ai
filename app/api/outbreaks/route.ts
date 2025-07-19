@@ -39,7 +39,6 @@ export async function GET() {
 
     return NextResponse.json(outbreaks, { status: 200 });
   } catch (error) {
-    console.error("Error reading CSV file:", error);
     return NextResponse.json(
       { message: "Error reading outbreak data" },
       { status: 500 }

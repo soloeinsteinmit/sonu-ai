@@ -22,6 +22,7 @@ import {
   buildCircularMarkerHtml,
 } from "@/lib/utils/map-helpers";
 import { MapLegend } from "@/components/map/map-legend";
+import { toast } from "sonner";
 
 /**
  * Props for OutbreakMap component
@@ -74,7 +75,7 @@ export function OutbreakMap({
 
         setIsMapReady(true);
       } catch (err) {
-        console.error("Failed to initialize map:", err);
+        toast.error("Failed to load map");
         setError("Failed to load map");
       }
     }
@@ -127,7 +128,7 @@ export function OutbreakMap({
             const data = await response.json();
             outbreak.location.name = data.location || "Unknown";
           } catch (error) {
-            console.error("Error fetching location:", error);
+            toast.error("Failed to fetch location");
             outbreak.location.name = "Unknown";
           }
         }

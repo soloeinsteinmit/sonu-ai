@@ -26,6 +26,7 @@ import {
   PREVENTION_TIPS,
 } from "@/lib/constants/diseases";
 import { predict } from "@/lib/utils/predict"; // Using the real prediction pipeline
+import { toast } from "sonner";
 
 interface AIProcessorProps {
   imageFile: File;
@@ -117,7 +118,7 @@ export function AIProcessor({
           error instanceof Error
             ? error.message
             : "An unknown error occurred during processing.";
-        console.error("Inference Error in AIProcessor:", error);
+        toast.error("Inference Error in AIProcessor");
         setStatus((prev) => ({
           ...prev,
           stage: "error",

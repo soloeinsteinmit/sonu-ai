@@ -19,6 +19,7 @@ import { X, MapPin, Calendar, AlertTriangle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OutbreakData } from "@/app/map/page";
+import { toast } from "sonner";
 
 /**
  * Props for OutbreakDetails component
@@ -108,7 +109,7 @@ export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
         const data = await response.json();
         setLocation(data.location || "Unknown");
       } catch (error) {
-        console.error("Error fetching location:", error);
+        toast.error("Failed to fetch location");
         setLocation("Unknown");
       }
     };
@@ -141,7 +142,7 @@ export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
         alert("Outbreak information copied to clipboard!");
       }
     } catch (error) {
-      console.error("Error sharing:", error);
+      toast.error("Error sharing");
     } finally {
       setIsSharing(false);
     }

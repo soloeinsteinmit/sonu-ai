@@ -31,8 +31,6 @@ export async function predict(imageFile: File): Promise<Prediction> {
     // Load the inference session if it hasn't been loaded yet.
     if (!session) {
       session = await createInferenceSession();
-    } else {
-      console.log("Using existing session.");
     }
 
     const preprocessedImage = await preprocessImage(imageFile);
@@ -41,10 +39,6 @@ export async function predict(imageFile: File): Promise<Prediction> {
 
     return prediction;
   } catch (error) {
-    console.error(
-      "❌ An error occurred during the prediction pipeline:",
-      error
-    );
     // If an error occurs, nullify the session to force a reload on the next attempt.
     session = null;
     throw error;

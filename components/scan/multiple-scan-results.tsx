@@ -80,7 +80,7 @@ export function MultipleScanResults({
 
   return (
     <>
-      <div className="w-full max-w-4xl mx-auto space-y-6">
+      <div className="w-full max-w-md mx-auto space-y-6">
         {/* Summary Card */}
         <Card>
           <CardHeader className="text-center pb-4">

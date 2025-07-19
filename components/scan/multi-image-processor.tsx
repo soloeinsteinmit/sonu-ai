@@ -118,7 +118,6 @@ export function MultiImageProcessor({
           // Small delay for UX
           await new Promise((resolve) => setTimeout(resolve, 500));
         } catch (error) {
-          console.error(`Error processing image ${i + 1}:`, error);
           // Continue with other images but log the error
           const errorResult = createErrorResult(file, error);
           scanResults.push(errorResult);
@@ -278,7 +277,7 @@ export function MultiImageProcessor({
 
   return (
     <>
-      <Card className="w-full max-w-2xl mx-auto overflow-hidden">
+      <Card className="w-full max-w-md mx-auto overflow-hidden">
         <CardHeader className="text-center pb-4">
           <CardTitle className="flex items-center justify-center space-x-2">
             <Images className="h-6 w-6 text-primary" />

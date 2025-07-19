@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Merriweather, Source_Code_Pro } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 
@@ -140,8 +141,10 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen bg-background font-sans">
         {children}
-        <script dangerouslySetInnerHTML={{
-          __html: `
+        <Toaster richColors />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
             // PWA Install Prompt
             let deferredPrompt = null;
             
@@ -149,10 +152,10 @@ export default function RootLayout({
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(
                   function(registration) {
-                    console.log('Service Worker registration successful with scope: ', registration.scope);
+                    // Service Worker registration successful
                   },
                   function(error) {
-                    console.log('Service Worker registration failed: ', error);
+                    // Service Worker registration failed
                   }
                 );
               });
@@ -224,9 +227,9 @@ export default function RootLayout({
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                   if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
+                    // User accepted the install prompt
                   } else {
-                    console.log('User dismissed the install prompt');
+                    // User dismissed the install prompt
                   }
                   deferredPrompt = null;
                   dismissInstallPrompt();
@@ -240,8 +243,9 @@ export default function RootLayout({
                 prompt.remove();
               }
             }
-          `
-        }} />
+          `,
+          }}
+        />
       </body>
     </html>
   );

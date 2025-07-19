@@ -39,6 +39,7 @@ const OutbreakMap = dynamic(
 );
 import { MapFilters } from "@/components/map/map-filters";
 import { OutbreakDetails } from "@/components/map/outbreak-details";
+import { toast } from "sonner";
 
 /**
  * Disease outbreak data structure
@@ -112,8 +113,7 @@ export default function MapPage() {
         setOutbreaks(data);
         setFilteredOutbreaks(data);
       } catch (error) {
-        console.error(error);
-        // Handle error state in UI
+        toast.error("Failed to fetch outbreak data");
       } finally {
         setIsLoading(false);
       }
@@ -196,9 +196,6 @@ export default function MapPage() {
               </Link>
               <div>
                 <h1 className="text-lg font-semibold">Disease Outbreak Map</h1>
-                {/* <p className="text-sm text-muted-foreground hidden sm:block">
-                  Track disease outbreaks across Ghana
-                </p> */}
               </div>
             </div>
 

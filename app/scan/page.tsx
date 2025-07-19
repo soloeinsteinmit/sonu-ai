@@ -18,6 +18,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import { CameraCapture } from "@/components/scan/camera-capture";
 import { AIProcessor } from "@/components/scan/ai-processor";
 import { MultiImageProcessor } from "@/components/scan/multi-image-processor";
@@ -123,13 +124,13 @@ export default function ScanPage() {
           }
         },
         (error) => {
-          console.error("Error getting location: ", error);
-          // Handle error - maybe show a message to the user
+          toast.error(
+            "Unable to access current location. Please enable GPS or try again."
+          );
         }
       );
     } else {
-      console.error("Geolocation is not supported by this browser.");
-      // Handle case where geolocation is not supported
+      toast.error("Geolocation is not supported by this browser.");
     }
   };
 
@@ -148,15 +149,12 @@ export default function ScanPage() {
       });
 
       if (response.ok) {
-        console.log("Prediction saved successfully");
-        // Optionally, show a success message to the user
+        toast.success("Outbreak reported successfully.");
       } else {
-        console.error("Failed to save prediction");
-        // Optionally, show an error message to the user
+        toast.error("Failed to report outbreak. Please try again later.");
       }
     } catch (error) {
-      console.error("Error saving prediction:", error);
-      // Optionally, show an error message to the user
+      toast.error("An error occurred while reporting outbreak.");
     }
   };
 
