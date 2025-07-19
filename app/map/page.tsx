@@ -199,14 +199,14 @@ export default function MapPage() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 sm:space-x-0">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowFilters(!showFilters)}
               >
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
+                <Filter className="h-4 w-4 mr-2 sm:mr-0" />
+                <span className="hidden sm:block">Filters</span>
               </Button>
             </div>
           </div>

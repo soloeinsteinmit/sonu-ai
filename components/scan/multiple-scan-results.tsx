@@ -28,6 +28,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { MultipleScanResult, ScanResult } from "@/lib/types/disease";
 import { AIChat } from "./ai-chat";
@@ -286,7 +287,10 @@ export function MultipleScanResults({
             {onReportOutbreak && (
               <Button
                 variant="outline"
-                onClick={onReportOutbreak}
+                onClick={async () => {
+                  await onReportOutbreak();
+                  toast.success("Activity reported to map.");
+                }}
                 className="h-12 flex-1"
               >
                 <MapPin className="mr-2 h-4 w-4" />
