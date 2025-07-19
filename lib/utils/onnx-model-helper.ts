@@ -35,9 +35,10 @@ function softmax(logits: Float32Array): Float32Array {
  */
 export async function createInferenceSession(): Promise<ort.InferenceSession> {
   try {
-    // Models in the 'public' directory are served at the root.
+    // Update: using MobileNet-based model trained for mobile (mobilenet_mobile.onnx)
+    // Place the file under /public/model/
     const session = await ort.InferenceSession.create(
-      "/model/agrisentry_model.onnx",
+      "/model/mobilenet_mobile.onnx",
       {
         executionProviders: ["wasm"],
         graphOptimizationLevel: "all",
