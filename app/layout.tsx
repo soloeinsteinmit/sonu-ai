@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     "plant health",
     "disease detection",
   ],
-  authors: [{ name: "Alhassan Mohammed Nuruddin" }, { name: "Solomon Eshun" }],
+  authors: [{ name: "Mohammed Nuruddin Alhassan" }, { name: "Solomon Eshun" }],
   creator: "AgriSentry AI Team",
   publisher: "AgriSentry AI",
   formatDetection: {

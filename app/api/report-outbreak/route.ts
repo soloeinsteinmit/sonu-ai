@@ -15,7 +15,12 @@ export async function POST(req: NextRequest) {
     }
 
     const csvLine = `${new Date().toISOString()},${latitude},${longitude},${disease}\n`;
-    const filePath = path.join(process.cwd(), "server", "predictions.csv");
+
+    // Use a writable directory ("/tmp" in Vercel) or allow override via env
+    const dataDir =
+      process.env.PREDICTIONS_DIR ||
+      (process.env.VERCEL ? "/tmp" : path.join(process.cwd(), "server"));
+    const filePath = path.join(dataDir, "predictions.csv");
 
     // Ensure the directory exists
     const dirPath = path.dirname(filePath);

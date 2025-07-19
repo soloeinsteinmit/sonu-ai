@@ -4,8 +4,17 @@ import path from "path";
 import csv from "csv-parser";
 
 export async function GET() {
-  const filePath = path.join(process.cwd(), "server", "predictions.csv");
+  // Use a writable directory ("/tmp" on Vercel) or allow override via env
+  const dataDir =
+    process.env.PREDICTIONS_DIR ||
+    (process.env.VERCEL ? "/tmp" : path.join(process.cwd(), "server"));
+  const filePath = path.join(dataDir, "predictions.csv");
   const results: any[] = [];
+
+  // If the file doesn't exist yet, return an empty array so the client can handle gracefully
+  if (!fs.existsSync(filePath)) {
+    return NextResponse.json([], { status: 200 });
+  }
 
   try {
     await new Promise((resolve, reject) => {

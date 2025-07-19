@@ -10,7 +10,7 @@
  * - Popup information on marker click
  * - Smooth zoom and pan controls
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.1.0
  */
 

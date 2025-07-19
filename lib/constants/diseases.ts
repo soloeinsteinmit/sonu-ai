@@ -5,7 +5,7 @@
  * based on common crop diseases in Ghana. In production, this would
  * be fetched from a backend API or database.
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 

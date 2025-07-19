@@ -7,7 +7,7 @@
  * rather than static information cards. Shows basic detection
  * results and prominent chat button for conversational assistance.
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 

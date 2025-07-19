@@ -493,7 +493,7 @@ const ScanPage = () => {
 
 ## 🏆 Ghana AI Hackathon 2025
 
-**Team**: Alhassan Mohammed Nuruddin & Solomon Eshun  
+**Team**: Mohammed Nuruddin Alhassan & Solomon Eshun  
 **Category**: Agriculture & Food Security  
 **Technology**: AI/ML, Computer Vision, PWA, Geospatial Analysis  
 

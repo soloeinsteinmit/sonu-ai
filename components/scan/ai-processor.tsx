@@ -7,7 +7,7 @@
  * It uses the ONNX runtime to perform inference directly in the browser,
  * providing a truly offline-capable experience with beautiful animations.
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 
