@@ -249,7 +249,10 @@ export function OutbreakDetails({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete outbreak");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `Failed to delete outbreak (${response.status})`
+        );
       }
 
       toast.success(
@@ -263,7 +266,11 @@ export function OutbreakDetails({
 
       onClose();
     } catch (error) {
-      toast.error("Failed to delete outbreak. Please try again.");
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to delete outbreak. Please try again.";
+      toast.error(errorMessage);
       console.error("Delete error:", error);
     } finally {
       setIsDeleting(false);

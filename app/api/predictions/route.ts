@@ -139,12 +139,12 @@ export async function GET() {
         // Only include rows with disease data that are NOT healthy
         return row.disease && !isHealthyPlant(row.disease);
       })
-      .map((row, index) => ({
-        id: `csv-${index + 1}`,
+      .map((row) => ({
+        id: `csv-${row.id}`, // Use actual CSV ID instead of array index
         location: {
           lat: parseFloat(row.latitude) || 0,
           lng: parseFloat(row.longitude) || 0,
-          name: `AI Detection ${index + 1}`,
+          name: `AI Detection #${row.id}`,
           region: "AI Detected",
         },
         disease: row.disease,
