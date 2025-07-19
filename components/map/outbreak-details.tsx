@@ -171,7 +171,7 @@ export function OutbreakDetails({
   /**
    * Get user location and check if they can delete this outbreak
    */
-  const checkUserLocation = async () => {
+  const checkUserLocation = async (showToast: boolean = false) => {
     setIsLoadingLocation(true);
     try {
       const location = await getCurrentLocation();
@@ -197,18 +197,21 @@ export function OutbreakDetails({
 
       setCanDelete(withinRange);
 
-      if (withinRange) {
-        toast.success(
-          `You're ${formatDistance(
-            distance
-          )} from this outbreak. You can help verify this report.`
-        );
-      } else {
-        toast.info(
-          `You're ${formatDistance(
-            distance
-          )} from this outbreak. You need to be within 5km to help moderate this report.`
-        );
+      // Only show toast when explicitly requested (manual button click)
+      if (showToast) {
+        if (withinRange) {
+          toast.success(
+            `You're ${formatDistance(
+              distance
+            )} from this outbreak. You can help verify this report.`
+          );
+        } else {
+          toast.info(
+            `You're ${formatDistance(
+              distance
+            )} from this outbreak. You need to be within 5km to help moderate this report.`
+          );
+        }
       }
     } catch (error) {
       const errorMessage =
@@ -433,7 +436,7 @@ export function OutbreakDetails({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={checkUserLocation}
+                onClick={() => checkUserLocation(true)}
                 className="text-blue-600 border-blue-200 hover:bg-blue-50"
               >
                 <Navigation className="h-4 w-4 mr-2" />
