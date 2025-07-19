@@ -8,15 +8,16 @@
  * 2. AI processing simulation
  * 3. Results display with treatment recommendations
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Camera, Brain, FileText } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { CameraCapture } from "@/components/scan/camera-capture";
 import { AIProcessor } from "@/components/scan/ai-processor";
@@ -24,7 +25,6 @@ import { MultiImageProcessor } from "@/components/scan/multi-image-processor";
 import { ScanResultsChat } from "@/components/scan/scan-results-chat";
 import { MultipleScanResults } from "@/components/scan/multiple-scan-results";
 import { ScanResult, MultipleScanResult } from "@/lib/types/disease";
-import { FloatingMapButton } from "@/components/common/floating-map-button";
 
 /**
  * Scan workflow stages
@@ -104,6 +104,32 @@ export default function ScanPage() {
   };
 
   /**
+   * Handle direct image upload from result components
+   * This bypasses the camera capture stage and goes directly to processing
+   */
+  const handleDirectImageUpload = (files: File[]) => {
+    if (files.length === 1) {
+      // Single image mode
+      setCapturedImage(files[0]);
+      setCapturedImages([]);
+      setIsMultipleMode(false);
+    } else {
+      // Multiple images mode
+      setCapturedImages(files);
+      setCapturedImage(null);
+      setIsMultipleMode(files.length > 1);
+    }
+    
+    // Reset previous results
+    setScanResult(null);
+    setMultipleScanResult(null);
+    setError(null);
+    
+    // Go directly to processing stage
+    setCurrentStage("processing");
+  };
+
+  /**
    * Handle outbreak reporting (placeholder for future implementation)
    */
   const handleReportOutbreak = () => {
@@ -149,13 +175,40 @@ export default function ScanPage() {
       });
 
       if (response.ok) {
-        // Silent success; child component will show toast
+        toast.success("Outbreak reported successfully.");
       } else {
         toast.error("Failed to report outbreak. Please try again later.");
       }
     } catch (error) {
       toast.error("An error occurred while reporting outbreak.");
     }
+  };
+
+  /**
+   * Get stage icon based on current workflow stage
+   */
+  const getStageIcon = (stage: ScanStage) => {
+    switch (stage) {
+      case "capture":
+        return <Camera className="h-4 w-4" />;
+      case "processing":
+        return <Brain className="h-4 w-4" />;
+      case "results":
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  /**
+   * Check if stage is active, completed, or pending
+   */
+  const getStageStatus = (stage: ScanStage) => {
+    const stages: ScanStage[] = ["capture", "processing", "results"];
+    const currentIndex = stages.indexOf(currentStage);
+    const stageIndex = stages.indexOf(stage);
+
+    if (stageIndex < currentIndex) return "completed";
+    if (stageIndex === currentIndex) return "active";
+    return "pending";
   };
 
   return (
@@ -173,11 +226,75 @@ export default function ScanPage() {
               </Link>
               <div>
                 <h1 className="text-lg font-semibold">Disease Detection</h1>
+                {/* <p className="text-sm text-muted-foreground">
+                  AI-powered crop disease analysis
+                </p> */}
               </div>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Progress Indicator */}
+      <div className="bg-muted/30 border-b">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-center space-x-8">
+            {(["capture", "processing", "results"] as ScanStage[]).map(
+              (stage, index) => {
+                const status = getStageStatus(stage);
+                const isActive = status === "active";
+                const isCompleted = status === "completed";
+
+                return (
+                  <div key={stage} className="flex items-center space-x-2">
+                    <div
+                      className={`
+                    flex items-center justify-center w-8 h-8 rounded-full border-2 transition-colors
+                    ${
+                      isActive
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : ""
+                    }
+                    ${
+                      isCompleted
+                        ? "bg-green-500 border-green-500 text-white"
+                        : ""
+                    }
+                    ${
+                      status === "pending"
+                        ? "border-muted-foreground/30 text-muted-foreground"
+                        : ""
+                    }
+                  `}
+                    >
+                      {getStageIcon(stage)}
+                    </div>
+                    <span
+                      className={`
+                    text-sm font-medium capitalize hidden sm:block
+                    ${isActive ? "text-primary" : ""}
+                    ${isCompleted ? "text-green-600" : ""}
+                    ${status === "pending" ? "text-muted-foreground" : ""}
+                  `}
+                    >
+                      {stage}
+                    </span>
+
+                    {index < 2 && (
+                      <div
+                        className={`
+                      w-8 h-0.5 mx-2 transition-colors
+                      ${isCompleted ? "bg-green-500" : "bg-muted-foreground/30"}
+                    `}
+                      />
+                    )}
+                  </div>
+                );
+              }
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 max-[1024px]:max-w-md">
@@ -235,6 +352,7 @@ export default function ScanPage() {
               <ScanResultsChat
                 result={scanResult}
                 onNewScan={startNewScan}
+                onDirectImageUpload={handleDirectImageUpload}
                 onReportOutbreak={handleReportOutbreak}
               />
             </div>
@@ -247,12 +365,48 @@ export default function ScanPage() {
                 <MultipleScanResults
                   result={multipleScanResult}
                   onNewScan={startNewScan}
+                  onDirectImageUpload={handleDirectImageUpload}
                   onReportOutbreak={handleReportOutbreak}
                 />
               </div>
             )}
         </div>
-        <FloatingMapButton />
+
+        {/* Help Section */}
+        {/* <div className="mt-12 max-w-2xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-center">Need Help?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="text-center p-4 rounded-lg bg-muted/50">
+                  <h4 className="font-medium mb-2">
+                    🤔 Not sure what disease this is?
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Our AI can detect 24 common diseases across cashew, cassava,
+                    maize, and tomato crops.
+                  </p>
+                </div>
+
+                <div className="text-center p-4 rounded-lg bg-muted/50">
+                  <h4 className="font-medium mb-2">📞 Need expert advice?</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Contact your local agricultural extension officer for
+                    additional guidance.
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Badge variant="outline" className="text-xs">
+                  AgriSentry AI • Accuracy: 95% • Ghana-focused
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </div> */}
       </main>
     </div>
   );

@@ -6,11 +6,11 @@
  * Displays the results of multiple image scans with summary statistics
  * and individual result details.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Camera,
@@ -24,6 +24,7 @@ import {
   ChevronUp,
   Images,
   Volume2,
+  Upload,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,12 +38,14 @@ import { MultipleDiseaseVideos } from "./multiple-disease-videos";
 interface MultipleScanResultsProps {
   result: MultipleScanResult;
   onNewScan: () => void;
+  onDirectImageUpload?: (files: File[]) => void;
   onReportOutbreak?: () => void;
 }
 
 export function MultipleScanResults({
   result,
   onNewScan,
+  onDirectImageUpload,
   onReportOutbreak,
 }: MultipleScanResultsProps) {
   const [showChat, setShowChat] = useState(false);
@@ -50,7 +53,8 @@ export function MultipleScanResults({
   const [selectedResult, setSelectedResult] = useState<ScanResult | null>(null);
   const [expandedResults, setExpandedResults] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { summary, results, totalImages, processedImages } = result;
 
   const playAudio = (disease: any) => {
@@ -66,6 +70,64 @@ export function MultipleScanResults({
       newAudio.onended = () => setAudio(null);
     }
   };
+
+  /**
+   * Handle direct file upload from New Scan button
+   */
+  const handleDirectFileUpload = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(event.target.files || []);
+
+      if (files.length === 0) return;
+
+      // Validate files
+      const validFiles: File[] = [];
+      for (const file of files) {
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+          toast.error(`${file.name} is not a valid image file`);
+          continue;
+        }
+
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error(`${file.name} is too large. Please select files under 10MB`);
+          continue;
+        }
+
+        validFiles.push(file);
+      }
+
+      if (validFiles.length === 0) return;
+
+      // Call the direct upload handler if provided, otherwise fall back to onNewScan
+      if (onDirectImageUpload) {
+        onDirectImageUpload(validFiles);
+      } else {
+        // If no direct handler, fall back to original behavior
+        onNewScan();
+      }
+
+      // Reset file input
+      if (event.target) {
+        event.target.value = '';
+      }
+    },
+    [onDirectImageUpload, onNewScan]
+  );
+
+  /**
+   * Handle New Scan button click - directly trigger file upload
+   */
+  const handleNewScanClick = useCallback(() => {
+    if (onDirectImageUpload) {
+      // Directly trigger file upload dialog
+      fileInputRef.current?.click();
+    } else {
+      // Fall back to original behavior
+      onNewScan();
+    }
+  }, [onDirectImageUpload, onNewScan]);
 
   // Show chat interface if user clicked on AI chat
   if (showChat) {
@@ -266,13 +328,15 @@ export function MultipleScanResults({
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
+          
+
           <div className="flex gap-2">
             <Button
-              onClick={onNewScan}
+              onClick={handleNewScanClick}
               variant="outline"
               className="h-12 flex-1"
             >
-              <Camera className="mr-2 h-4 w-4 " />
+              <Upload className="mr-2 h-4 w-4 " />
               New Scan
             </Button>
 
@@ -297,8 +361,19 @@ export function MultipleScanResults({
             <MessageCircle className="mr-2 h-5 w-5" />
             Chat with AI
           </Button>
+
         </div>
       </div>
+
+      {/* Hidden file input for direct upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleDirectFileUpload}
+        className="hidden"
+      />
 
       {/* Enhanced Disease Details Modal */}
       <AnimatePresence>

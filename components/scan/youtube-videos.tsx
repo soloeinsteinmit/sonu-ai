@@ -6,7 +6,7 @@
  * Displays educational YouTube videos related to the detected disease
  * with thumbnail previews in an accordion format.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 

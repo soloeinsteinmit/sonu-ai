@@ -10,7 +10,7 @@
  * - Location-based filtering
  * - Mobile-optimized controls
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 
@@ -170,18 +170,6 @@ export default function MapPage() {
   };
 
   /**
-   * Handle outbreak deletion
-   */
-  const handleOutbreakDelete = (outbreakId: string) => {
-    // Remove the outbreak from both the main list and filtered list
-    setOutbreaks(prev => prev.filter(outbreak => outbreak.id !== outbreakId));
-    setFilteredOutbreaks(prev => prev.filter(outbreak => outbreak.id !== outbreakId));
-    
-    // Close the details panel
-    setSelectedOutbreak(null);
-  };
-
-  /**
    * Clear filters
    */
   const clearFilters = () => {
@@ -279,7 +267,6 @@ export default function MapPage() {
               <OutbreakDetails
                 outbreak={selectedOutbreak}
                 onClose={() => setSelectedOutbreak(null)}
-                onDelete={handleOutbreakDelete}
               />
             ) : (
               <Card>

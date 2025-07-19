@@ -5,7 +5,7 @@
  * It combines image preprocessing and model inference into a single,
  * easy-to-use function that the UI can call.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 

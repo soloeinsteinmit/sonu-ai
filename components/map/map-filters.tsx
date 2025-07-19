@@ -11,7 +11,7 @@
  * - Severity level filtering
  * - Date range filtering
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 

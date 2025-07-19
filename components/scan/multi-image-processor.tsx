@@ -6,7 +6,7 @@
  * This component handles processing multiple images sequentially,
  * showing progress and collecting results for batch analysis.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 

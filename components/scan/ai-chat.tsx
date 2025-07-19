@@ -10,14 +10,24 @@
  * - Text-to-speech in Twi
  * - Mobile-optimized interface
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Send, Bot, User, Loader2, History, Trash2 } from "lucide-react";
+import {
+  Send,
+  Mic,
+  MicOff,
+  Bot,
+  User,
+  Loader2,
+  MessageCircle,
+  History,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -164,6 +174,8 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     userMessage: string
   ): Promise<Message | null> => {
     const diseaseInfo = scanResult.disease;
+    const detectionResult = scanResult.detectionResult;
+    const primaryTreatment = scanResult.recommendations.primary;
 
     if (!process.env.NEXT_PUBLIC_OPENROUTER_API_KEY) {
       toast.error("OpenRouter API key not configured");
@@ -428,7 +440,7 @@ When asked about where to buy the treatment, search the web for nearest location
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             )}
             {userLocation && (
-              <Badge variant="outline" className="text-xs max-[1024px]:hidden">
+              <Badge variant="outline" className="text-xs">
                 📍 {userLocation.split(",")[0]}
               </Badge>
             )}
@@ -453,33 +465,16 @@ When asked about where to buy the treatment, search the web for nearest location
           </div>
         </CardTitle>
 
-        <div className="flex items-center space-x-2 min-[1024px]:hidden">
-          {userLocation && (
-            <Badge variant="outline" className="text-xs">
-              📍 {userLocation.split(",")[0]}
-            </Badge>
-          )}
-        </div>
-
         <div className="flex items-center justify-between text-sm">
           <Badge variant="secondary" className="text-xs">
             Disease: {scanResult.disease.name}
           </Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={saveCurrentChat}
-            className="text-xs h-6 px-2"
-            disabled={messages.length <= 1}
-          >
-            Save Chat
-          </Button>
         </div>
       </CardHeader>
 
       {/* History Sidebar */}
       {showHistory && (
-        <div className="absolute top-14 left-0 w-full max-w-sm mx-auto h-full bg-background border-r z-10 flex flex-col">
+        <div className="absolute top-0 left-0 w-full h-full bg-background border-r z-10 flex flex-col">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold">Chat History</h3>
             <div className="flex items-center space-x-2">
@@ -651,7 +646,33 @@ When asked about where to buy the treatment, search the web for nearest location
       </CardContent>
 
       {/* Quick Questions */}
-      <div className="px-4 pt-4 pb-0 border-t ">
+      <div className="p-4 border-t">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-sm font-medium">Quick Questions</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={saveCurrentChat}
+            className="text-xs h-6 px-2"
+            disabled={messages.length <= 1}
+          >
+            Save Chat
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {quickQuestions.map((q, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              size="sm"
+              onClick={() => setInputMessage(q)}
+              className="text-xs h-8 px-2"
+            >
+              {q}
+            </Button>
+          ))}
+        </div>
+
         {/* Input Area */}
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative">
@@ -662,6 +683,20 @@ When asked about where to buy the treatment, search the web for nearest location
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               className="pr-10"
             />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleVoiceInput}
+              className={`absolute right-1 top-1 h-8 w-8 p-0 ${
+                isListening ? "text-red-500" : ""
+              }`}
+            >
+              {isListening ? (
+                <MicOff className="h-4 w-4" />
+              ) : (
+                <Mic className="h-4 w-4" />
+              )}
+            </Button>
           </div>
 
           <Button

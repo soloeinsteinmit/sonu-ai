@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Merriweather, Source_Code_Pro } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { FloatingMapButton } from "@/components/common/floating-map-button";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     "plant health",
     "disease detection",
   ],
-  authors: [{ name: "Mohammed Nuruddin Alhassan" }, { name: "Solomon Eshun" }],
+  authors: [{ name: "Alhassan Mohammed Nuruddin" }, { name: "Solomon Eshun" }],
   creator: "AgriSentry AI Team",
   publisher: "AgriSentry AI",
   formatDetection: {
@@ -141,12 +142,12 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen bg-background font-sans">
         {children}
+        <FloatingMapButton />
         <Toaster richColors />
         <script
           dangerouslySetInnerHTML={{
             __html: `
-            // PWA Install Prompt with persistence
-            const PROMPT_KEY = 'agrisentry-pwa-dismissed';
+            // PWA Install Prompt
             let deferredPrompt = null;
             
             if ('serviceWorker' in navigator) {
@@ -164,17 +165,8 @@ export default function RootLayout({
             
             // Handle install prompt
             window.addEventListener('beforeinstallprompt', function(e) {
-              // If the user previously dismissed the prompt, do not show again
-              if (localStorage.getItem(PROMPT_KEY) === '1') {
-                return;
-              }
               e.preventDefault();
               deferredPrompt = e;
-
-              // Mark that we've already triggered the prompt so we don't show
-              // it again on subsequent reloads, even if the user doesn't
-              // interact with it right away.
-              localStorage.setItem(PROMPT_KEY, '1');
               
               // Show install button after 2 seconds
               setTimeout(() => {
@@ -239,8 +231,7 @@ export default function RootLayout({
                   if (choiceResult.outcome === 'accepted') {
                     // User accepted the install prompt
                   } else {
-                    // User dismissed the install prompt – remember choice
-                    localStorage.setItem(PROMPT_KEY, '1');
+                    // User dismissed the install prompt
                   }
                   deferredPrompt = null;
                   dismissInstallPrompt();
@@ -253,8 +244,6 @@ export default function RootLayout({
               if (prompt) {
                 prompt.remove();
               }
-              // Persist dismissal so we don't nag next time
-              localStorage.setItem(PROMPT_KEY, '1');
             }
           `,
           }}

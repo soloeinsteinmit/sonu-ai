@@ -6,7 +6,7 @@
  * requires for inference. This involves resizing, normalizing, and reordering
  * pixel data to match the transformations used during model training in Python.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 

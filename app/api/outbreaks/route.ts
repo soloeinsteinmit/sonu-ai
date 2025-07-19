@@ -4,11 +4,7 @@ import path from "path";
 
 export async function GET() {
   try {
-    // Use a writable directory ("/tmp" on Vercel) or allow override via env
-    const dataDir =
-      process.env.PREDICTIONS_DIR ||
-      (process.env.VERCEL ? "/tmp" : path.join(process.cwd(), "server"));
-    const filePath = path.join(dataDir, "predictions.csv");
+    const filePath = path.join(process.cwd(), "server", "predictions.csv");
 
     if (!fs.existsSync(filePath)) {
       return NextResponse.json([], { status: 200 });

@@ -16,7 +16,16 @@
  */
 
 import { useState, useEffect } from "react";
-import { X, MapPin, Calendar, AlertTriangle, Phone, Trash2, Navigation, Shield } from "lucide-react";
+import {
+  X,
+  MapPin,
+  Calendar,
+  AlertTriangle,
+  Phone,
+  Trash2,
+  Navigation,
+  Shield,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -114,13 +123,19 @@ const getStatusInfo = (status: string) => {
 /**
  * Main outbreak details component
  */
-export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetailsProps) {
+export function OutbreakDetails({
+  outbreak,
+  onClose,
+  onDelete,
+}: OutbreakDetailsProps) {
   const [isSharing, setIsSharing] = useState(false);
   const [location, setLocation] = useState("Unknown");
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [canDelete, setCanDelete] = useState(false);
-  const [distanceToOutbreak, setDistanceToOutbreak] = useState<number | null>(null);
+  const [distanceToOutbreak, setDistanceToOutbreak] = useState<number | null>(
+    null
+  );
   const [isDeleting, setIsDeleting] = useState(false);
 
   const severityInfo = getSeverityInfo(outbreak.severity);
@@ -161,16 +176,16 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
     try {
       const location = await getCurrentLocation();
       setUserLocation(location);
-      
+
       const distance = calculateDistance(
         location.latitude,
         location.longitude,
         outbreak.location.lat,
         outbreak.location.lng
       );
-      
+
       setDistanceToOutbreak(distance);
-      
+
       // Check if user is within 5km tolerance for deletion
       const withinRange = isWithinDeletionRange(
         location.latitude,
@@ -179,17 +194,25 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
         outbreak.location.lng,
         5 // 5km tolerance
       );
-      
+
       setCanDelete(withinRange);
-      
+
       if (withinRange) {
-        toast.success(`You're ${formatDistance(distance)} from this outbreak. You can help verify this report.`);
+        toast.success(
+          `You're ${formatDistance(
+            distance
+          )} from this outbreak. You can help verify this report.`
+        );
       } else {
-        toast.info(`You're ${formatDistance(distance)} from this outbreak. You need to be within 5km to help moderate this report.`);
+        toast.info(
+          `You're ${formatDistance(
+            distance
+          )} from this outbreak. You need to be within 5km to help moderate this report.`
+        );
       }
-      
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to get your location";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to get your location";
       toast.error(`${errorMessage}. Please enable location services.`);
       console.error("Location error:", error);
       setUserLocation(null);
@@ -212,30 +235,32 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
     setIsDeleting(true);
     try {
       const response = await fetch(`/api/outbreaks/${outbreak.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userLocation: {
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
           },
-          reason: 'Community moderation - false or outdated report',
+          reason: "Community moderation - false or outdated report",
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete outbreak');
+        throw new Error("Failed to delete outbreak");
       }
 
-      toast.success("Outbreak report has been removed. Thank you for helping keep our community data accurate!");
-      
+      toast.success(
+        "Outbreak report has been removed. Thank you for helping keep our community data accurate!"
+      );
+
       // Call the onDelete callback to update the parent component
       if (onDelete) {
         onDelete(outbreak.id);
       }
-      
+
       onClose();
     } catch (error) {
       toast.error("Failed to delete outbreak. Please try again.");
@@ -382,7 +407,8 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
                 </p>
               </div>
               <p className="text-sm text-blue-700">
-                Getting your location to see if you can help verify this outbreak report.
+                Getting your location to see if you can help verify this
+                outbreak report.
               </p>
             </div>
           ) : !userLocation ? (
@@ -394,7 +420,8 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
                 </p>
               </div>
               <p className="text-sm text-gray-700 mb-3">
-                Please enable location services to help verify outbreak reports in your area.
+                Please enable location services to help verify outbreak reports
+                in your area.
               </p>
               <Button
                 variant="outline"
@@ -407,20 +434,41 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
               </Button>
             </div>
           ) : (
-            <div className={`p-3 rounded-md ${canDelete ? 'bg-green-50' : 'bg-gray-50'}`}>
+            <div
+              className={`p-3 rounded-md ${
+                canDelete ? "bg-green-50" : "bg-gray-50"
+              }`}
+            >
               <div className="flex items-center space-x-2 mb-2">
-                <Shield className={`h-4 w-4 ${canDelete ? 'text-green-600' : 'text-gray-600'}`} />
-                <p className={`text-sm font-medium ${canDelete ? 'text-green-800' : 'text-gray-800'}`}>
-                  {canDelete ? 'You Can Help Moderate' : 'Outside Moderation Range'}
+                <Shield
+                  className={`h-4 w-4 ${
+                    canDelete ? "text-green-600" : "text-gray-600"
+                  }`}
+                />
+                <p
+                  className={`text-sm font-medium ${
+                    canDelete ? "text-green-800" : "text-gray-800"
+                  }`}
+                >
+                  {canDelete
+                    ? "You Can Help Moderate"
+                    : "Outside Moderation Range"}
                 </p>
               </div>
-              <p className={`text-sm mb-3 ${canDelete ? 'text-green-700' : 'text-gray-700'}`}>
-                {canDelete 
-                  ? `You're ${formatDistance(distanceToOutbreak!)} from this outbreak. You can help remove false or outdated reports.`
-                  : `You're ${formatDistance(distanceToOutbreak!)} from this outbreak. You need to be within 5km to help moderate reports.`
-                }
+              <p
+                className={`text-sm mb-3 ${
+                  canDelete ? "text-green-700" : "text-gray-700"
+                }`}
+              >
+                {canDelete
+                  ? `You're ${formatDistance(
+                      distanceToOutbreak!
+                    )} from this outbreak. You can help remove false or outdated reports.`
+                  : `You're ${formatDistance(
+                      distanceToOutbreak!
+                    )} from this outbreak. You need to be within 5km to help moderate reports.`}
               </p>
-              
+
               {canDelete && (
                 <div className="flex gap-2">
                   <AlertDialog>
@@ -432,17 +480,26 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
                         className="text-red-600 border-red-200 hover:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        {isDeleting ? "Removing..." : "Remove False Report"}
+                        {isDeleting ? "Removing..." : "Remove Report"}
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent className="z-[9999]">
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Remove Outbreak Report?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          Remove Outbreak Report?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                          You're about to remove this {outbreak.disease} outbreak report from {outbreak.location.name || 'the map'}. 
-                          This action will help keep our community data accurate by removing false or outdated reports.
-                          <br /><br />
-                          <strong>Are you sure this report is incorrect or no longer relevant?</strong>
+                          You're about to remove this {outbreak.disease}{" "}
+                          outbreak report from{" "}
+                          {outbreak.location.name || "the map"}. This action
+                          will help keep our community data accurate by removing
+                          false or outdated reports.
+                          <br />
+                          <br />
+                          <strong>
+                            Are you sure this report is incorrect or no longer
+                            relevant?
+                          </strong>
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -466,7 +523,7 @@ export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetails
                   </Button>
                 </div>
               )}
-              
+
               {!canDelete && (
                 <Button
                   variant="outline"

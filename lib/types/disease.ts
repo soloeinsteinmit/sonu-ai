@@ -4,7 +4,7 @@
  * This file contains all TypeScript interfaces and types related to
  * crop disease detection, treatment recommendations, and related data structures.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 

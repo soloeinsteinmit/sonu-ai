@@ -5,7 +5,7 @@
  * runs inference on a preprocessed image tensor, and processes the output
  * to determine the predicted class and confidence score.
  *
- * @author Mohammed Nuruddin Alhassan & Solomon Eshun
+ * @author Alhassan Mohammed Nuruddin & Solomon Eshun
  * @version 1.0.0
  */
 
