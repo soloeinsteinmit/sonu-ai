@@ -17,17 +17,7 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import {
-  Send,
-  Mic,
-  MicOff,
-  Bot,
-  User,
-  Loader2,
-  MessageCircle,
-  History,
-  Trash2,
-} from "lucide-react";
+import { Send, Bot, User, Loader2, History, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -86,7 +76,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
    */
   const loadChatHistory = () => {
     try {
-      const savedHistory = localStorage.getItem('agrisentry-chat-history');
+      const savedHistory = localStorage.getItem("agrisentry-chat-history");
       if (savedHistory) {
         setChatHistory(JSON.parse(savedHistory));
       }
@@ -100,7 +90,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
    */
   const saveChatHistory = (history: ChatSession[]) => {
     try {
-      localStorage.setItem('agrisentry-chat-history', JSON.stringify(history));
+      localStorage.setItem("agrisentry-chat-history", JSON.stringify(history));
     } catch (error) {
       toast.error("Error saving chat history");
     }
@@ -137,19 +127,21 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
    */
   const fetchUserLocation = async () => {
     if (!navigator.geolocation) {
-      console.warn('Geolocation not supported');
+      console.warn("Geolocation not supported");
       return;
     }
 
     setLocationLoading(true);
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const response = await fetch(`/api/location?lat=${latitude}&lon=${longitude}`);
+          const response = await fetch(
+            `/api/location?lat=${latitude}&lon=${longitude}`
+          );
           const data = await response.json();
-          
+
           if (data.location) {
             setUserLocation(data.location);
           }
@@ -169,46 +161,52 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
   /**
    * Generate AI response using Perplexity API with streaming
    */
-  const generateAIResponse = async (userMessage: string): Promise<Message | null> => {
+  const generateAIResponse = async (
+    userMessage: string
+  ): Promise<Message | null> => {
     const diseaseInfo = scanResult.disease;
-    const detectionResult = scanResult.detectionResult;
-    const primaryTreatment = scanResult.recommendations.primary;
-    
+
     if (!process.env.NEXT_PUBLIC_OPENROUTER_API_KEY) {
       toast.error("OpenRouter API key not configured");
       const errorMessage: Message = {
         id: `msg-${Date.now()}`,
         type: "ai",
-        content: "AI service is not properly configured. Please contact support or check your configuration.",
+        content:
+          "AI service is not properly configured. Please contact support or check your configuration.",
         timestamp: new Date(),
       };
-      
-      setMessages(prev => [...prev, errorMessage]);
+
+      setMessages((prev) => [...prev, errorMessage]);
       return null;
     }
 
     // Create system prompt with location context
-    const locationContext = userLocation ? `The farmer is located in ${userLocation}. ` : "";
+    const locationContext = userLocation
+      ? `The farmer is located in ${userLocation}. `
+      : "";
     const systemPrompt = `You are AgriSentry AI, an expert agricultural assistant helping farmers. ${locationContext}. You have diagnosed ${diseaseInfo.name} in their crop. Be helpful, concise, and provide practical advice. Always respond in English only. 
 
 When asked about where to buy the treatment, search the web for nearest location. Never give a general answer. Mention shops or place near by and their info if possible.`;
 
     try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'perplexity/sonar-pro',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userMessage }
-          ],
-          stream: true,
-        }),
-      });
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "perplexity/sonar-pro",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userMessage },
+            ],
+            stream: true,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -216,23 +214,23 @@ When asked about where to buy the treatment, search the web for nearest location
 
       const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error('Response body is not readable');
+        throw new Error("Response body is not readable");
       }
 
       const decoder = new TextDecoder();
-      let buffer = '';
-      let fullContent = '';
+      let buffer = "";
+      let fullContent = "";
 
       // Create streaming message
       const streamingMessage: Message = {
         id: `msg-${Date.now()}`,
         type: "ai",
-        content: '',
+        content: "",
         timestamp: new Date(),
       };
 
       // Add empty message to start streaming
-      setMessages(prev => [...prev, streamingMessage]);
+      setMessages((prev) => [...prev, streamingMessage]);
 
       try {
         while (true) {
@@ -240,37 +238,37 @@ When asked about where to buy the treatment, search the web for nearest location
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
-          
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
+
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
 
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
+            if (line.startsWith("data: ")) {
               const data = line.slice(6);
-              if (data === '[DONE]') continue;
-              
+              if (data === "[DONE]") continue;
+
               try {
                 const parsed = JSON.parse(data);
-                const content = parsed.choices?.[0]?.delta?.content || '';
-                
+                const content = parsed.choices?.[0]?.delta?.content || "";
+
                 if (content) {
                   fullContent += content;
-                  
+
                   // Update the streaming message in real-time
-                  setMessages(prev => 
-                    prev.map(msg => 
-                      msg.id === streamingMessage.id 
+                  setMessages((prev) =>
+                    prev.map((msg) =>
+                      msg.id === streamingMessage.id
                         ? { ...msg, content: fullContent }
                         : msg
                     )
                   );
-                  
+
                   // Scroll to bottom as content streams
                   scrollToBottom();
                 }
               } catch (e) {
                 // Skip invalid JSON
-                console.warn('Invalid JSON in stream:', e);
+                console.warn("Invalid JSON in stream:", e);
               }
             }
           }
@@ -283,30 +281,32 @@ When asked about where to buy the treatment, search the web for nearest location
           timestamp: new Date(),
         };
 
-        setMessages(prev => 
-          prev.map(msg => 
+        setMessages((prev) =>
+          prev.map((msg) =>
             msg.id === streamingMessage.id ? finalMessage : msg
           )
         );
 
         return finalMessage;
-
       } finally {
         reader.releaseLock();
       }
-
     } catch (error) {
       toast.error("Error generating AI response");
-      
-      let errorMessage = "I'm experiencing technical difficulties. Please try again.";
-      
+
+      let errorMessage =
+        "I'm experiencing technical difficulties. Please try again.";
+
       if (error instanceof Error) {
-        if (error.message.includes('401')) {
-          errorMessage = "Authentication failed. Please check your API configuration.";
-        } else if (error.message.includes('429')) {
-          errorMessage = "Service is temporarily busy. Please try again in a moment.";
-        } else if (error.message.includes('network')) {
-          errorMessage = "Network connection issue. Please check your internet connection.";
+        if (error.message.includes("401")) {
+          errorMessage =
+            "Authentication failed. Please check your API configuration.";
+        } else if (error.message.includes("429")) {
+          errorMessage =
+            "Service is temporarily busy. Please try again in a moment.";
+        } else if (error.message.includes("network")) {
+          errorMessage =
+            "Network connection issue. Please check your internet connection.";
         }
       }
 
@@ -318,7 +318,7 @@ When asked about where to buy the treatment, search the web for nearest location
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, fallbackMessage]);
+      setMessages((prev) => [...prev, fallbackMessage]);
       return fallbackMessage;
     }
   };
@@ -329,9 +329,9 @@ When asked about where to buy the treatment, search the web for nearest location
   const saveCurrentChat = () => {
     if (messages.length <= 1) return; // Only save if there are actual conversations
 
-    const title = messages.find(m => m.type === 'user')?.content
-      ?.substring(0, 50) + '...' || 
-      `Chat about ${scanResult.disease.name}`;
+    const title =
+      messages.find((m) => m.type === "user")?.content?.substring(0, 50) +
+        "..." || `Chat about ${scanResult.disease.name}`;
 
     const newSession: ChatSession = {
       id: `chat-${Date.now()}`,
@@ -405,7 +405,6 @@ When asked about where to buy the treatment, search the web for nearest location
     }
   };
 
-
   /**
    * Quick question buttons for common queries
    */
@@ -430,8 +429,8 @@ When asked about where to buy the treatment, search the web for nearest location
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             )}
             {userLocation && (
-              <Badge variant="outline" className="text-xs">
-                📍 {userLocation.split(',')[0]}
+              <Badge variant="outline" className="text-xs max-[1024px]:hidden">
+                📍 {userLocation.split(",")[0]}
               </Badge>
             )}
             {onClose && (
@@ -455,16 +454,33 @@ When asked about where to buy the treatment, search the web for nearest location
           </div>
         </CardTitle>
 
+        <div className="flex items-center space-x-2 min-[1024px]:hidden">
+          {userLocation && (
+            <Badge variant="outline" className="text-xs">
+              📍 {userLocation.split(",")[0]}
+            </Badge>
+          )}
+        </div>
+
         <div className="flex items-center justify-between text-sm">
           <Badge variant="secondary" className="text-xs">
             Disease: {scanResult.disease.name}
           </Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={saveCurrentChat}
+            className="text-xs h-6 px-2"
+            disabled={messages.length <= 1}
+          >
+            Save Chat
+          </Button>
         </div>
       </CardHeader>
 
       {/* History Sidebar */}
       {showHistory && (
-        <div className="absolute top-0 left-0 w-full h-full bg-background border-r z-10 flex flex-col">
+        <div className="absolute top-14 left-0 w-full max-w-sm mx-auto h-full bg-background border-r z-10 flex flex-col">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold">Chat History</h3>
             <div className="flex items-center space-x-2">
@@ -502,9 +518,12 @@ When asked about where to buy the treatment, search the web for nearest location
                     onClick={() => loadChatSession(session)}
                   >
                     <div className="text-sm">
-                      <div className="font-medium truncate">{session.title}</div>
+                      <div className="font-medium truncate">
+                        {session.title}
+                      </div>
                       <div className="text-xs text-muted-foreground">
-                        {session.diseaseName} • {new Date(session.timestamp).toLocaleDateString()}
+                        {session.diseaseName} •{" "}
+                        {new Date(session.timestamp).toLocaleDateString()}
                       </div>
                     </div>
                   </Button>
@@ -543,21 +562,73 @@ When asked about where to buy the treatment, search the web for nearest location
                     <User className="h-4 w-4 mt-1 flex-shrink-0" />
                   )}
                   <div className="flex-1 text-sm">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
-                      h1: ({children}) => <h1 className="text-lg font-semibold mt-2 mb-1">{children}</h1>,
-                      h2: ({children}) => <h2 className="text-base font-semibold mt-2 mb-1">{children}</h2>,
-                      h3: ({children}) => <h3 className="text-sm font-semibold mt-2 mb-1">{children}</h3>,
-                      p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
-                      ul: ({children}) => <ul className="list-disc list-inside my-2 space-y-1 pl-4">{children}</ul>,
-                      ol: ({children}) => <ol className="list-decimal list-inside my-2 space-y-1 pl-4">{children}</ol>,
-                      li: ({children}) => <li className="mb-1">{children}</li>,
-                      code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs">{children}</code>,
-                      pre: ({children}) => <pre className="bg-muted p-2 rounded text-xs overflow-auto">{children}</pre>,
-                      blockquote: ({children}) => <blockquote className="border-l-2 border-muted-foreground pl-3 italic">{children}</blockquote>,
-                      strong: ({children}) => <strong className="font-semibold">{children}</strong>,
-                      em: ({children}) => <em className="italic">{children}</em>,
-                      a: ({children, href}) => <a href={href} className="text-primary underline hover:no-underline">{children}</a>,
-                    }}>{message.content}</ReactMarkdown>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        h1: ({ children }) => (
+                          <h1 className="text-lg font-semibold mt-2 mb-1">
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ children }) => (
+                          <h2 className="text-base font-semibold mt-2 mb-1">
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ children }) => (
+                          <h3 className="text-sm font-semibold mt-2 mb-1">
+                            {children}
+                          </h3>
+                        ),
+                        p: ({ children }) => (
+                          <p className="mb-2 last:mb-0">{children}</p>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc list-inside my-2 space-y-1 pl-4">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="list-decimal list-inside my-2 space-y-1 pl-4">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => (
+                          <li className="mb-1">{children}</li>
+                        ),
+                        code: ({ children }) => (
+                          <code className="bg-muted px-1 py-0.5 rounded text-xs">
+                            {children}
+                          </code>
+                        ),
+                        pre: ({ children }) => (
+                          <pre className="bg-muted p-2 rounded text-xs overflow-auto">
+                            {children}
+                          </pre>
+                        ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-2 border-muted-foreground pl-3 italic">
+                            {children}
+                          </blockquote>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-semibold">{children}</strong>
+                        ),
+                        em: ({ children }) => (
+                          <em className="italic">{children}</em>
+                        ),
+                        a: ({ children, href }) => (
+                          <a
+                            href={href}
+                            className="text-primary underline hover:no-underline"
+                          >
+                            {children}
+                          </a>
+                        ),
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               </div>
@@ -581,33 +652,7 @@ When asked about where to buy the treatment, search the web for nearest location
       </CardContent>
 
       {/* Quick Questions */}
-      <div className="p-4 border-t">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-sm font-medium">Quick Questions</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={saveCurrentChat}
-            className="text-xs h-6 px-2"
-            disabled={messages.length <= 1}
-          >
-            Save Chat
-          </Button>
-        </div>
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {quickQuestions.map((q, index) => (
-            <Button
-              key={index}
-              variant="outline"
-              size="sm"
-              onClick={() => setInputMessage(q)}
-              className="text-xs h-8 px-2"
-            >
-              {q}
-            </Button>
-          ))}
-        </div>
-
+      <div className="px-4 pt-4 pb-0 border-t ">
         {/* Input Area */}
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative">
@@ -618,20 +663,6 @@ When asked about where to buy the treatment, search the web for nearest location
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               className="pr-10"
             />
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleVoiceInput}
-              className={`absolute right-1 top-1 h-8 w-8 p-0 ${
-                isListening ? "text-red-500" : ""
-              }`}
-            >
-              {isListening ? (
-                <MicOff className="h-4 w-4" />
-              ) : (
-                <Mic className="h-4 w-4" />
-              )}
-            </Button>
           </div>
 
           <Button
