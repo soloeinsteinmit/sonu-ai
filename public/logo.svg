@@ -1,0 +1,50 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a"/>
+      <stop offset="100%" style="stop-color:#15803d"/>
+    </linearGradient>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#16a34a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="248" fill="url(#shieldGradient)"/>
+  
+  <!-- Shield outline -->
+  <path d="M256 48 L156 96 L156 224 C156 320 200 396 256 464 C312 396 356 320 356 224 L356 96 L256 48 Z" 
+        fill="white" opacity="0.9"/>
+  
+  <!-- Leaf -->
+  <path d="M256 128 C220 128 192 156 192 192 C192 228 220 256 256 256 C292 256 320 228 320 192 C320 156 292 128 256 128 Z
+           M256 128 C256 128 240 160 240 192 C240 224 248 240 256 240 C264 240 272 224 272 192 C272 160 256 128 256 128 Z"
+        fill="url(#leafGradient)"/>
+  
+  <!-- Leaf veins -->
+  <path d="M256 144 L256 240" stroke="#15803d" stroke-width="2" opacity="0.6"/>
+  <path d="M240 176 L272 176" stroke="#15803d" stroke-width="1.5" opacity="0.4"/>
+  <path d="M242 192 L270 192" stroke="#15803d" stroke-width="1.5" opacity="0.4"/>
+  <path d="M244 208 L268 208" stroke="#15803d" stroke-width="1.5" opacity="0.4"/>
+  
+  <!-- AI circuit pattern -->
+  <g opacity="0.3" stroke="#22c55e" stroke-width="1.5" fill="none">
+    <circle cx="200" cy="200" r="8"/>
+    <circle cx="312" cy="200" r="8"/>
+    <circle cx="256" cy="280" r="8"/>
+    <line x1="208" y1="200" x2="248" y2="192"/>
+    <line x1="304" y1="200" x2="264" y2="192"/>
+    <line x1="256" y1="208" x2="256" y2="272"/>
+  </g>
+  
+  <!-- Microchip accent -->
+  <g transform="translate(256, 350)" opacity="0.8">
+    <rect x="-12" y="-8" width="24" height="16" rx="2" fill="#16a34a"/>
+    <rect x="-10" y="-6" width="20" height="12" rx="1" fill="white"/>
+    <circle cx="-6" cy="-2" r="1" fill="#16a34a"/>
+    <circle cx="-2" cy="-2" r="1" fill="#16a34a"/>
+    <circle cx="2" cy="-2" r="1" fill="#16a34a"/>
+    <circle cx="6" cy="-2" r="1" fill="#16a34a"/>
+  </g>
+</svg>

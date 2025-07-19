@@ -1,0 +1,47 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="leafGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a"/>
+      <stop offset="50%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#15803d"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="256" cy="256" r="248" fill="url(#leafGrad512)"/>
+  
+  <!-- Shield with rounded corners -->
+  <path d="M256 48 L128 96 L128 224 C128 320 184 396 256 464 C328 396 384 320 384 224 L384 96 L256 48 Z" 
+        fill="white" opacity="0.95" stroke="#15803d" stroke-width="4"/>
+  
+  <!-- Detailed Leaf -->
+  <path d="M256 128 C200 128 160 168 160 224 C160 280 200 320 256 320 C312 320 352 280 352 224 C352 168 312 128 256 128 Z
+           M256 128 C256 128 232 176 232 224 C232 272 244 296 256 296 C268 296 280 272 280 224 C280 176 256 128 256 128 Z"
+        fill="#16a34a"/>
+  
+  <!-- Leaf veins -->
+  <path d="M256 144 L256 304" stroke="#15803d" stroke-width="3"/>
+  <path d="M224 192 L288 192" stroke="#15803d" stroke-width="2"/>
+  <path d="M226 224 L286 224" stroke="#15803d" stroke-width="2"/>
+  <path d="M228 256 L284 256" stroke="#15803d" stroke-width="2"/>
+  
+  <!-- AI circuit pattern -->
+  <g opacity="0.4" stroke="#15803d" stroke-width="2" fill="none">
+    <circle cx="192" cy="192" r="12"/>
+    <circle cx="320" cy="192" r="12"/>
+    <circle cx="256" cy="320" r="12"/>
+    <line x1="204" y1="192" x2="244" y2="184"/>
+    <line x1="308" y1="192" x2="268" y2="184"/>
+    <line x1="256" y1="204" x2="256" y2="308"/>
+  </g>
+  
+  <!-- Tech accent -->
+  <g transform="translate(256, 400)" opacity="0.9">
+    <rect x="-24" y="-12" width="48" height="24" rx="4" fill="#15803d"/>
+    <rect x="-20" y="-8" width="40" height="16" rx="2" fill="white"/>
+    <circle cx="-12" cy="-4" r="2" fill="#16a34a"/>
+    <circle cx="-4" cy="-4" r="2" fill="#16a34a"/>
+    <circle cx="4" cy="-4" r="2" fill="#16a34a"/>
+    <circle cx="12" cy="-4" r="2" fill="#16a34a"/>
+  </g>
+</svg>
