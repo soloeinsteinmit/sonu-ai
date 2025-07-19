@@ -24,6 +24,7 @@ import { MultiImageProcessor } from "@/components/scan/multi-image-processor";
 import { ScanResultsChat } from "@/components/scan/scan-results-chat";
 import { MultipleScanResults } from "@/components/scan/multiple-scan-results";
 import { ScanResult, MultipleScanResult } from "@/lib/types/disease";
+import { FloatingMapButton } from "@/components/common/floating-map-button";
 
 /**
  * Scan workflow stages
@@ -296,41 +297,7 @@ export default function ScanPage() {
             )}
         </div>
 
-        {/* Help Section */}
-        {/* <div className="mt-12 max-w-2xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center">Need Help?</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="text-center p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-medium mb-2">
-                    🤔 Not sure what disease this is?
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Our AI can detect 24 common diseases across cashew, cassava,
-                    maize, and tomato crops.
-                  </p>
-                </div>
-
-                <div className="text-center p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-medium mb-2">📞 Need expert advice?</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Contact your local agricultural extension officer for
-                    additional guidance.
-                  </p>
-                </div>
-              </div>
-
-              <div className="text-center">
-                <Badge variant="outline" className="text-xs">
-                  AgriSentry AI • Accuracy: 95% • Ghana-focused
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </div> */}
+        <FloatingMapButton />
       </main>
     </div>
   );

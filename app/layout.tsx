@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Merriweather, Source_Code_Pro } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-import { FloatingMapButton } from "@/components/common/floating-map-button";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 
@@ -142,7 +141,6 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen bg-background font-sans">
         {children}
-        <FloatingMapButton />
         <Toaster richColors />
         <script
           dangerouslySetInnerHTML={{

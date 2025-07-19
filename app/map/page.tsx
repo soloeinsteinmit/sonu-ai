@@ -314,22 +314,6 @@ export default function MapPage() {
                       {filteredOutbreaks.length}
                     </Badge>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      Active / Resolved
-                    </span>
-                    <Badge variant="destructive">
-                      {
-                        filteredOutbreaks.filter((o) => o.status === "active")
-                          .length
-                      }{" "}
-                      /{" "}
-                      {
-                        filteredOutbreaks.filter((o) => o.status === "resolved")
-                          .length
-                      }
-                    </Badge>
-                  </div>
                 </div>
               </CardContent>
             </Card>
