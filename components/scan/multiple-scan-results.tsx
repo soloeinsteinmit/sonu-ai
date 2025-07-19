@@ -16,7 +16,6 @@ import {
   Camera,
   MapPin,
   MessageCircle,
-  TrendingUp,
   BarChart3,
   Eye,
   X,
@@ -24,7 +23,6 @@ import {
   ChevronUp,
   Images,
   Volume2,
-  Upload,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -336,7 +334,7 @@ export function MultipleScanResults({
               variant="outline"
               className="h-12 flex-1"
             >
-              <Upload className="mr-2 h-4 w-4 " />
+              <Camera className="mr-2 h-4 w-4 " />
               New Scan
             </Button>
 
@@ -345,7 +343,6 @@ export function MultipleScanResults({
                 variant="outline"
                 onClick={async () => {
                   await onReportOutbreak();
-                  toast.success("Activity reported to map.");
                 }}
                 className="h-12 flex-1"
               >

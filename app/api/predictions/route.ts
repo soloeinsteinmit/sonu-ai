@@ -7,11 +7,11 @@ import csv from "csv-parser";
 const mockOutbreaks = [
   {
     id: "outbreak-1",
-    location: { 
-      lat: 5.6037, 
-      lng: -0.1870, 
+    location: {
+      lat: 5.6037,
+      lng: -0.187,
       name: "Accra Central",
-      region: "Greater Accra" 
+      region: "Greater Accra",
     },
     disease: "Cassava Mosaic",
     crop: "Cassava",
@@ -19,15 +19,16 @@ const mockOutbreaks = [
     reportedDate: "2025-01-15T10:30:00Z",
     reportedBy: "Farmer John Mensah",
     status: "active" as const,
-    description: "Widespread mosaic symptoms observed in cassava plantation. Affecting approximately 60% of plants."
+    description:
+      "Widespread mosaic symptoms observed in cassava plantation. Affecting approximately 60% of plants.",
   },
   {
-    id: "outbreak-2", 
-    location: { 
-      lat: 6.6885, 
-      lng: -1.6244, 
+    id: "outbreak-2",
+    location: {
+      lat: 6.6885,
+      lng: -1.6244,
       name: "Kumasi",
-      region: "Ashanti" 
+      region: "Ashanti",
     },
     disease: "Maize Streak Virus",
     crop: "Maize",
@@ -35,15 +36,16 @@ const mockOutbreaks = [
     reportedDate: "2025-01-14T14:15:00Z",
     reportedBy: "Agricultural Extension Officer",
     status: "contained" as const,
-    description: "Streak symptoms in young maize plants. Treatment measures have been applied."
+    description:
+      "Streak symptoms in young maize plants. Treatment measures have been applied.",
   },
   {
     id: "outbreak-3",
-    location: { 
-      lat: 5.5500, 
-      lng: -0.2167, 
+    location: {
+      lat: 5.55,
+      lng: -0.2167,
       name: "Tema",
-      region: "Greater Accra" 
+      region: "Greater Accra",
     },
     disease: "Tomato Leaf Blight",
     crop: "Tomato",
@@ -51,15 +53,16 @@ const mockOutbreaks = [
     reportedDate: "2025-01-13T08:45:00Z",
     reportedBy: "Greenhouse Manager",
     status: "active" as const,
-    description: "Rapid spread of leaf blight in greenhouse facility. Immediate intervention required."
+    description:
+      "Rapid spread of leaf blight in greenhouse facility. Immediate intervention required.",
   },
   {
     id: "outbreak-4",
-    location: { 
-      lat: 7.9465, 
-      lng: -1.0232, 
+    location: {
+      lat: 7.9465,
+      lng: -1.0232,
       name: "Tamale",
-      region: "Northern" 
+      region: "Northern",
     },
     disease: "Cashew Anthracnose",
     crop: "Cashew",
@@ -67,15 +70,16 @@ const mockOutbreaks = [
     reportedDate: "2025-01-12T16:20:00Z",
     reportedBy: "Cashew Farmer Association",
     status: "active" as const,
-    description: "Anthracnose symptoms detected in cashew trees. Monitoring ongoing."
+    description:
+      "Anthracnose symptoms detected in cashew trees. Monitoring ongoing.",
   },
   {
     id: "outbreak-5",
-    location: { 
-      lat: 5.1200, 
-      lng: -1.2800, 
+    location: {
+      lat: 5.12,
+      lng: -1.28,
       name: "Cape Coast",
-      region: "Central" 
+      region: "Central",
     },
     disease: "Cassava Brown Spot",
     crop: "Cassava",
@@ -83,8 +87,9 @@ const mockOutbreaks = [
     reportedDate: "2025-01-11T11:10:00Z",
     reportedBy: "Community Farmer",
     status: "contained" as const,
-    description: "Brown spot disease identified in small cassava plot. Localized treatment applied."
-  }
+    description:
+      "Brown spot disease identified in small cassava plot. Localized treatment applied.",
+  },
 ];
 
 /**
@@ -92,22 +97,24 @@ const mockOutbreaks = [
  */
 function isHealthyPlant(disease: string): boolean {
   if (!disease) return true;
-  
+
   const diseaseLower = disease.toLowerCase().trim();
-  
+
   // Filter out any variation of healthy plants
   const healthyIndicators = [
-    'healthy',
-    'normal',
-    'no disease',
-    'disease free',
-    'clean',
-    'unaffected',
-    'good condition',
-    'no symptoms'
+    "healthy",
+    "normal",
+    "no disease",
+    "disease free",
+    "clean",
+    "unaffected",
+    "good condition",
+    "no symptoms",
   ];
-  
-  return healthyIndicators.some(indicator => diseaseLower.includes(indicator));
+
+  return healthyIndicators.some((indicator) =>
+    diseaseLower.includes(indicator)
+  );
 }
 
 export async function GET() {
@@ -150,12 +157,12 @@ export async function GET() {
       }));
 
     // Combine mock outbreaks with CSV data (all are already filtered to exclude healthy plants)
-    const allOutbreaks = [...mockOutbreaks, ...csvOutbreaks];
+    const allOutbreaks = [...csvOutbreaks];
 
     return NextResponse.json(allOutbreaks);
   } catch (error) {
     console.error("Error fetching outbreak data:", error);
     // Return just mock data if CSV reading fails (all are diseased plants)
-    return NextResponse.json(mockOutbreaks);
+    // return NextResponse.json(mockOutbreaks);
   }
 }

@@ -19,12 +19,9 @@ import {
   AlertTriangle,
   Camera,
   MapPin,
-  Brain,
-  Leaf,
   X,
   Eye,
   Volume2,
-  Upload,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +57,7 @@ export function ScanResultsChat({
   const [showChat, setShowChat] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { detectionResult, disease } = result;
 
@@ -158,7 +155,9 @@ export function ScanResultsChat({
 
         // Validate file size (max 10MB)
         if (file.size > 10 * 1024 * 1024) {
-          toast.error(`${file.name} is too large. Please select files under 10MB`);
+          toast.error(
+            `${file.name} is too large. Please select files under 10MB`
+          );
           continue;
         }
 
@@ -177,7 +176,7 @@ export function ScanResultsChat({
 
       // Reset file input
       if (event.target) {
-        event.target.value = '';
+        event.target.value = "";
       }
     },
     [onDirectImageUpload, onNewScan]
@@ -299,7 +298,7 @@ export function ScanResultsChat({
             variant="outline"
             className="h-12 w-[48%]"
           >
-            <Upload className="mr-2 h-4 w-4" />
+            <Camera className="mr-2 h-4 w-4" />
             New Scan
           </Button>
 
@@ -308,7 +307,6 @@ export function ScanResultsChat({
               variant="outline"
               onClick={async () => {
                 await onReportOutbreak();
-                toast.success("Activity reported to map.");
               }}
               className="h-12 w-[48%]"
             >
