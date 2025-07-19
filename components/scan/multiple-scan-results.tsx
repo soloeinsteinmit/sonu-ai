@@ -266,14 +266,6 @@ export function MultipleScanResults({
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
-          <Button
-            onClick={() => setShowChat(true)}
-            className="w-full h-12 bg-primary hover:bg-primary/90"
-          >
-            <MessageCircle className="mr-2 h-5 w-5" />
-            Ask AI About Results
-          </Button>
-
           <div className="flex gap-2">
             <Button
               onClick={onNewScan}
@@ -298,6 +290,13 @@ export function MultipleScanResults({
               </Button>
             )}
           </div>
+          <Button
+            onClick={() => setShowChat(true)}
+            className="w-full h-12 bg-primary hover:bg-primary/90"
+          >
+            <MessageCircle className="mr-2 h-5 w-5" />
+            Chat with AI
+          </Button>
         </div>
       </div>
 
