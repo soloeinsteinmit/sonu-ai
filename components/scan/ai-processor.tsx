@@ -284,7 +284,6 @@ export function AIProcessor({
             </h4>
             <ul className="text-xs text-muted-foreground space-y-1">
               <li>• Running inference directly in your browser</li>
-              <li>• Model: `agrisentry_model.onnx`</li>
               <li>• This works 100% offline!</li>
               <li>
                 • File: {imageFile.name} (

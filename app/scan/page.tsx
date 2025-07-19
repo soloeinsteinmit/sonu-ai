@@ -149,7 +149,7 @@ export default function ScanPage() {
       });
 
       if (response.ok) {
-        toast.success("Outbreak reported successfully.");
+        // Silent success; child component will show toast
       } else {
         toast.error("Failed to report outbreak. Please try again later.");
       }

@@ -179,8 +179,6 @@ export default function MapPage() {
     
     // Close the details panel
     setSelectedOutbreak(null);
-    
-    toast.success("Outbreak report has been removed from the map.");
   };
 
   /**
