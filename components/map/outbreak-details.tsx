@@ -6,20 +6,40 @@
  * Detailed view of selected outbreak information
  * Features:
  * - Complete outbreak information
+ * - Location-based deletion capability
  * - Action buttons for reporting
  * - Treatment recommendations
  * - Contact information
  *
  * @author Mohammed Nuruddin Alhassan & Solomon Eshun
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { useState, useEffect } from "react";
-import { X, MapPin, Calendar, AlertTriangle, Phone } from "lucide-react";
+import { X, MapPin, Calendar, AlertTriangle, Phone, Trash2, Navigation, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { OutbreakData } from "@/app/map/page";
 import { toast } from "sonner";
+import {
+  getCurrentLocation,
+  isWithinDeletionRange,
+  formatDistance,
+  calculateDistance,
+  UserLocation,
+} from "@/lib/utils/location-helper";
 
 /**
  * Props for OutbreakDetails component
@@ -27,6 +47,7 @@ import { toast } from "sonner";
 interface OutbreakDetailsProps {
   outbreak: OutbreakData;
   onClose: () => void;
+  onDelete?: (outbreakId: string) => void;
 }
 
 /**
@@ -93,9 +114,14 @@ const getStatusInfo = (status: string) => {
 /**
  * Main outbreak details component
  */
-export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
+export function OutbreakDetails({ outbreak, onClose, onDelete }: OutbreakDetailsProps) {
   const [isSharing, setIsSharing] = useState(false);
   const [location, setLocation] = useState("Unknown");
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [canDelete, setCanDelete] = useState(false);
+  const [distanceToOutbreak, setDistanceToOutbreak] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const severityInfo = getSeverityInfo(outbreak.severity);
   const statusInfo = getStatusInfo(outbreak.status);
@@ -118,6 +144,106 @@ export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
       fetchLocation();
     }
   }, [outbreak.location.lat, outbreak.location.lng]);
+
+  /**
+   * Automatically check user location when component mounts
+   */
+  useEffect(() => {
+    // Auto-check user location when outbreak details open
+    checkUserLocation();
+  }, [outbreak.id]); // Re-run when outbreak changes
+
+  /**
+   * Get user location and check if they can delete this outbreak
+   */
+  const checkUserLocation = async () => {
+    setIsLoadingLocation(true);
+    try {
+      const location = await getCurrentLocation();
+      setUserLocation(location);
+      
+      const distance = calculateDistance(
+        location.latitude,
+        location.longitude,
+        outbreak.location.lat,
+        outbreak.location.lng
+      );
+      
+      setDistanceToOutbreak(distance);
+      
+      // Check if user is within 5km tolerance for deletion
+      const withinRange = isWithinDeletionRange(
+        location.latitude,
+        location.longitude,
+        outbreak.location.lat,
+        outbreak.location.lng,
+        5 // 5km tolerance
+      );
+      
+      setCanDelete(withinRange);
+      
+      if (withinRange) {
+        toast.success(`You're ${formatDistance(distance)} from this outbreak. You can help verify this report.`);
+      } else {
+        toast.info(`You're ${formatDistance(distance)} from this outbreak. You need to be within 5km to help moderate this report.`);
+      }
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to get your location";
+      toast.error(`${errorMessage}. Please enable location services.`);
+      console.error("Location error:", error);
+      setUserLocation(null);
+      setCanDelete(false);
+      setDistanceToOutbreak(null);
+    } finally {
+      setIsLoadingLocation(false);
+    }
+  };
+
+  /**
+   * Handle outbreak deletion
+   */
+  const handleDelete = async () => {
+    if (!canDelete || !userLocation) {
+      toast.error("You must be within 5km of the outbreak to delete it.");
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/outbreaks/${outbreak.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userLocation: {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+          reason: 'Community moderation - false or outdated report',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete outbreak');
+      }
+
+      toast.success("Outbreak report has been removed. Thank you for helping keep our community data accurate!");
+      
+      // Call the onDelete callback to update the parent component
+      if (onDelete) {
+        onDelete(outbreak.id);
+      }
+      
+      onClose();
+    } catch (error) {
+      toast.error("Failed to delete outbreak. Please try again.");
+      console.error("Delete error:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   /**
    * Handle sharing outbreak information
@@ -236,43 +362,124 @@ export function OutbreakDetails({ outbreak, onClose }: OutbreakDetailsProps) {
           </div>
         )}
 
-        {/* Action buttons */}
-        {/* <div className="space-y-2 pt-4 border-t">
-          <p className="text-sm font-medium">Actions</p>
-
-          <div className="grid grid-cols-1 gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReportSimilar}
-              className="justify-start"
-            >
-              <AlertTriangle className="h-4 w-4 mr-2" />
-              Report Similar Outbreak
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleContact}
-              className="justify-start"
-            >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Contact Reporter
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              disabled={isSharing}
-              className="justify-start"
-            >
-              <Share2 className="h-4 w-4 mr-2" />
-              {isSharing ? "Sharing..." : "Share Information"}
-            </Button>
+        {/* Location-based moderation */}
+        <div className="space-y-3 pt-4 border-t">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium">Community Moderation</p>
+            {distanceToOutbreak !== null && (
+              <Badge variant="outline" className="text-xs">
+                {formatDistance(distanceToOutbreak)}
+              </Badge>
+            )}
           </div>
-        </div> */}
+
+          {isLoadingLocation ? (
+            <div className="bg-blue-50 p-3 rounded-md">
+              <div className="flex items-center space-x-2 mb-2">
+                <Navigation className="h-4 w-4 text-blue-600 animate-pulse" />
+                <p className="text-sm font-medium text-blue-800">
+                  Checking Your Location...
+                </p>
+              </div>
+              <p className="text-sm text-blue-700">
+                Getting your location to see if you can help verify this outbreak report.
+              </p>
+            </div>
+          ) : !userLocation ? (
+            <div className="bg-gray-50 p-3 rounded-md">
+              <div className="flex items-center space-x-2 mb-2">
+                <Navigation className="h-4 w-4 text-gray-600" />
+                <p className="text-sm font-medium text-gray-800">
+                  Location Access Needed
+                </p>
+              </div>
+              <p className="text-sm text-gray-700 mb-3">
+                Please enable location services to help verify outbreak reports in your area.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={checkUserLocation}
+                className="text-blue-600 border-blue-200 hover:bg-blue-50"
+              >
+                <Navigation className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          ) : (
+            <div className={`p-3 rounded-md ${canDelete ? 'bg-green-50' : 'bg-gray-50'}`}>
+              <div className="flex items-center space-x-2 mb-2">
+                <Shield className={`h-4 w-4 ${canDelete ? 'text-green-600' : 'text-gray-600'}`} />
+                <p className={`text-sm font-medium ${canDelete ? 'text-green-800' : 'text-gray-800'}`}>
+                  {canDelete ? 'You Can Help Moderate' : 'Outside Moderation Range'}
+                </p>
+              </div>
+              <p className={`text-sm mb-3 ${canDelete ? 'text-green-700' : 'text-gray-700'}`}>
+                {canDelete 
+                  ? `You're ${formatDistance(distanceToOutbreak!)} from this outbreak. You can help remove false or outdated reports.`
+                  : `You're ${formatDistance(distanceToOutbreak!)} from this outbreak. You need to be within 5km to help moderate reports.`
+                }
+              </p>
+              
+              {canDelete && (
+                <div className="flex gap-2">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isDeleting}
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {isDeleting ? "Removing..." : "Remove False Report"}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="z-[9999]">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Remove Outbreak Report?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          You're about to remove this {outbreak.disease} outbreak report from {outbreak.location.name || 'the map'}. 
+                          This action will help keep our community data accurate by removing false or outdated reports.
+                          <br /><br />
+                          <strong>Are you sure this report is incorrect or no longer relevant?</strong>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDelete}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Yes, Remove Report
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setUserLocation(null)}
+                    className="text-gray-600 border-gray-200"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
+              
+              {!canDelete && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setUserLocation(null)}
+                  className="text-gray-600 border-gray-200"
+                >
+                  Try Different Location
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Emergency contact */}
         {outbreak.severity === "critical" && (

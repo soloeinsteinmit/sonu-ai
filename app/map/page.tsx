@@ -170,6 +170,20 @@ export default function MapPage() {
   };
 
   /**
+   * Handle outbreak deletion
+   */
+  const handleOutbreakDelete = (outbreakId: string) => {
+    // Remove the outbreak from both the main list and filtered list
+    setOutbreaks(prev => prev.filter(outbreak => outbreak.id !== outbreakId));
+    setFilteredOutbreaks(prev => prev.filter(outbreak => outbreak.id !== outbreakId));
+    
+    // Close the details panel
+    setSelectedOutbreak(null);
+    
+    toast.success("Outbreak report has been removed from the map.");
+  };
+
+  /**
    * Clear filters
    */
   const clearFilters = () => {
@@ -267,6 +281,7 @@ export default function MapPage() {
               <OutbreakDetails
                 outbreak={selectedOutbreak}
                 onClose={() => setSelectedOutbreak(null)}
+                onDelete={handleOutbreakDelete}
               />
             ) : (
               <Card>

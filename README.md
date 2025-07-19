@@ -84,8 +84,6 @@ graph TB
     SW --> IDB
     UI --> LOCAL
     
-
-    
     class PWA,UI,SW frontend
     class ONNX,MODEL,PROC ai
     class DISEASES,TREATMENTS,OUTBREAKS data
@@ -215,11 +213,6 @@ graph LR
     MODEL --> SOFTMAX[Softmax Layer]
     SOFTMAX --> OUTPUT[22 Disease Classes]
     
-    classDef input fill:#e3f2fd
-    classDef process fill:#f3e5f5
-    classDef model fill:#e8f5e8
-    classDef output fill:#fff3e0
-    
     class INPUT input
     class PREP,RESIZE,NORM process
     class MODEL model
@@ -280,10 +273,6 @@ graph TB
     FILTER --> HEATMAP
     ANON --> MARKERS
     MARKERS --> STATS
-    
-    classDef collect fill:#e1f5fe
-    classDef process fill:#f3e5f5
-    classDef visual fill:#e8f5e8
     
     class REPORT,GPS,TIME collect
     class CLUSTER,FILTER,ANON process
