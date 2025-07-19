@@ -13,11 +13,10 @@
  */
 
 import { useState } from "react";
-import { ArrowLeft, Camera, Brain, FileText } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { CameraCapture } from "@/components/scan/camera-capture";
 import { AIProcessor } from "@/components/scan/ai-processor";
@@ -119,12 +118,12 @@ export default function ScanPage() {
       setCapturedImage(null);
       setIsMultipleMode(files.length > 1);
     }
-    
+
     // Reset previous results
     setScanResult(null);
     setMultipleScanResult(null);
     setError(null);
-    
+
     // Go directly to processing stage
     setCurrentStage("processing");
   };
@@ -185,20 +184,6 @@ export default function ScanPage() {
   };
 
   /**
-   * Get stage icon based on current workflow stage
-   */
-  const getStageIcon = (stage: ScanStage) => {
-    switch (stage) {
-      case "capture":
-        return <Camera className="h-4 w-4" />;
-      case "processing":
-        return <Brain className="h-4 w-4" />;
-      case "results":
-        return <FileText className="h-4 w-4" />;
-    }
-  };
-
-  /**
    * Check if stage is active, completed, or pending
    */
   const getStageStatus = (stage: ScanStage) => {
@@ -234,67 +219,6 @@ export default function ScanPage() {
           </div>
         </div>
       </header>
-
-      {/* Progress Indicator */}
-      <div className="bg-muted/30 border-b">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-center space-x-8">
-            {(["capture", "processing", "results"] as ScanStage[]).map(
-              (stage, index) => {
-                const status = getStageStatus(stage);
-                const isActive = status === "active";
-                const isCompleted = status === "completed";
-
-                return (
-                  <div key={stage} className="flex items-center space-x-2">
-                    <div
-                      className={`
-                    flex items-center justify-center w-8 h-8 rounded-full border-2 transition-colors
-                    ${
-                      isActive
-                        ? "bg-primary border-primary text-primary-foreground"
-                        : ""
-                    }
-                    ${
-                      isCompleted
-                        ? "bg-green-500 border-green-500 text-white"
-                        : ""
-                    }
-                    ${
-                      status === "pending"
-                        ? "border-muted-foreground/30 text-muted-foreground"
-                        : ""
-                    }
-                  `}
-                    >
-                      {getStageIcon(stage)}
-                    </div>
-                    <span
-                      className={`
-                    text-sm font-medium capitalize hidden sm:block
-                    ${isActive ? "text-primary" : ""}
-                    ${isCompleted ? "text-green-600" : ""}
-                    ${status === "pending" ? "text-muted-foreground" : ""}
-                  `}
-                    >
-                      {stage}
-                    </span>
-
-                    {index < 2 && (
-                      <div
-                        className={`
-                      w-8 h-0.5 mx-2 transition-colors
-                      ${isCompleted ? "bg-green-500" : "bg-muted-foreground/30"}
-                    `}
-                      />
-                    )}
-                  </div>
-                );
-              }
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 max-[1024px]:max-w-md">
