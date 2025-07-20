@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Offline Indicator Component
+ * sonu - Offline Indicator Component
  *
  * Shows the user's connection status and provides offline guidance.
  *

@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Offline Storage Utilities
+ * sonu - Offline Storage Utilities
  *
  * Handles offline data storage and synchronization for scan results,
  * outbreak reports, and other app data.

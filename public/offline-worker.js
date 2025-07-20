@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Custom Offline Worker
+ * sonu - Custom Offline Worker
  *
  * This script enhances the Next.js PWA service worker with custom offline functionality.
  * It's imported by the main service worker and provides additional caching strategies.

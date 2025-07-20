@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Offline Error Handler Component
+ * sonu - Offline Error Handler Component
  *
  * This component catches and handles errors that occur during offline operation,
  * providing user-friendly error messages and recovery options.

@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - PWA Detection Hook
+ * sonu - PWA Detection Hook
  *
  * Custom hook to detect if the app is running as an installed PWA
  * and provide PWA-specific functionality.

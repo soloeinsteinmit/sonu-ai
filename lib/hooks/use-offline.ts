@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Offline Detection Hook
+ * sonu - Offline Detection Hook
  *
  * Custom hook to detect online/offline status and provide
  * offline-specific functionality.

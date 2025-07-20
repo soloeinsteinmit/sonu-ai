@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Offline Fallback Page
+ * sonu - Offline Fallback Page
  *
  * Displayed when the user is offline and tries to access a page
  * that hasn't been cached yet.

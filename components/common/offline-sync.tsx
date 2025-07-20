@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Offline Sync Component
+ * sonu - Offline Sync Component
  *
  * Handles automatic synchronization of offline data when
  * the user comes back online.

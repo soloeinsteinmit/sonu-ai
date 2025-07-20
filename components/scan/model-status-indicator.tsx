@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Model Status Indicator
+ * sonu - Model Status Indicator
  *
  * This component shows the status of the AI model loading
  * and provides guidance for offline use.
