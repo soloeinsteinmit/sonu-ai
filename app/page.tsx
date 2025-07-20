@@ -188,7 +188,7 @@ export default function Home() {
                 <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <TrendingUp className="h-10 w-10 text-green-600" />
                 </div>
-                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text">
                   96%
                 </div>
                 <div className="text-gray-600 font-semibold">
@@ -200,7 +200,7 @@ export default function Home() {
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-sky-200 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <span className="text-3xl">🌾</span>
                 </div>
-                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
+                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text">
                   4
                 </div>
                 <div className="text-gray-600 font-semibold">Major Crops</div>
@@ -210,7 +210,7 @@ export default function Home() {
                 <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Shield className="h-10 w-10 text-amber-600" />
                 </div>
-                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text">
                   24
                 </div>
                 <div className="text-gray-600 font-semibold">Disease Types</div>
@@ -220,7 +220,7 @@ export default function Home() {
                 <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-violet-200 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <CheckCircle className="h-10 w-10 text-purple-600" />
                 </div>
-                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text">
                   Free
                 </div>
                 <div className="text-gray-600 font-semibold">Always Free</div>
@@ -594,8 +594,7 @@ export default function Home() {
           </h2>
 
           <p className="text-xl sm:text-2xl text-green-100 mb-12 leading-relaxed max-w-4xl mx-auto font-medium">
-            Join hundreds of Ghanaian farmers who are already using Sonu
-            to{" "}
+            Join hundreds of Ghanaian farmers who are already using Sonu to{" "}
             <span className="text-yellow-300 font-semibold">
               keep their crops healthy and increase their harvests
             </span>
@@ -696,21 +695,33 @@ export default function Home() {
                 and community outbreak tracking. Built with ❤️ for Ghana's
                 agricultural future.
               </p>
- 
+
               {/* Enhanced Quick Stats */}
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-green-500/10 to-emerald-600/5 backdrop-blur-sm border border-green-500/20 hover:border-green-400/40 transition-all duration-300 group">
-                  <div className="text-3xl font-black text-green-400 group-hover:scale-110 transition-transform duration-300">500+</div>
-                  <div className="text-xs text-gray-400 font-medium">Farmers Helped</div>
-                  <div className="text-xs text-green-500 mt-1">🌾 Growing Daily</div>
+                  <div className="text-3xl font-black text-green-400 group-hover:scale-110 transition-transform duration-300">
+                    500+
+                  </div>
+                  <div className="text-xs text-gray-400 font-medium">
+                    Farmers Helped
+                  </div>
+                  <div className="text-xs text-green-500 mt-1">
+                    🌾 Growing Daily
+                  </div>
                 </div>
                 <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-600/5 backdrop-blur-sm border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 group">
-                  <div className="text-3xl font-black text-blue-400 group-hover:scale-110 transition-transform duration-300">96%</div>
-                  <div className="text-xs text-gray-400 font-medium">Accuracy Rate</div>
-                  <div className="text-xs text-blue-500 mt-1">🎯 AI Powered</div>
+                  <div className="text-3xl font-black text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                    96%
+                  </div>
+                  <div className="text-xs text-gray-400 font-medium">
+                    Accuracy Rate
+                  </div>
+                  <div className="text-xs text-blue-500 mt-1">
+                    🎯 AI Powered
+                  </div>
                 </div>
-              </div> 
- 
+              </div>
+
               {/* Enhanced Quick Actions */}
               <div className="flex gap-4">
                 <Link
@@ -878,8 +889,12 @@ export default function Home() {
                 <div className="inline-flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-red-500/10 via-yellow-500/10 to-green-500/10 border border-yellow-500/20">
                   <span className="text-2xl animate-pulse">🇬🇭</span>
                   <div className="text-left">
-                    <div className="text-sm font-bold text-white">Proudly Ghanaian</div>
-                    <div className="text-xs text-gray-400">Built in Accra, Ghana</div>
+                    <div className="text-sm font-bold text-white">
+                      Proudly Ghanaian
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      Built in Accra, Ghana
+                    </div>
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">

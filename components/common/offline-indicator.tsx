@@ -68,7 +68,7 @@ export function OfflineIndicator() {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
-          className={`fixed top-0 left-0 right-0 z-50 ${
+          className={`fixed top-0 left-0 right-0 z-[9999] ${
             isOffline ? "bg-orange-500 text-white" : "bg-green-500 text-white"
           } shadow-lg`}
         >

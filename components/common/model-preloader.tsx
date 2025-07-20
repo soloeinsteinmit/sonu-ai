@@ -104,7 +104,7 @@ export function ModelPreloader() {
           className="fixed top-4 right-4 z-50 max-w-sm"
         >
           <div className="bg-background border rounded-lg shadow-lg p-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 z-[9999]">
               {isLoading ? (
                 <>
                   <Download className="h-5 w-5 text-blue-500 animate-pulse" />
