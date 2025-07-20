@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import { NearbyOutbreakAlert } from "@/components/alerts/nearby-outbreak-alert";
 import { OfflineIndicator } from "@/components/common/offline-indicator";
 import { OfflineSync } from "@/components/common/offline-sync";
+import { ModelPreloader } from "@/components/common/model-preloader";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -157,6 +158,7 @@ export default function RootLayout({
       <body className="antialiased min-h-screen bg-background font-sans">
         <OfflineIndicator />
         <OfflineSync />
+        <ModelPreloader />
         {children}
         {/* Show user an alert if they are near an outbreak */}
         <NearbyOutbreakAlert radiusKm={5} />
@@ -165,56 +167,111 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-            // PWA Install Prompt - Fixed version
+            // PWA Install Prompt and Service Worker Registration
             const PROMPT_KEY = 'Sonu-pwa-dismissed';
             let deferredPrompt = null;
             let promptAlreadyShown = false;
             
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', function() {
-                // Register the main service worker
-                navigator.serviceWorker.register('/sw.js').then(
-                  function(registration) {
-                    console.log('SW registered successfully');
-                    
-                    // Import the custom offline worker
-                    navigator.serviceWorker.ready.then(function(registration) {
-                      // Check if the service worker is active
-                      if (registration.active) {
-                        // Create a message channel
-                        const messageChannel = new MessageChannel();
-                        
-                        // Set up the message handler
-                        messageChannel.port1.onmessage = function(event) {
-                          if (event.data && event.data.registered) {
-                            console.log('Custom offline handler registered');
-                          }
-                        };
-                        
-                        // Send message to service worker to register custom handler
-                        registration.active.postMessage(
-                          { type: 'REGISTER_CUSTOM_HANDLER' },
-                          [messageChannel.port2]
-                        );
-                      }
-                    });
-                  },
-                  function(error) {
-                    console.error('SW registration failed:', error);
-                  }
-                );
+            // Function to preload the AI model
+            async function preloadAIModel() {
+              try {
+                console.log('Preloading AI model...');
                 
-                // Load the custom offline worker script
-                const offlineScript = document.createElement('script');
-                offlineScript.src = '/offline-worker.js';
-                offlineScript.async = true;
-                document.head.appendChild(offlineScript);
+                // Try to fetch the model to ensure it's cached
+                const modelPaths = [
+                  '/model/Sonu_model.onnx',
+                  '/model/mobilenet_mobile.onnx'
+                ];
+                
+                for (const modelPath of modelPaths) {
+                  try {
+                    console.log('Attempting to preload model:', modelPath);
+                    const response = await fetch(modelPath, { cache: 'force-cache' });
+                    if (response.ok) {
+                      console.log('Successfully preloaded model:', modelPath);
+                      break; // Stop if one model loads successfully
+                    } else {
+                      console.warn('Failed to preload model:', modelPath);
+                    }
+                  } catch (err) {
+                    console.warn('Error preloading model:', modelPath, err);
+                  }
+                }
+              } catch (error) {
+                console.error('Error in preloadAIModel:', error);
+              }
+            }
+            
+            // Function to check if app is installed as PWA
+            function isPWA() {
+              return window.matchMedia('(display-mode: standalone)').matches || 
+                     (window.navigator.standalone === true);
+            }
+            
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', async function() {
+                try {
+                  // Register the main service worker
+                  const registration = await navigator.serviceWorker.register('/sw.js');
+                  console.log('SW registered successfully');
+                  
+                  // Wait for the service worker to be ready
+                  await navigator.serviceWorker.ready;
+                  
+                  // Import the custom offline worker script
+                  const offlineScript = document.createElement('script');
+                  offlineScript.src = '/offline-worker.js';
+                  offlineScript.async = true;
+                  document.head.appendChild(offlineScript);
+                  
+                  // Check if service worker is active
+                  if (registration.active) {
+                    // Create a message channel
+                    const messageChannel = new MessageChannel();
+                    
+                    // Set up the message handler
+                    messageChannel.port1.onmessage = function(event) {
+                      if (event.data && event.data.registered) {
+                        console.log('Custom offline handler registered');
+                      }
+                    };
+                    
+                    // Send message to service worker to register custom handler
+                    registration.active.postMessage(
+                      { type: 'REGISTER_CUSTOM_HANDLER' },
+                      [messageChannel.port2]
+                    );
+                  }
+                  
+                  // Preload the AI model if we're in a PWA or online
+                  if (isPWA() || navigator.onLine) {
+                    preloadAIModel();
+                  }
+                  
+                  // Listen for service worker updates
+                  registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    if (newWorker) {
+                      newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                          console.log('New service worker installed, reloading for updates');
+                          // Optional: Show a notification that an update is available
+                        }
+                      });
+                    }
+                  });
+                } catch (error) {
+                  console.error('SW registration failed:', error);
+                }
               });
               
               // Listen for offline/online events
               window.addEventListener('online', function() {
                 document.body.classList.remove('is-offline');
                 document.body.classList.add('is-online');
+                
+                // Try to preload the model when we come back online
+                preloadAIModel();
               });
               
               window.addEventListener('offline', function() {
@@ -228,6 +285,15 @@ export default function RootLayout({
               } else {
                 document.body.classList.add('is-offline');
               }
+              
+              // Listen for PWA display mode changes
+              window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
+                if (evt.matches) {
+                  console.log('App is running as installed PWA');
+                  // Preload model when app is installed
+                  preloadAIModel();
+                }
+              });
             }
             
             // Handle install prompt

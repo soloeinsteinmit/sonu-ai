@@ -30,17 +30,49 @@ export async function predict(imageFile: File): Promise<Prediction> {
   try {
     // Load the inference session if it hasn't been loaded yet.
     if (!session) {
-      session = await createInferenceSession();
+      console.log("Creating new inference session");
+      try {
+        session = await createInferenceSession();
+        console.log("Inference session created successfully");
+
+        // Store in localStorage that we've loaded the model
+        localStorage.setItem("sonu-model-loaded", "true");
+      } catch (sessionError) {
+        console.error("Failed to create inference session:", sessionError);
+
+        // Check if we're offline
+        if (!navigator.onLine) {
+          throw new Error(
+            "You're offline and the AI model couldn't be loaded. Please connect to the internet once to download the model for offline use."
+          );
+        }
+
+        throw sessionError;
+      }
     }
 
+    console.log("Preprocessing image");
     const preprocessedImage = await preprocessImage(imageFile);
+    console.log("Image preprocessed successfully");
 
+    console.log("Running inference");
     const prediction = await runInference(session, preprocessedImage);
+    console.log("Inference completed successfully:", prediction);
 
     return prediction;
   } catch (error) {
+    console.error("Prediction error:", error);
+
     // If an error occurs, nullify the session to force a reload on the next attempt.
     session = null;
+
+    // Enhance error message for offline scenarios
+    if (!navigator.onLine) {
+      throw new Error(
+        "You're offline. Please ensure you've used the app online at least once to download the AI model for offline use."
+      );
+    }
+
     throw error;
   }
 }

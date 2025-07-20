@@ -29,6 +29,7 @@ import {
   saveScanResultOffline,
   saveOutbreakReportOffline,
 } from "@/lib/utils/offline-storage";
+import { ModelStatusIndicator } from "@/components/scan/model-status-indicator";
 
 /**
  * Scan workflow stages
@@ -259,6 +260,7 @@ export default function ScanPage() {
         <div className="flex justify-center">
           {currentStage === "capture" && (
             <div className="w-full max-w-md space-y-4">
+              <ModelStatusIndicator />
               <CameraCapture
                 onImageCapture={handleImageCapture}
                 onImagesCapture={handleImagesCapture}

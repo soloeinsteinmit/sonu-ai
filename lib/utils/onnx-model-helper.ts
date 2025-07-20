@@ -34,31 +34,37 @@ function softmax(logits: Float32Array): Float32Array {
  * @returns {Promise<ort.InferenceSession>} A promise that resolves to the inference session.
  */
 export async function createInferenceSession(): Promise<ort.InferenceSession> {
-  try {
-    // Update: using MobileNet-based model trained for mobile
-    // Place the file under /public/model/
-    const modelPath = "/model/mobilenet_mobile.onnx";
+  // Define model paths - try both to ensure compatibility
+  const modelPaths = ["/model/Sonu_model.onnx", "/model/mobilenet_mobile.onnx"];
 
+  let lastError: any = null;
+
+  // Try loading each model path in sequence
+  for (const modelPath of modelPaths) {
     try {
-      console.log("Loading ONNX model from:", modelPath);
+      console.log("Attempting to load ONNX model from:", modelPath);
+
       const session = await ort.InferenceSession.create(modelPath, {
         executionProviders: ["wasm"],
         graphOptimizationLevel: "all",
       });
-      console.log("ONNX model loaded successfully");
+
+      console.log("ONNX model loaded successfully from:", modelPath);
       return session;
     } catch (error) {
-      console.error("Failed to load ONNX model:", error);
-      throw new Error(
-        `Failed to load AI model: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
+      console.warn(`Failed to load model from ${modelPath}:`, error);
+      lastError = error;
+      // Continue to next model path
     }
-    return session;
-  } catch (e) {
-    throw e;
   }
+
+  // If we get here, all model paths failed
+  console.error("All model loading attempts failed");
+  throw new Error(
+    `Failed to load AI model: ${
+      lastError instanceof Error ? lastError.message : String(lastError)
+    }`
+  );
 }
 
 /**
