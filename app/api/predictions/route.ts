@@ -120,7 +120,12 @@ function isHealthyPlant(disease: string): boolean {
 }
 
 export async function GET() {
-  const filePath = path.join(process.cwd(), "server", "predictions.csv");
+  // Determine path to predictions.csv in a writable directory
+  const dataDir =
+    process.env.PREDICTIONS_DIR ||
+    (process.env.VERCEL ? "/tmp" : path.join(process.cwd(), "server"));
+
+  const filePath = path.join(dataDir, "predictions.csv");
   const csvResults: any[] = [];
 
   try {
