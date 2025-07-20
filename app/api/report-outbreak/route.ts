@@ -47,7 +47,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const filePath = path.join(process.cwd(), "server", "predictions.csv");
+    // Determine a writable directory for predictions.csv
+    // 1. Use PREDICTIONS_DIR env if provided (e.g. persistent volume)
+    // 2. On Vercel, fall back to /tmp which is writable at runtime
+    // 3. Otherwise default to the local "server" folder (development)
+
+    const dataDir =
+      process.env.PREDICTIONS_DIR ||
+      (process.env.VERCEL ? "/tmp" : path.join(process.cwd(), "server"));
+
+    const filePath = path.join(dataDir, "predictions.csv");
 
     // Ensure the directory exists
     const dirPath = path.dirname(filePath);
