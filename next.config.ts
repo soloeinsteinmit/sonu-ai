@@ -1,7 +1,84 @@
 import type { NextConfig } from "next";
-import withPWA from "next-pwa";
+import withPWAInit from "@ducanh2912/next-pwa";
 
-const isDevelopment = process.env.NODE_ENV === "development";
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: false,
+  register: true,
+  workboxOptions: {
+    disableDevLogs: true,
+    skipWaiting: true,
+    clientsClaim: true,
+    maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB for large model files
+    additionalManifestEntries: [
+      { url: "/", revision: null },
+      { url: "/scan", revision: null },
+      { url: "/map", revision: null },
+      { url: "/offline", revision: null },
+    ],
+    runtimeCaching: [
+      {
+        urlPattern: /^https?.*\.(png|jpg|jpeg|svg|gif|webp|ico)$/,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "images",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: /^https?.*\.(js|css|woff2?|woff|ttf)$/,
+        handler: "StaleWhileRevalidate",
+        options: {
+          cacheName: "static-resources",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+          },
+        },
+      },
+      {
+        urlPattern: /^https?.*\.onnx$/,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "ml-models",
+          expiration: {
+            maxEntries: 5,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: ({ request }) => request.destination === "document",
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "pages",
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 24 * 60 * 60, // 1 day
+          },
+          networkTimeoutSeconds: 3,
+        },
+      },
+      {
+        urlPattern: /\/api\/.*/,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "api-cache",
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 5 * 60, // 5 minutes
+          },
+          networkTimeoutSeconds: 10,
+        },
+      },
+    ],
+    navigateFallback: "/offline",
+    navigateFallbackDenylist: [/^\/_/, /\/[^/?]+\.[^/]+$/],
+  },
+});
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -12,54 +89,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const pwaConfig = {
-  dest: "public",
-  register: true,
-  skipWaiting: true,
-  disable: isDevelopment,
-  reloadOnOnline: false,
-  cacheStartUrl: true,
-  cacheOnFrontEndNav: true,
-  dynamicStartUrl: false,
-  buildExcludes: [/middleware-manifest\.json$/],
-  // Force new service worker with timestamp
-  additionalManifestEntries: [
-    {
-      url: '/_offline',
-      revision: Date.now().toString(),
-    },
-  ],
-  runtimeCaching: [
-    {
-      urlPattern: /^https?:\/\/localhost:3000\/.*/,
-      handler: "CacheFirst" as const,
-      options: {
-        cacheName: "sonu-pages-v3-" + Date.now(),
-        expiration: {
-          maxEntries: 200,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-        },
-        cacheableResponse: {
-          statuses: [0, 200],
-        },
-      },
-    },
-    {
-      urlPattern: /\.(?:js|css|woff2?|png|jpg|jpeg|svg|ico)$/,
-      handler: "CacheFirst" as const,
-      options: {
-        cacheName: "sonu-assets-v3-" + Date.now(),
-        expiration: {
-          maxEntries: 200,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-        },
-      },
-    },
-  ],
-  fallbacks: {
-    document: "/offline",
-  },
-  maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB
-};
-
-export default withPWA(pwaConfig)(nextConfig);
+export default withPWA(nextConfig);

@@ -1,67 +1,160 @@
-# PWA Setup Guide for sonu
+# PWA Setup for Sonu - Crop Disease Detection
 
-This guide will help you set up the Progressive Web App (PWA) functionality for proper Android and iOS installation.
+## Overview
 
-## Offline-First PWA
+This application is configured as a Progressive Web App (PWA) with full offline functionality, including:
 
-This PWA is configured to be offline-first. The `next.config.ts` uses `next-pwa` to implement a `CacheFirst` strategy for all assets.
+- Offline disease detection using AI models
+- Cached pages and resources
+- Offline report storage and synchronization
+- Install prompt for mobile devices
 
-### Key Features:
-- **Offline Availability**: Once the app is loaded, it is fully functional without an internet connection.
-- **Cache-First Strategy**: All pages and assets are served from the cache first, ensuring fast load times and offline access.
-- **Custom Offline Page**: A fallback page (`/offline`) is displayed if a user tries to access a non-cached page while offline.
+## Current Configuration
 
-## Quick Setup
+### PWA Package
 
-### 1. Install Dependencies
-Ensure you have all the necessary packages installed:
+- **Package**: `@ducanh2912/next-pwa` (latest version compatible with Next.js 15)
+- **Service Worker**: Auto-generated at `/public/sw.js`
+- **Offline Fallback**: `/offline` page
+
+### Caching Strategies
+
+1. **Images**: CacheFirst (30 days, 100 entries max)
+2. **Static Resources**: StaleWhileRevalidate (7 days, 100 entries max)
+3. **ML Models**: CacheFirst (30 days, 5 entries max)
+4. **API Calls**: NetworkFirst with 10s timeout (5 minutes cache, 50 entries max)
+
+### Offline Features
+
+- ✅ Disease scanning works completely offline
+- ✅ Reports saved locally when offline
+- ✅ Auto-sync when back online
+- ✅ Offline indicator in UI
+- ✅ Fallback pages for network failures
+
+## Testing Offline Functionality
+
+### 1. Build and Start Production Server
+
 ```bash
-npm install --legacy-peer-deps
+npm run build
+npm start
 ```
 
-### 2. Run the Development Server
-For local testing, run the development server:
-```bash
-npm run dev
-```
+### 2. Test Offline Mode
+
+1. Open your app in Chrome/Edge at `http://localhost:3000`
+2. Open Developer Tools (F12)
+3. Go to **Application** > **Service Workers**
+4. Verify service worker is registered and running
+5. Go to **Network** tab and check "Offline" checkbox
+6. Navigate through the app - it should work offline!
 
 ### 3. Test PWA Installation
 
-#### On Android:
-1. Open the app in Chrome.
-2. Look for the "Install App" prompt or tap the menu (⋮).
-3. Select "Add to Home screen".
-4. The app should install as a standalone PWA.
+1. Open the app in a mobile browser or Chrome desktop
+2. Look for the install prompt (should appear after 3 seconds)
+3. Click "Install Now" to install as PWA
+4. Test the installed app
 
-#### On iOS:
-1. Open Safari (not Chrome).
-2. Tap the share button.
-3. Select "Add to Home Screen".
-4. The app should install correctly.
+### 4. Test Offline Disease Detection
 
-## PWA Configuration
-
-### `next.config.ts`
-The PWA configuration is handled in `next.config.ts` using `next-pwa`. The `runtimeCaching` is configured with a `CacheFirst` strategy.
-
-### `manifest.json`
-The `public/manifest.json` file is configured with the necessary properties for the PWA to be installable, including `name`, `short_name`, `icons`, and `start_url`.
+1. Go to `/scan` page while online
+2. Wait for AI model to load (check console)
+3. Go offline (Network tab > Offline)
+4. Take/upload a photo - should still work!
+5. Reports will be saved locally and sync when back online
 
 ## Troubleshooting
 
-### Android/iOS Installation Issues
-1. **App opens in browser instead of standalone**:
-   - Check that `display: "standalone"` is set in `manifest.json`.
-   - Ensure `start_url` is correct (`/`).
+### Service Worker Not Registering
 
-2. **Install prompt not showing**:
-   - Ensure you are using HTTPS (required for PWAs).
-   - Check the browser console for any service worker errors.
+- Clear browser cache and reload
+- Check console for errors
+- Ensure you're on production build (`npm start`, not `npm run dev`)
 
-### Offline Issues
-1. **App not working offline**:
-   - Verify that the service worker is registered and running.
-   - Check the cache storage in your browser's developer tools to ensure assets are being cached.
+### Offline Pages Not Working
 
-## Deployment
-When deploying to production, ensure that your hosting environment supports service workers and HTTPS.
+- Verify service worker is active in DevTools
+- Check Network tab shows service worker intercepting requests
+- Clear cache and reload to get fresh service worker
+
+### Model Not Loading Offline
+
+- Visit `/scan` page while online first to cache the model
+- Check Application > Cache Storage for "ml-models" cache
+- Model file is 21MB - ensure good connection for initial load
+
+## Advanced Configuration
+
+### Customizing Cache Strategies
+
+Edit `next.config.ts` to modify caching behavior:
+
+```typescript
+runtimeCaching: [
+  {
+    urlPattern: /^https?.*\.onnx$/,
+    handler: "CacheFirst", // Change to "NetworkFirst" for always fresh models
+    options: {
+      cacheName: "ml-models",
+      expiration: {
+        maxEntries: 5,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // Adjust cache duration
+      },
+    },
+  },
+];
+```
+
+### Adding New Offline Routes
+
+Update the `fallbacks` configuration in `next.config.ts`:
+
+```typescript
+fallbacks: {
+  document: "/offline",
+  image: "/icons/offline-image.png", // Fallback for images
+  audio: "/audio/offline-sound.mp3", // Fallback for audio
+}
+```
+
+## Deployment Notes
+
+### Production Checklist
+
+- ✅ Service worker generated correctly
+- ✅ Manifest.json is valid
+- ✅ Icons are properly sized and cached
+- ✅ Offline fallback pages exist
+- ✅ Critical resources are precached
+- ✅ HTTPS enabled (required for PWA)
+
+### Performance Optimizations
+
+- Large files (>21MB) are not precached automatically
+- Model files cached on first use
+- Images and static assets cached aggressively
+- API responses cached with network-first strategy
+
+---
+
+## Quick Start Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Test offline in DevTools:
+# 1. F12 > Application > Service Workers (verify registered)
+# 2. Network > Offline checkbox
+# 3. Navigate app - should work offline!
+```
+
+Your PWA is now ready for your hackathon submission! 🚀

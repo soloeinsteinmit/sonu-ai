@@ -268,14 +268,18 @@ export default function RootLayout({
               window.addEventListener('online', function() {
                 document.body.classList.remove('is-offline');
                 document.body.classList.add('is-online');
+                console.log('✅ Back online');
                 
                 // Try to preload the model when we come back online
-                preloadAIModel();
+                if (!isPWA()) {
+                  preloadAIModel();
+                }
               });
               
               window.addEventListener('offline', function() {
                 document.body.classList.remove('is-online');
                 document.body.classList.add('is-offline');
+                console.log('⚠️ Gone offline');
               });
               
               // Set initial state
