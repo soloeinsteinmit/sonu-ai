@@ -65,7 +65,7 @@ def predict_single_image(model, image_path, transforms, class_names, device):
 # =============================================================================
 if __name__ == "__main__":
     # --- IMPORTANT: UPDATE THESE PATHS ---
-    CHECKPOINT_PATH = "/kaggle/working/Sonu_pytorch_output/Sonu_model_20250708_203930.pth"
+    CHECKPOINT_PATH = "/kaggle/working/Sonu_pytorch_output/mobilenet_mobile_20250708_203930.pth"
     IMAGE_TO_TEST_PATH = "path/to/your/test/image.jpg" # <--- CHANGE THIS TO YOUR IMAGE
     # ------------------------------------
     device = get_default_device()

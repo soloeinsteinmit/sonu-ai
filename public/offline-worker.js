@@ -26,7 +26,7 @@ const CRITICAL_RESOURCES = [
 ];
 
 // Model files to cache
-const MODEL_FILES = ["/model/Sonu_model.onnx", "/model/mobilenet_mobile.onnx"];
+const MODEL_FILES = ["/model/mobilenet_mobile.onnx"];
 
 // WASM files needed for ONNX runtime
 const WASM_FILES = [
@@ -131,10 +131,7 @@ const handleCustomFetch = async (request) => {
     }
 
     // If not in cache, try both model files
-    for (const modelPath of [
-      "/model/Sonu_model.onnx",
-      "/model/mobilenet_mobile.onnx",
-    ]) {
+    for (const modelPath of ["/model/mobilenet_mobile.onnx"]) {
       try {
         // Check if we have this alternative model in cache
         const altModelRequest = new Request(modelPath);

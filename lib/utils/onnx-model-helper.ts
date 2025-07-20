@@ -35,7 +35,7 @@ function softmax(logits: Float32Array): Float32Array {
  */
 export async function createInferenceSession(): Promise<ort.InferenceSession> {
   // Define model paths - try both to ensure compatibility
-  const modelPaths = ["/model/Sonu_model.onnx", "/model/mobilenet_mobile.onnx"];
+  const modelPaths = ["/model/mobilenet_mobile.onnx"];
 
   let lastError: any = null;
 

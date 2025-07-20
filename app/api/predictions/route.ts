@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import csv from "csv-parser";
 
+export const runtime = "nodejs";
+
 // Mock outbreak data that can be deleted by users - ONLY DISEASED PLANTS
 const mockOutbreaks = [
   {

@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import csv from "csv-parser";
 
+export const runtime = "nodejs";
+
 /**
  * Generate the next available ID by reading existing CSV data
  */

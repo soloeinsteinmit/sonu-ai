@@ -179,7 +179,6 @@ export default function RootLayout({
                 
                 // Try to fetch the model to ensure it's cached
                 const modelPaths = [
-                  '/model/Sonu_model.onnx',
                   '/model/mobilenet_mobile.onnx'
                 ];
                 

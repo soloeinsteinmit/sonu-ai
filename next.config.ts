@@ -191,11 +191,43 @@ export default isDevelopment
             },
           },
         },
+        // Still inside withPWA
+        {
+          urlPattern: /^https:\/\/(a|b|c)\.tile\.openstreetmap\.org\/.*/i,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "osm-tiles",
+            expiration: { maxEntries: 1000, maxAgeSeconds: 60 * 60 * 24 * 30 }, // 30 days
+          },
+        },
+        // OpenStreetMap tile images - cache first
+        {
+          urlPattern: /^https?:\/\/(a|b|c)\.tile\.openstreetmap\.org\/.*$/,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "osm-tiles",
+            expiration: {
+              maxEntries: 2000,
+              maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+            },
+          },
+        },
       ],
       buildExcludes: [/middleware-manifest.json$/],
       maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB
+      // @ts-expect-error - next-pwa supports fallbacks
       fallbacks: {
         document: "/offline",
         image: "/icons/offline-image.png",
       },
+      // Make sure the custom offline-enhancement worker is loaded by Workbox
+      // This pulls in "public/offline-worker.js" at runtime so all the extra
+      // caching logic (models, WASM, custom fetch routing, etc.) becomes
+      // available without having to re-implement it inside the auto-generated
+      // sw.js.
+      importScripts: ["/offline-worker.js"],
+      additionalManifestEntries: [
+        { url: "/_next/static/chunks/app/map/page-*.js", revision: null }, // glob
+        { url: "/_next/static/chunks/app/offline/page-*.js", revision: null },
+      ],
     })(nextConfig);
