@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Location Helper Utilities
+ * Sonu - Location Helper Utilities
  *
  * Utilities for location-based operations including:
  * - Distance calculations

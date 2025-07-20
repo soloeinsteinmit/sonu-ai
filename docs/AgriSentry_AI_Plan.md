@@ -1,8 +1,8 @@
-# AgriSentry AI - Ghana AI Hackathon Project Plan
+# Sonu - Ghana AI Hackathon Project Plan
 
 ## 🎯 Project Overview
 
-**AgriSentry AI** is a comprehensive crop disease detection and community outbreak tracking system designed specifically for Ghanaian farmers. It combines AI-powered disease diagnosis with real-time outbreak mapping to create a national agricultural "immune system."
+**Sonu** is a comprehensive crop disease detection and community outbreak tracking system designed specifically for Ghanaian farmers. It combines AI-powered disease diagnosis with real-time outbreak mapping to create a national agricultural "immune system."
 
 ### Key Innovation Points
 
@@ -113,7 +113,7 @@
 ## 🗂 Project Structure
 
 ```
-agrisentry-ai/
+Sonu-ai/
 ├── frontend/                 # React PWA Application
 │   ├── public/
 │   │   ├── manifest.json    # PWA manifest
@@ -383,10 +383,10 @@ agrisentry-ai/
 ### Demo Script
 
 1. **Problem Introduction**: Ghana's crop disease challenges
-2. **Solution Overview**: AgriSentry AI capabilities
+2. **Solution Overview**: Sonu capabilities
 3. **Live Demo**: Disease detection and treatment recommendations
 4. **Community Feature**: Outbreak mapping demonstration
 5. **Technical Highlights**: AI model and architecture
 6. **Impact Potential**: Scalability and real-world deployment
 
-This comprehensive plan positions AgriSentry AI as a winning hackathon submission that combines technical innovation with real-world impact, specifically designed for Ghana's agricultural sector.
+This comprehensive plan positions Sonu as a winning hackathon submission that combines technical innovation with real-world impact, specifically designed for Ghana's agricultural sector.

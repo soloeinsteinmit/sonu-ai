@@ -1,4 +1,4 @@
-# PWA Setup Guide for AgriSentry AI
+# PWA Setup Guide for Sonu
 
 This guide will help you set up the Progressive Web App (PWA) functionality for proper Android installation.
 

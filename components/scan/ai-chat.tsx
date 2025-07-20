@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - AI Chat Interface
+ * Sonu - AI Chat Interface
  *
  * Conversational AI interface that allows farmers to ask questions
  * about their detected plant disease. Features include:
@@ -86,7 +86,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
    */
   const loadChatHistory = () => {
     try {
-      const savedHistory = localStorage.getItem("agrisentry-chat-history");
+      const savedHistory = localStorage.getItem("Sonu-chat-history");
       if (savedHistory) {
         setChatHistory(JSON.parse(savedHistory));
       }
@@ -100,7 +100,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
    */
   const saveChatHistory = (history: ChatSession[]) => {
     try {
-      localStorage.setItem("agrisentry-chat-history", JSON.stringify(history));
+      localStorage.setItem("Sonu-chat-history", JSON.stringify(history));
     } catch (error) {
       toast.error("Error saving chat history");
     }
@@ -114,7 +114,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     const welcomeMessage: Message = {
       id: `msg-${Date.now()}`,
       type: "ai",
-      content: `Hello! I'm your AgriSentry AI assistant. I can see you've detected ${scanResult.disease.name} in your crop. ${locationText}. Feel free to ask me any questions about this disease, treatment options, or general farming advice. How can I help you today?`,
+      content: `Hello! I'm your Sonu assistant. I can see you've detected ${scanResult.disease.name} in your crop. ${locationText}. Feel free to ask me any questions about this disease, treatment options, or general farming advice. How can I help you today?`,
       timestamp: new Date(),
     };
 
@@ -196,7 +196,7 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
     const locationContext = userLocation
       ? `The farmer is located in ${userLocation}. `
       : "";
-    const systemPrompt = `You are AgriSentry AI, an expert agricultural assistant helping farmers. ${locationContext}. You have diagnosed ${diseaseInfo.name} in their crop. Be helpful, concise, and provide practical advice. Always respond in English only. 
+    const systemPrompt = `You are Sonu, an expert agricultural assistant helping farmers. ${locationContext}. You have diagnosed ${diseaseInfo.name} in their crop. Be helpful, concise, and provide practical advice. Always respond in English only. 
 
 When asked about where to buy the treatment, search the web for nearest location. Never give a general answer. Mention shops or place near by and their info if possible.`;
 

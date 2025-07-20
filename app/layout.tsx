@@ -27,8 +27,8 @@ const sourceCodePro = Source_Code_Pro({
 
 export const metadata: Metadata = {
   title: {
-    default: "AgriSentry AI - Crop Disease Detection",
-    template: "%s | AgriSentry AI",
+    default: "Sonu - Crop Disease Detection",
+    template: "%s | Sonu",
   },
   description:
     "AI-powered crop disease detection and community outbreak tracking for Ghanaian farmers. Detect diseases instantly, get treatment recommendations, and track community outbreaks.",
@@ -42,37 +42,37 @@ export const metadata: Metadata = {
     "disease detection",
   ],
   authors: [{ name: "Alhassan Mohammed Nuruddin" }, { name: "Solomon Eshun" }],
-  creator: "AgriSentry AI Team",
-  publisher: "AgriSentry AI",
+  creator: "Sonu Team",
+  publisher: "Sonu",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://agrisentry-ai.vercel.app"),
+  metadataBase: new URL("https://Sonu-ai.vercel.app"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://agrisentry-ai.vercel.app",
-    title: "AgriSentry AI - Crop Disease Detection",
+    url: "https://Sonu-ai.vercel.app",
+    title: "Sonu - Crop Disease Detection",
     description:
       "AI-powered crop disease detection and community outbreak tracking for Ghanaian farmers",
-    siteName: "AgriSentry AI",
+    siteName: "Sonu",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AgriSentry AI - Crop Disease Detection",
+        alt: "Sonu - Crop Disease Detection",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AgriSentry AI - Crop Disease Detection",
+    title: "Sonu - Crop Disease Detection",
     description: "AI-powered crop disease detection for Ghanaian farmers",
     images: ["/og-image.png"],
   },
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "AgriSentry AI",
+    title: "Sonu",
   },
 };
 
@@ -122,10 +122,10 @@ export default function RootLayout({
       className={`${montserrat.variable} ${merriweather.variable} ${sourceCodePro.variable}`}
     >
       <head>
-        <meta name="application-name" content="AgriSentry AI" />
+        <meta name="application-name" content="Sonu" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="AgriSentry AI" />
+        <meta name="apple-mobile-web-app-title" content="Sonu" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />
@@ -151,7 +151,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
             // PWA Install Prompt - Fixed version
-            const PROMPT_KEY = 'agrisentry-pwa-dismissed';
+            const PROMPT_KEY = 'Sonu-pwa-dismissed';
             let deferredPrompt = null;
             let promptAlreadyShown = false;
             
@@ -231,7 +231,7 @@ export default function RootLayout({
                         justify-content: center;
                         font-size: 16px;
                       ">🌱</div>
-                      <strong style="color: white; font-size: 18px; font-weight: 600;">Install AgriSentry AI</strong>
+                      <strong style="color: white; font-size: 18px; font-weight: 600;">Install Sonu</strong>
                     </div>
                     <button onclick="dismissInstallPrompt()" style="
                       background: rgba(255,255,255,0.1);

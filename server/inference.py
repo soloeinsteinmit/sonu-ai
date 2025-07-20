@@ -17,7 +17,7 @@ def ConvBlock(in_channels, out_channels, pool=False):
         layers.append(nn.MaxPool2d(4))
     return nn.Sequential(*layers)
 class CNN_NeuralNet(nn.Module):
-    """CNN Architecture for AgriSentry AI"""
+    """CNN Architecture for Sonu"""
     # The parameter is 'num_diseases', not 'num_classes'
     def __init__(self, in_channels, num_diseases):
         super().__init__()
@@ -65,7 +65,7 @@ def predict_single_image(model, image_path, transforms, class_names, device):
 # =============================================================================
 if __name__ == "__main__":
     # --- IMPORTANT: UPDATE THESE PATHS ---
-    CHECKPOINT_PATH = "/kaggle/working/agrisentry_pytorch_output/agrisentry_model_20250708_203930.pth"
+    CHECKPOINT_PATH = "/kaggle/working/Sonu_pytorch_output/Sonu_model_20250708_203930.pth"
     IMAGE_TO_TEST_PATH = "path/to/your/test/image.jpg" # <--- CHANGE THIS TO YOUR IMAGE
     # ------------------------------------
     device = get_default_device()

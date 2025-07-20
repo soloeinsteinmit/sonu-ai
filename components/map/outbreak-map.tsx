@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Outbreak Map Component
+ * Sonu - Outbreak Map Component
  *
  * Interactive Leaflet map for displaying disease outbreaks
  * Features:

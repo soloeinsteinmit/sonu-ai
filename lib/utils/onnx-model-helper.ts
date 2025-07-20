@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - ONNX Model Helper
+ * Sonu - ONNX Model Helper
  *
  * This utility manages the ONNX inference session. It loads the model,
  * runs inference on a preprocessed image tensor, and processes the output

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Multi-Image Processor Component
+ * Sonu - Multi-Image Processor Component
  *
  * This component handles processing multiple images sequentially,
  * showing progress and collecting results for batch analysis.

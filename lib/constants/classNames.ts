@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Model Class Names
+ * Sonu - Model Class Names
  *
  * This file contains the array of class names that the ONNX model was trained on.
  * The order of these names MUST EXACTLY match the order used during model training.

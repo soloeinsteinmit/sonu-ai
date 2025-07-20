@@ -1,6 +1,6 @@
 {
-  "name": "AgriSentry AI - Crop Disease Detection",
-  "short_name": "AgriSentry",
+  "name": "Sonu - Crop Disease Detection",
+  "short_name": "Sonu",
   "description": "AI-powered crop disease detection and community outbreak tracking for Ghanaian farmers",
   "start_url": "/",
   "display": "standalone",

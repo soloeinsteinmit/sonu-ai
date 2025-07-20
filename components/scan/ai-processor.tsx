@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Real-Time AI Processor Component
+ * Sonu - Real-Time AI Processor Component
  *
  * This component orchestrates the real-time, client-side disease detection.
  * It uses the ONNX runtime to perform inference directly in the browser,

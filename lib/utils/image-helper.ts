@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Image Helper for ONNX Model
+ * Sonu - Image Helper for ONNX Model
  *
  * This utility handles the crucial step of image preprocessing. It takes a raw
  * image file and converts it into the specific tensor format that the ONNX model

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Scan Page
+ * Sonu - Scan Page
  *
  * Main disease detection page that orchestrates the complete workflow:
  * 1. Image capture (camera or upload)

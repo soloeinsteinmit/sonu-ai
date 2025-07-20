@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Camera Capture Component
+ * Sonu - Camera Capture Component
  *
  * A mobile-first camera component that allows users to capture images
  * for disease detection. Includes fallback to file upload for devices

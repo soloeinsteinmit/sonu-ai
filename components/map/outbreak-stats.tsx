@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Outbreak Stats Component
+ * Sonu - Outbreak Stats Component
  * 
  * Statistics dashboard for outbreak data
  * Features:

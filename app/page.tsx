@@ -37,7 +37,7 @@ export default function Home() {
               </div>
               <div className="ml-4">
                 <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-green-800 to-emerald-700 bg-clip-text text-transparent">
-                  AgriSentry
+                  Sonu
                 </span>
                 <div className="text-xs text-green-600 font-medium">
                   AI Powered
@@ -569,7 +569,7 @@ export default function Home() {
           </h2>
 
           <p className="text-xl sm:text-2xl text-green-100 mb-12 leading-relaxed max-w-4xl mx-auto font-medium">
-            Join hundreds of Ghanaian farmers who are already using AgriSentry
+            Join hundreds of Ghanaian farmers who are already using Sonu
             to{" "}
             <span className="text-yellow-300 font-semibold">
               keep their crops healthy and increase their harvests
@@ -654,7 +654,7 @@ export default function Home() {
                 </div>
                 <div className="ml-4">
                   <span className="text-2xl font-black bg-gradient-to-r from-white via-green-200 to-emerald-200 bg-clip-text text-transparent">
-                    AgriSentry AI
+                    Sonu
                   </span>
                   <div className="text-xs text-green-400 font-semibold">
                     Powered by AI
@@ -811,7 +811,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="text-center md:text-left">
                 <p className="text-gray-400 text-sm">
-                  &copy; 2025 AgriSentry AI. Built for Ghana AI Hackathon.
+                  &copy; 2025 Sonu. Built for Ghana AI Hackathon.
                 </p>
                 <p className="text-gray-500 text-xs mt-1">
                   Made with{" "}

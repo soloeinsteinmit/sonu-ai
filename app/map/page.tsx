@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Disease Outbreak Map
+ * Sonu - Disease Outbreak Map
  *
  * Interactive map showing disease outbreaks across Ghana
  * Features:

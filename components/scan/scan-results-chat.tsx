@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Scan Results with Chat Interface
+ * Sonu - Scan Results with Chat Interface
  *
  * Simplified results display that focuses on AI chat interaction
  * rather than static information cards. Shows basic detection

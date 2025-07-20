@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Disease Database Constants
+ * Sonu - Disease Database Constants
  *
  * This file contains mock disease data and treatment recommendations
  * based on common crop diseases in Ghana. In production, this would

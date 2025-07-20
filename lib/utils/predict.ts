@@ -1,5 +1,5 @@
 /**
- * AgriSentry AI - Prediction Pipeline
+ * Sonu - Prediction Pipeline
  *
  * This file orchestrates the entire client-side inference process.
  * It combines image preprocessing and model inference into a single,

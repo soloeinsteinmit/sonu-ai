@@ -1,8 +1,8 @@
-# AgriSentry AI - Crop Disease Detection System
+# Sonu - Crop Disease Detection System
 
 **Ghana AI Hackathon 2025 Submission**
 
-A comprehensive AI-powered crop disease detection and community outbreak tracking system designed specifically for Ghanaian farmers. AgriSentry AI combines computer vision, geospatial analysis, and Progressive Web App (PWA) technology to create a national agricultural "immune system."
+A comprehensive AI-powered crop disease detection and community outbreak tracking system designed specifically for Ghanaian farmers. Sonu combines computer vision, geospatial analysis, and Progressive Web App (PWA) technology to create a national agricultural "immune system."
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ A comprehensive AI-powered crop disease detection and community outbreak trackin
 
 ## 🎯 Project Overview
 
-AgriSentry AI addresses critical challenges in Ghana's agricultural sector by providing:
+Sonu addresses critical challenges in Ghana's agricultural sector by providing:
 
 - **Instant Disease Detection**: AI-powered analysis of crop photos with 95% accuracy
 - **Treatment Recommendations**: Localized treatment plans with organic and chemical options
@@ -169,7 +169,7 @@ graph TB
 ## 📱 Application Structure
 
 ```
-agrisentry-ai-frontend/
+Sonu-ai-frontend/
 ├── app/                          # Next.js App Router
 │   ├── api/                      # API Routes
 │   │   ├── location/             # Location services
@@ -323,8 +323,8 @@ graph TB
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/agrisentry-ai-frontend.git
-cd agrisentry-ai-frontend
+git clone https://github.com/your-username/Sonu-ai-frontend.git
+cd Sonu-ai-frontend
 
 # Install dependencies
 npm install
@@ -486,8 +486,8 @@ const ScanPage = () => {
 **Category**: Agriculture & Food Security  
 **Technology**: AI/ML, Computer Vision, PWA, Geospatial Analysis  
 
-**Live Demo**: [https://agrisentry.vercel.app](https://agrisentry.vercel.app)  
-**GitHub**: [https://github.com/soloeinsteinmit/agrisentry-ai-frontend](https://github.com/soloeinsteinmit/agrisentry-ai-frontend)
+**Live Demo**: [https://Sonu.vercel.app](https://Sonu.vercel.app)  
+**GitHub**: [https://github.com/soloeinsteinmit/Sonu-ai-frontend](https://github.com/soloeinsteinmit/Sonu-ai-frontend)
 
 ### Judging Criteria Alignment
 
@@ -499,4 +499,4 @@ const ScanPage = () => {
 
 ---
 
-*AgriSentry AI - Protecting Ghana's crops, one photo at a time.* 🌾📱🤖
+*Sonu - Protecting Ghana's crops, one photo at a time.* 🌾📱🤖

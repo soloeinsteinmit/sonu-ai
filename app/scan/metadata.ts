@@ -18,15 +18,15 @@ export const metadata: Metadata = {
     "cashew crop analyzer"
   ],
   openGraph: {
-    title: "Crop Disease Scanner - Instant AI Detection | AgriSentry AI",
+    title: "Crop Disease Scanner - Instant AI Detection | Sonu",
     description: "📸 Take a photo, get instant results! AI-powered crop disease detection for cassava, maize, tomato & cashew. 95% accuracy + treatment advice.",
-    url: "https://agrisentry.vercel.app/scan",
+    url: "https://Sonu.vercel.app/scan",
     images: [
       {
         url: "/og-scan-page.png",
         width: 1200,
         height: 630,
-        alt: "AgriSentry AI crop disease scanner interface showing camera capture and AI analysis"
+        alt: "Sonu crop disease scanner interface showing camera capture and AI analysis"
       }
     ],
   },

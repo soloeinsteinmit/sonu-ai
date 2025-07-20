@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 /**
- * AgriSentry AI - Outbreak Deletion API
+ * Sonu - Outbreak Deletion API
  *
  * Handles location-based deletion of outbreak reports
  * Users can only delete outbreaks within 5km of their location

@@ -18,15 +18,15 @@ export const metadata: Metadata = {
     "agricultural early warning"
   ],
   openGraph: {
-    title: "Disease Outbreak Map - Community Tracking | AgriSentry AI",
+    title: "Disease Outbreak Map - Community Tracking | Sonu",
     description: "🗺️ Real-time crop disease tracking across Ghana! See outbreaks in your area, get early warnings, and connect with farming community.",
-    url: "https://agrisentry.vercel.app/map",
+    url: "https://Sonu.vercel.app/map",
     images: [
       {
         url: "/og-map-page.png",
         width: 1200,
         height: 630,
-        alt: "AgriSentry AI disease outbreak map showing real-time crop disease tracking across Ghana"
+        alt: "Sonu disease outbreak map showing real-time crop disease tracking across Ghana"
       }
     ],
   },

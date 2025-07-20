@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Multiple Scan Results Component
+ * Sonu - Multiple Scan Results Component
  *
  * Displays the results of multiple image scans with summary statistics
  * and individual result details.

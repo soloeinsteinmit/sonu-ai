@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Multiple Disease Videos Component
+ * Sonu - Multiple Disease Videos Component
  *
  * Displays educational YouTube videos for all detected diseases in batch results
  * with clear dividers and disease labels.

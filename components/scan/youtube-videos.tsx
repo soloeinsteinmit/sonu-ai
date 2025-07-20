@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - YouTube Educational Videos Component
+ * Sonu - YouTube Educational Videos Component
  *
  * Displays educational YouTube videos related to the detected disease
  * with thumbnail previews in an accordion format.
@@ -212,7 +212,7 @@ export function YouTubeVideos({ diseaseId }: YouTubeVideosProps) {
               <div className="text-center">
                 <p className="text-xs text-muted-foreground">
                   Videos are sourced from YouTube and may contain ads.
-                  AgriSentry AI is not responsible for external content.
+                  Sonu is not responsible for external content.
                 </p>
               </div>
             </CardContent>

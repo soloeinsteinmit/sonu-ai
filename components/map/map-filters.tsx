@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Map Filters Component
+ * Sonu - Map Filters Component
  *
  * Filter controls for the outbreak map
  * Features:
