@@ -114,7 +114,6 @@ export function AIChat({ scanResult, onClose }: AIChatProps) {
       content: `Hello! I'm your Sonu assistant. I can see you've detected ${scanResult.disease.name} in your crop. ${locationText}. Feel free to ask me any questions about this disease, treatment options, or general farming advice. How can I help you today?`,
       timestamp: new Date(),
     };
-
     setMessages([welcomeMessage]);
   }, [scanResult, userLocation]);
 
