@@ -118,7 +118,7 @@ export default function Home() {
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
                 </div>
                 <span className="text-sm text-gray-600 font-medium">
-                  Trusted by 500+ farmers
+                  Trusted by farmers
                 </span>
               </div>
             </div>
