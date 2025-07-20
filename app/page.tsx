@@ -710,7 +710,7 @@ export default function Home() {
                   <div className="text-xs text-blue-500 mt-1">🎯 AI Powered</div>
                 </div>
               </div> 
-
+ 
               {/* Enhanced Quick Actions */}
               <div className="flex gap-4">
                 <Link
