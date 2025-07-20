@@ -411,7 +411,7 @@ When asked about where to buy the treatment, search the web for nearest location
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             )}
             {userLocation && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs max-[1024px]:hidden">
                 📍 {userLocation.split(",")[0]}
               </Badge>
             )}
@@ -435,7 +435,11 @@ When asked about where to buy the treatment, search the web for nearest location
             </Button>
           </div>
         </CardTitle>
-
+        <div className="min-lg:hidden flex">
+          <Badge variant="outline" className="text-xs">
+            📍 {userLocation.split(",")[0]}
+          </Badge>
+        </div>
         <div className="flex items-center justify-between text-sm">
           <Badge variant="secondary" className="text-xs">
             Disease: {scanResult.disease.name}
