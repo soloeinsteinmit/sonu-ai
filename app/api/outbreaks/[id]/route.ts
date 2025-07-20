@@ -161,10 +161,10 @@ export async function DELETE(
       fs.writeFileSync(filePath, newContent, "utf-8");
 
       // console.log(
-        `CSV outbreak ${id} deleted by user at ${userLat}, ${userLon}. Reason: ${
-          reason || "No reason provided"
-        }`
-      );
+      //   `CSV outbreak ${id} deleted by user at ${userLat}, ${userLon}. Reason: ${
+      //     reason || "No reason provided"
+      //   }`
+      // );
 
       return NextResponse.json(
         { message: "Outbreak successfully deleted" },
