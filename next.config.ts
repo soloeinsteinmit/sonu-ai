@@ -15,6 +15,29 @@ const withPWA = withPWAInit({
       { url: "/scan", revision: null },
       { url: "/map", revision: null },
       { url: "/offline", revision: null },
+      // Audio files for offline farmer descriptions
+      { url: "/audio/Cashew_anthracnose.wav", revision: null },
+      { url: "/audio/Cashew_gumosis.wav", revision: null },
+      { url: "/audio/Cashew_healthy.wav", revision: null },
+      { url: "/audio/Cashew_leaf_miner.wav", revision: null },
+      { url: "/audio/Cashew_red_rust.wav", revision: null },
+      { url: "/audio/Cassava_bacterial_blight.wav", revision: null },
+      { url: "/audio/Cassava_brown_spot.wav", revision: null },
+      { url: "/audio/Cassava_green_mite.wav", revision: null },
+      { url: "/audio/Cassava_healthy.wav", revision: null },
+      { url: "/audio/Cassava_mosaic.wav", revision: null },
+      { url: "/audio/Maize_fall_armyworm.wav", revision: null },
+      { url: "/audio/Maize_grasshopper.wav", revision: null },
+      { url: "/audio/Maize_healthy.wav", revision: null },
+      { url: "/audio/Maize_leaf_beetle.wav", revision: null },
+      { url: "/audio/Maize_leaf_blight.wav", revision: null },
+      { url: "/audio/Maize_leaf_spot.wav", revision: null },
+      { url: "/audio/Maize_streak_virus.wav", revision: null },
+      { url: "/audio/Tomato_healthy.wav", revision: null },
+      { url: "/audio/Tomato_leaf_blight.wav", revision: null },
+      { url: "/audio/Tomato_leaf_curl.wav", revision: null },
+      { url: "/audio/Tomato_septoria_leaf_spot.wav", revision: null },
+      { url: "/audio/Tomato_verticulium_wilt.wav", revision: null },
     ],
     runtimeCaching: [
       {
@@ -24,6 +47,17 @@ const withPWA = withPWAInit({
           cacheName: "images",
           expiration: {
             maxEntries: 100,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: /^https?.*\.(wav|mp3|ogg|m4a|aac)$/,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "audio-files",
+          expiration: {
+            maxEntries: 50,
             maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
           },
         },
