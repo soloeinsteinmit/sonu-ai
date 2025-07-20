@@ -294,17 +294,18 @@ export function AIProcessor({
 
           {/* Error Display */}
           {status.stage === "error" && status.error && (
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <p className="text-sm text-red-600 mb-2">
-                Processing failed: {status.error}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Please try another image or ensure your browser is up-to-date.
-              </p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-sm text-red-600 mb-2 font-medium">
+                  Processing failed
+                </p>
+                <p className="text-xs text-red-500 mb-2">{status.error}</p>
+                <p className="text-xs text-muted-foreground">
+                  This might happen if you're offline and haven't used the app
+                  online first. Please try connecting to the internet once to
+                  download the AI model.
+                </p>
+              </div>
             </motion.div>
           )}
         </CardContent>

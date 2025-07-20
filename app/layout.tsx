@@ -1,10 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Merriweather, Source_Code_Pro, Pacifico } from "next/font/google";
+import {
+  Montserrat,
+  Merriweather,
+  Source_Code_Pro,
+  Pacifico,
+} from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { NearbyOutbreakAlert } from "@/components/alerts/nearby-outbreak-alert";
-import { FloatingMapButton } from "@/components/common/floating-map-button";
+import { OfflineIndicator } from "@/components/common/offline-indicator";
+import { OfflineSync } from "@/components/common/offline-sync";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -149,10 +155,12 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
       <body className="antialiased min-h-screen bg-background font-sans">
+        <OfflineIndicator />
+        <OfflineSync />
         {children}
         {/* Show user an alert if they are near an outbreak */}
         <NearbyOutbreakAlert radiusKm={5} />
-        <FloatingMapButton />
+
         <Toaster richColors />
         <script
           dangerouslySetInnerHTML={{
@@ -164,15 +172,62 @@ export default function RootLayout({
             
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
+                // Register the main service worker
                 navigator.serviceWorker.register('/sw.js').then(
                   function(registration) {
-                    console.log('SW registered');
+                    console.log('SW registered successfully');
+                    
+                    // Import the custom offline worker
+                    navigator.serviceWorker.ready.then(function(registration) {
+                      // Check if the service worker is active
+                      if (registration.active) {
+                        // Create a message channel
+                        const messageChannel = new MessageChannel();
+                        
+                        // Set up the message handler
+                        messageChannel.port1.onmessage = function(event) {
+                          if (event.data && event.data.registered) {
+                            console.log('Custom offline handler registered');
+                          }
+                        };
+                        
+                        // Send message to service worker to register custom handler
+                        registration.active.postMessage(
+                          { type: 'REGISTER_CUSTOM_HANDLER' },
+                          [messageChannel.port2]
+                        );
+                      }
+                    });
                   },
                   function(error) {
-                    console.log('SW registration failed');
+                    console.error('SW registration failed:', error);
                   }
                 );
+                
+                // Load the custom offline worker script
+                const offlineScript = document.createElement('script');
+                offlineScript.src = '/offline-worker.js';
+                offlineScript.async = true;
+                document.head.appendChild(offlineScript);
               });
+              
+              // Listen for offline/online events
+              window.addEventListener('online', function() {
+                document.body.classList.remove('is-offline');
+                document.body.classList.add('is-online');
+              });
+              
+              window.addEventListener('offline', function() {
+                document.body.classList.remove('is-online');
+                document.body.classList.add('is-offline');
+              });
+              
+              // Set initial state
+              if (navigator.onLine) {
+                document.body.classList.add('is-online');
+              } else {
+                document.body.classList.add('is-offline');
+              }
             }
             
             // Handle install prompt

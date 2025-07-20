@@ -35,15 +35,26 @@ function softmax(logits: Float32Array): Float32Array {
  */
 export async function createInferenceSession(): Promise<ort.InferenceSession> {
   try {
-    // Update: using MobileNet-based model trained for mobile (mobilenet_mobile.onnx)
+    // Update: using MobileNet-based model trained for mobile
     // Place the file under /public/model/
-    const session = await ort.InferenceSession.create(
-      "/model/mobilenet_mobile.onnx",
-      {
+    const modelPath = "/model/mobilenet_mobile.onnx";
+
+    try {
+      console.log("Loading ONNX model from:", modelPath);
+      const session = await ort.InferenceSession.create(modelPath, {
         executionProviders: ["wasm"],
         graphOptimizationLevel: "all",
-      }
-    );
+      });
+      console.log("ONNX model loaded successfully");
+      return session;
+    } catch (error) {
+      console.error("Failed to load ONNX model:", error);
+      throw new Error(
+        `Failed to load AI model: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
     return session;
   } catch (e) {
     throw e;

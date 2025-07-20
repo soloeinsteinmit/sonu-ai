@@ -1,1 +1,415 @@
-if(!self.define){let e,a={};const i=(i,s)=>(i=new URL(i+".js",s).href,a[i]||new Promise(a=>{if("document"in self){const e=document.createElement("script");e.src=i,e.onload=a,document.head.appendChild(e)}else e=i,importScripts(i),a()}).then(()=>{let e=a[i];if(!e)throw new Error(`Module ${i} didn’t register its module`);return e}));self.define=(s,c)=>{const d=e||("document"in self?document.currentScript.src:"")||location.href;if(a[d])return;let t={};const r=e=>i(e,d),n={module:{uri:d},exports:t,require:r};a[d]=Promise.all(s.map(e=>n[e]||r(e))).then(e=>(c(...e),t))}}define(["./workbox-8e5392e7"],function(e){"use strict";importScripts(),self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"/_next/app-build-manifest.json",revision:"cb2a7d0b78c83cf6ba348d802ec6f0f2"},{url:"/_next/static/LNE84T1X0eNkOd53-QmpN/_buildManifest.js",revision:"e60f1fc6189f748a799dee97f56d3fbd"},{url:"/_next/static/LNE84T1X0eNkOd53-QmpN/_ssgManifest.js",revision:"b6652df95db52feb4daf4eca35380933"},{url:"/_next/static/chunks/037f3a08-9a864accea981509.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/17278b49-755ff82dad5974b5.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/23-ae9b689c8ac22883.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/299-d7bff47eef5abcb3.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/341.3d7e7d0d3d1bf4f5.js",revision:"3d7e7d0d3d1bf4f5"},{url:"/_next/static/chunks/472.a3826d29d6854395.js",revision:"a3826d29d6854395"},{url:"/_next/static/chunks/4bd1b696-16ffd280aa2e3009.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/634.e184d360371d2133.js",revision:"e184d360371d2133"},{url:"/_next/static/chunks/684-ea7e5fd077b3e7e5.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/874-e909718850e7282e.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/_not-found/page-de05db3c4dceadb5.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/api/location/route-66983b2c751dd608.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/api/outbreaks/route-7d51f2060a068e8c.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/api/predictions/route-73145690cf3c763b.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/api/report-outbreak/route-23f370281c7964d2.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/layout-1e78059dd46eabd8.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/map/page-ce97c69f4c3e2c0a.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/not-found-2cc491afdc38acea.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/page-69dcc25a45e312b0.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/app/scan/page-71e3e44c614de6b1.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/d0deef33.d8e4dae5397587ae.js",revision:"d8e4dae5397587ae"},{url:"/_next/static/chunks/framework-b326bfe0905a39d9.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/main-48305b3e6e5cfb94.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/main-app-02234b30dfba25da.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/pages/_app-92f2aae776f86b9c.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/pages/_error-429ffef92729b913.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/chunks/polyfills-42372ed130431b0a.js",revision:"846118c33b2c0e922d7b3a7676f81f6f"},{url:"/_next/static/chunks/webpack-2baa4fbf384dbd5b.js",revision:"LNE84T1X0eNkOd53-QmpN"},{url:"/_next/static/css/61a9cd0f3b30fd69.css",revision:"61a9cd0f3b30fd69"},{url:"/_next/static/css/a4327c7cf14645db.css",revision:"a4327c7cf14645db"},{url:"/_next/static/media/021bc4481ed92ece-s.woff2",revision:"0f5cb8880dd308345f58cecdc5fc5041"},{url:"/_next/static/media/027647acf05c7ff8-s.woff2",revision:"3591b7c787c0714852651cebcf68a08f"},{url:"/_next/static/media/0421fed624cfafec-s.woff2",revision:"72271f2ebeae94d38797e46ecf09287b"},{url:"/_next/static/media/1e0245f199a3e64d-s.woff2",revision:"c8be71e9c26ec438dc5186b9e43e9fe4"},{url:"/_next/static/media/1f3fe8c6df3d47c1-s.p.woff2",revision:"c355ec2df77a650bba34b592b711cb81"},{url:"/_next/static/media/3e8ab5100a4aa694-s.woff2",revision:"639aed42fb4050938f7dca6956047319"},{url:"/_next/static/media/3f69592b2fe603c7-s.woff2",revision:"84568c0a37620328592a78e9ad069d77"},{url:"/_next/static/media/443896d591e4f761-s.p.woff2",revision:"c701418e2f543d7f5d26448b1ecfbfc8"},{url:"/_next/static/media/4f05ba3a6752a328-s.p.woff2",revision:"ea21cc6e4b393851204d1a3160ad6abc"},{url:"/_next/static/media/50cc6d76ab2a2da3-s.woff2",revision:"45172fcd21b47bba9d7b8118e9012ff4"},{url:"/_next/static/media/5b45b5fd85b63a3d-s.woff2",revision:"a0d9d6782a3a3a9449af75aa4ad7b5c6"},{url:"/_next/static/media/6325a8417175c41d-s.woff2",revision:"a3fd0c427e31c0cadb48607ee8c7876b"},{url:"/_next/static/media/99b7f73d5af7c3e2-s.woff2",revision:"e94b5e20c27aefc321077e0493d637fa"},{url:"/_next/static/media/b78b37b810acce9f-s.woff2",revision:"84178643d3301be33c644418edb5428e"},{url:"/_next/static/media/ca1d48d650382c09-s.woff2",revision:"888e97f93e4c4baa5e9af45001f30f0d"},{url:"/_next/static/media/e79147326f4a3c39-s.woff2",revision:"a8261d24ead0864af517e55dcb3c6ad1"},{url:"/_next/static/media/fe4c52824bfaed3e-s.woff2",revision:"805d9d0a89317c31018ba4093b57970a"},{url:"/_next/static/media/layers-2x.9859cd12.png",revision:"9859cd12"},{url:"/_next/static/media/layers.ef6db872.png",revision:"ef6db872"},{url:"/_next/static/media/marker-icon.d577052a.png",revision:"d577052a"},{url:"/_next/static/media/ort-wasm-simd-threaded.jsep.09e91cb9.wasm",revision:"09e91cb9"},{url:"/_next/static/media/ort.bundle.min.d9de45e6.mjs",revision:"d9de45e6"},{url:"/audio/Cashew_anthracnose.wav",revision:"e43042be2269630d2b00477e1e68a75a"},{url:"/audio/Cashew_gumosis.wav",revision:"89c530e0f09db422bcb1344af6534c58"},{url:"/audio/Cashew_healthy.wav",revision:"ade5593b56510d49bd2bd9f1e8a5d055"},{url:"/audio/Cashew_leaf_miner.wav",revision:"78e9a71352c69cd3aea0a5405fd91362"},{url:"/audio/Cashew_red_rust.wav",revision:"c876acbf74c979c732b486a1853ca38c"},{url:"/audio/Cassava_bacterial_blight.wav",revision:"b5dc28a369398c8a76969c25b555dad5"},{url:"/audio/Cassava_brown_spot.wav",revision:"ddf5b2f7372116d628142aa056f85094"},{url:"/audio/Cassava_green_mite.wav",revision:"fb69d4016007c7898dd6ffe1ee2c51e2"},{url:"/audio/Cassava_healthy.wav",revision:"6127e86dd9fd7096453b2d17014f9e22"},{url:"/audio/Cassava_mosaic.wav",revision:"826e3927b063248a01609c9a1bd55fdc"},{url:"/audio/Maize_fall_armyworm.wav",revision:"0f7e534d3b3d043bdfffd1e56d63a48c"},{url:"/audio/Maize_grasshopper.wav",revision:"5fd4148dbfa3c64ef39a2b63f7231bcb"},{url:"/audio/Maize_healthy.wav",revision:"5330434dc883ed5218ebfc1895ee4eee"},{url:"/audio/Maize_leaf_beetle.wav",revision:"7567b8aa338e6161367d98fc2fa561f6"},{url:"/audio/Maize_leaf_blight.wav",revision:"59769b767fa498058ed7bddc7fcb6cd6"},{url:"/audio/Maize_leaf_spot.wav",revision:"6911a697ceeeed411001b3e2246264be"},{url:"/audio/Maize_streak_virus.wav",revision:"67a3ab8c1269fbc97cadad6c7193ee25"},{url:"/audio/Tomato_healthy.wav",revision:"7963fd11707d18bd0f9b75d0bcb9c6a1"},{url:"/audio/Tomato_leaf_blight.wav",revision:"cf3a0394f9e6b8eb26d52cc857f2064f"},{url:"/audio/Tomato_leaf_curl.wav",revision:"e416a4a8ac4a2cfe964ac0868630ba12"},{url:"/audio/Tomato_septoria_leaf_spot.wav",revision:"da6b0ea2abab3db0ebfbca4d5bc70fff"},{url:"/audio/Tomato_verticulium_wilt.wav",revision:"bc409546dd6f64e2ded9f71436756970"},{url:"/file.svg",revision:"d09f95206c3fa0bb9bd9fefabfd0ea71"},{url:"/generate-icons.html",revision:"530401e384ed38ac13bde54782a001f5"},{url:"/globe.svg",revision:"2aaafa6a49b6563925fe440891e32717"},{url:"/icons/icon-152x152.png",revision:"9e160ef8fc89eb3ab2645776c9fbfa2e"},{url:"/icons/icon-192x192.png",revision:"9e160ef8fc89eb3ab2645776c9fbfa2e"},{url:"/icons/icon-512x512.png",revision:"b3af5c54bcc869221c28caece95f1941"},{url:"/icons/maskable-192x192.png",revision:"9e160ef8fc89eb3ab2645776c9fbfa2e"},{url:"/icons/maskable-512x512.png",revision:"b3af5c54bcc869221c28caece95f1941"},{url:"/manifest.json",revision:"cda3dacfc596e7ce9e7859586b318e3e"},{url:"/model/Sonu_model.onnx",revision:"dd6c836a21fd203b54d696113298d924"},{url:"/next.svg",revision:"8e061864f388b47f33a1c3780831193e"},{url:"/vercel.svg",revision:"c0af2f507b369b085b35ef4bbe3bcf1e"},{url:"/window.svg",revision:"a2760511c65806022ad20adf74370ff3"}],{ignoreURLParametersMatching:[]}),e.cleanupOutdatedCaches(),e.registerRoute("/",new e.NetworkFirst({cacheName:"start-url",plugins:[{cacheWillUpdate:async({request:e,response:a,event:i,state:s})=>a&&"opaqueredirect"===a.type?new Response(a.body,{status:200,statusText:"OK",headers:a.headers}):a}]}),"GET"),e.registerRoute(/^https?.*/,new e.NetworkFirst({cacheName:"offlineCache",plugins:[new e.ExpirationPlugin({maxEntries:200})]}),"GET")});
+if (!self.define) {
+  let e,
+    a = {};
+  const i = (i, s) => (
+    (i = new URL(i + ".js", s).href),
+    a[i] ||
+      new Promise((a) => {
+        if ("document" in self) {
+          const e = document.createElement("script");
+          (e.src = i), (e.onload = a), document.head.appendChild(e);
+        } else (e = i), importScripts(i), a();
+      }).then(() => {
+        let e = a[i];
+        if (!e) throw new Error(`Module ${i} didn’t register its module`);
+        return e;
+      })
+  );
+  self.define = (s, c) => {
+    const d =
+      e ||
+      ("document" in self ? document.currentScript.src : "") ||
+      location.href;
+    if (a[d]) return;
+    let t = {};
+    const r = (e) => i(e, d),
+      n = { module: { uri: d }, exports: t, require: r };
+    a[d] = Promise.all(s.map((e) => n[e] || r(e))).then((e) => (c(...e), t));
+  };
+}
+define(["./workbox-8e5392e7"], function (e) {
+  "use strict";
+  importScripts(),
+    self.skipWaiting(),
+    e.clientsClaim(),
+    e.precacheAndRoute(
+      [
+        {
+          url: "/_next/app-build-manifest.json",
+          revision: "cb2a7d0b78c83cf6ba348d802ec6f0f2",
+        },
+        {
+          url: "/_next/static/LNE84T1X0eNkOd53-QmpN/_buildManifest.js",
+          revision: "e60f1fc6189f748a799dee97f56d3fbd",
+        },
+        {
+          url: "/_next/static/LNE84T1X0eNkOd53-QmpN/_ssgManifest.js",
+          revision: "b6652df95db52feb4daf4eca35380933",
+        },
+        {
+          url: "/_next/static/chunks/037f3a08-9a864accea981509.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/17278b49-755ff82dad5974b5.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/23-ae9b689c8ac22883.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/299-d7bff47eef5abcb3.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/341.3d7e7d0d3d1bf4f5.js",
+          revision: "3d7e7d0d3d1bf4f5",
+        },
+        {
+          url: "/_next/static/chunks/472.a3826d29d6854395.js",
+          revision: "a3826d29d6854395",
+        },
+        {
+          url: "/_next/static/chunks/4bd1b696-16ffd280aa2e3009.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/634.e184d360371d2133.js",
+          revision: "e184d360371d2133",
+        },
+        {
+          url: "/_next/static/chunks/684-ea7e5fd077b3e7e5.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/874-e909718850e7282e.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/_not-found/page-de05db3c4dceadb5.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/api/location/route-66983b2c751dd608.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/api/outbreaks/route-7d51f2060a068e8c.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/api/predictions/route-73145690cf3c763b.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/api/report-outbreak/route-23f370281c7964d2.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/layout-1e78059dd46eabd8.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/map/page-ce97c69f4c3e2c0a.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/not-found-2cc491afdc38acea.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/page-69dcc25a45e312b0.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/app/scan/page-71e3e44c614de6b1.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/d0deef33.d8e4dae5397587ae.js",
+          revision: "d8e4dae5397587ae",
+        },
+        {
+          url: "/_next/static/chunks/framework-b326bfe0905a39d9.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/main-48305b3e6e5cfb94.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/main-app-02234b30dfba25da.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/pages/_app-92f2aae776f86b9c.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/pages/_error-429ffef92729b913.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/chunks/polyfills-42372ed130431b0a.js",
+          revision: "846118c33b2c0e922d7b3a7676f81f6f",
+        },
+        {
+          url: "/_next/static/chunks/webpack-2baa4fbf384dbd5b.js",
+          revision: "LNE84T1X0eNkOd53-QmpN",
+        },
+        {
+          url: "/_next/static/css/61a9cd0f3b30fd69.css",
+          revision: "61a9cd0f3b30fd69",
+        },
+        {
+          url: "/_next/static/css/a4327c7cf14645db.css",
+          revision: "a4327c7cf14645db",
+        },
+        {
+          url: "/_next/static/media/021bc4481ed92ece-s.woff2",
+          revision: "0f5cb8880dd308345f58cecdc5fc5041",
+        },
+        {
+          url: "/_next/static/media/027647acf05c7ff8-s.woff2",
+          revision: "3591b7c787c0714852651cebcf68a08f",
+        },
+        {
+          url: "/_next/static/media/0421fed624cfafec-s.woff2",
+          revision: "72271f2ebeae94d38797e46ecf09287b",
+        },
+        {
+          url: "/_next/static/media/1e0245f199a3e64d-s.woff2",
+          revision: "c8be71e9c26ec438dc5186b9e43e9fe4",
+        },
+        {
+          url: "/_next/static/media/1f3fe8c6df3d47c1-s.p.woff2",
+          revision: "c355ec2df77a650bba34b592b711cb81",
+        },
+        {
+          url: "/_next/static/media/3e8ab5100a4aa694-s.woff2",
+          revision: "639aed42fb4050938f7dca6956047319",
+        },
+        {
+          url: "/_next/static/media/3f69592b2fe603c7-s.woff2",
+          revision: "84568c0a37620328592a78e9ad069d77",
+        },
+        {
+          url: "/_next/static/media/443896d591e4f761-s.p.woff2",
+          revision: "c701418e2f543d7f5d26448b1ecfbfc8",
+        },
+        {
+          url: "/_next/static/media/4f05ba3a6752a328-s.p.woff2",
+          revision: "ea21cc6e4b393851204d1a3160ad6abc",
+        },
+        {
+          url: "/_next/static/media/50cc6d76ab2a2da3-s.woff2",
+          revision: "45172fcd21b47bba9d7b8118e9012ff4",
+        },
+        {
+          url: "/_next/static/media/5b45b5fd85b63a3d-s.woff2",
+          revision: "a0d9d6782a3a3a9449af75aa4ad7b5c6",
+        },
+        {
+          url: "/_next/static/media/6325a8417175c41d-s.woff2",
+          revision: "a3fd0c427e31c0cadb48607ee8c7876b",
+        },
+        {
+          url: "/_next/static/media/99b7f73d5af7c3e2-s.woff2",
+          revision: "e94b5e20c27aefc321077e0493d637fa",
+        },
+        {
+          url: "/_next/static/media/b78b37b810acce9f-s.woff2",
+          revision: "84178643d3301be33c644418edb5428e",
+        },
+        {
+          url: "/_next/static/media/ca1d48d650382c09-s.woff2",
+          revision: "888e97f93e4c4baa5e9af45001f30f0d",
+        },
+        {
+          url: "/_next/static/media/e79147326f4a3c39-s.woff2",
+          revision: "a8261d24ead0864af517e55dcb3c6ad1",
+        },
+        {
+          url: "/_next/static/media/fe4c52824bfaed3e-s.woff2",
+          revision: "805d9d0a89317c31018ba4093b57970a",
+        },
+        {
+          url: "/_next/static/media/layers-2x.9859cd12.png",
+          revision: "9859cd12",
+        },
+        {
+          url: "/_next/static/media/layers.ef6db872.png",
+          revision: "ef6db872",
+        },
+        {
+          url: "/_next/static/media/marker-icon.d577052a.png",
+          revision: "d577052a",
+        },
+        {
+          url: "/_next/static/media/ort-wasm-simd-threaded.jsep.09e91cb9.wasm",
+          revision: "09e91cb9",
+        },
+        {
+          url: "/_next/static/media/ort.bundle.min.d9de45e6.mjs",
+          revision: "d9de45e6",
+        },
+        {
+          url: "/audio/Cashew_anthracnose.wav",
+          revision: "e43042be2269630d2b00477e1e68a75a",
+        },
+        {
+          url: "/audio/Cashew_gumosis.wav",
+          revision: "89c530e0f09db422bcb1344af6534c58",
+        },
+        {
+          url: "/audio/Cashew_healthy.wav",
+          revision: "ade5593b56510d49bd2bd9f1e8a5d055",
+        },
+        {
+          url: "/audio/Cashew_leaf_miner.wav",
+          revision: "78e9a71352c69cd3aea0a5405fd91362",
+        },
+        {
+          url: "/audio/Cashew_red_rust.wav",
+          revision: "c876acbf74c979c732b486a1853ca38c",
+        },
+        {
+          url: "/audio/Cassava_bacterial_blight.wav",
+          revision: "b5dc28a369398c8a76969c25b555dad5",
+        },
+        {
+          url: "/audio/Cassava_brown_spot.wav",
+          revision: "ddf5b2f7372116d628142aa056f85094",
+        },
+        {
+          url: "/audio/Cassava_green_mite.wav",
+          revision: "fb69d4016007c7898dd6ffe1ee2c51e2",
+        },
+        {
+          url: "/audio/Cassava_healthy.wav",
+          revision: "6127e86dd9fd7096453b2d17014f9e22",
+        },
+        {
+          url: "/audio/Cassava_mosaic.wav",
+          revision: "826e3927b063248a01609c9a1bd55fdc",
+        },
+        {
+          url: "/audio/Maize_fall_armyworm.wav",
+          revision: "0f7e534d3b3d043bdfffd1e56d63a48c",
+        },
+        {
+          url: "/audio/Maize_grasshopper.wav",
+          revision: "5fd4148dbfa3c64ef39a2b63f7231bcb",
+        },
+        {
+          url: "/audio/Maize_healthy.wav",
+          revision: "5330434dc883ed5218ebfc1895ee4eee",
+        },
+        {
+          url: "/audio/Maize_leaf_beetle.wav",
+          revision: "7567b8aa338e6161367d98fc2fa561f6",
+        },
+        {
+          url: "/audio/Maize_leaf_blight.wav",
+          revision: "59769b767fa498058ed7bddc7fcb6cd6",
+        },
+        {
+          url: "/audio/Maize_leaf_spot.wav",
+          revision: "6911a697ceeeed411001b3e2246264be",
+        },
+        {
+          url: "/audio/Maize_streak_virus.wav",
+          revision: "67a3ab8c1269fbc97cadad6c7193ee25",
+        },
+        {
+          url: "/audio/Tomato_healthy.wav",
+          revision: "7963fd11707d18bd0f9b75d0bcb9c6a1",
+        },
+        {
+          url: "/audio/Tomato_leaf_blight.wav",
+          revision: "cf3a0394f9e6b8eb26d52cc857f2064f",
+        },
+        {
+          url: "/audio/Tomato_leaf_curl.wav",
+          revision: "e416a4a8ac4a2cfe964ac0868630ba12",
+        },
+        {
+          url: "/audio/Tomato_septoria_leaf_spot.wav",
+          revision: "da6b0ea2abab3db0ebfbca4d5bc70fff",
+        },
+        {
+          url: "/audio/Tomato_verticulium_wilt.wav",
+          revision: "bc409546dd6f64e2ded9f71436756970",
+        },
+        { url: "/file.svg", revision: "d09f95206c3fa0bb9bd9fefabfd0ea71" },
+        {
+          url: "/generate-icons.html",
+          revision: "530401e384ed38ac13bde54782a001f5",
+        },
+        { url: "/globe.svg", revision: "2aaafa6a49b6563925fe440891e32717" },
+        {
+          url: "/icons/icon-152x152.png",
+          revision: "9e160ef8fc89eb3ab2645776c9fbfa2e",
+        },
+        {
+          url: "/icons/icon-192x192.png",
+          revision: "9e160ef8fc89eb3ab2645776c9fbfa2e",
+        },
+        {
+          url: "/icons/icon-512x512.png",
+          revision: "b3af5c54bcc869221c28caece95f1941",
+        },
+        {
+          url: "/icons/maskable-192x192.png",
+          revision: "9e160ef8fc89eb3ab2645776c9fbfa2e",
+        },
+        {
+          url: "/icons/maskable-512x512.png",
+          revision: "b3af5c54bcc869221c28caece95f1941",
+        },
+        { url: "/manifest.json", revision: "cda3dacfc596e7ce9e7859586b318e3e" },
+        {
+          url: "/model/mobilenet_mobile.onnx",
+          revision: "dd6c836a21fd203b54d696113298d924",
+        },
+        { url: "/next.svg", revision: "8e061864f388b47f33a1c3780831193e" },
+        { url: "/vercel.svg", revision: "c0af2f507b369b085b35ef4bbe3bcf1e" },
+        { url: "/window.svg", revision: "a2760511c65806022ad20adf74370ff3" },
+      ],
+      { ignoreURLParametersMatching: [] }
+    ),
+    e.cleanupOutdatedCaches(),
+    e.registerRoute(
+      "/",
+      new e.NetworkFirst({
+        cacheName: "start-url",
+        plugins: [
+          {
+            cacheWillUpdate: async ({
+              request: e,
+              response: a,
+              event: i,
+              state: s,
+            }) =>
+              a && "opaqueredirect" === a.type
+                ? new Response(a.body, {
+                    status: 200,
+                    statusText: "OK",
+                    headers: a.headers,
+                  })
+                : a,
+          },
+        ],
+      }),
+      "GET"
+    ),
+    e.registerRoute(
+      /^https?.*/,
+      new e.NetworkFirst({
+        cacheName: "offlineCache",
+        plugins: [new e.ExpirationPlugin({ maxEntries: 200 })],
+      }),
+      "GET"
+    );
+});

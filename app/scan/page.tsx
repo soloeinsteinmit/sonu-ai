@@ -25,6 +25,10 @@ import { ScanResultsChat } from "@/components/scan/scan-results-chat";
 import { MultipleScanResults } from "@/components/scan/multiple-scan-results";
 import { ScanResult, MultipleScanResult } from "@/lib/types/disease";
 import { FloatingMapButton } from "@/components/common/floating-map-button";
+import {
+  saveScanResultOffline,
+  saveOutbreakReportOffline,
+} from "@/lib/utils/offline-storage";
 
 /**
  * Scan workflow stages
@@ -70,6 +74,8 @@ export default function ScanPage() {
    * Handle single AI processing completion
    */
   const handleProcessingComplete = (result: ScanResult) => {
+    // Save result offline for history/sync
+    saveScanResultOffline(result);
     setScanResult(result);
     setCurrentStage("results");
   };
@@ -78,6 +84,10 @@ export default function ScanPage() {
    * Handle multiple AI processing completion
    */
   const handleMultipleProcessingComplete = (result: MultipleScanResult) => {
+    // Save individual results offline for history/sync
+    result.results.forEach((scanResult) => {
+      saveScanResultOffline(scanResult);
+    });
     setMultipleScanResult(result);
     setCurrentStage("results");
   };
@@ -166,6 +176,14 @@ export default function ScanPage() {
     disease: string
   ) => {
     try {
+      // Check if online before making API call
+      if (!navigator.onLine) {
+        // Use offline storage utility
+        saveOutbreakReportOffline(latitude, longitude, disease);
+        toast.success("Report saved offline. Will sync when online.");
+        return;
+      }
+
       const response = await fetch("/api/report-outbreak", {
         method: "POST",
         headers: {
@@ -180,7 +198,9 @@ export default function ScanPage() {
         toast.error("Failed to report outbreak. Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while reporting outbreak.");
+      // If network error, save offline using utility
+      saveOutbreakReportOffline(latitude, longitude, disease);
+      toast.success("Report saved offline. Will sync when online.");
     }
   };
 

@@ -55,7 +55,7 @@ def predict_onnx(session, image_path, transforms, class_names):
 if __name__ == "__main__":
 
     # --- IMPORTANT: UPDATE THESE VALUES ---
-    ONNX_MODEL_PATH = r"C:\Users\mecha\Documents\revision\Sonu-ai-frontend\server\Sonu_model.onnx"
+    ONNX_MODEL_PATH = r"C:\Users\mecha\Documents\revision\Sonu-ai-frontend\server\mobilenet_mobile.onnx"
     IMAGE_TO_TEST_PATH = r"C:\Users\mecha\Documents\revision\Sonu-ai-frontend\CCMT Dataset\Tomato\leaf curl\leaf curl2_.jpg"
     
     # You MUST provide the class names in the exact same order as during training
