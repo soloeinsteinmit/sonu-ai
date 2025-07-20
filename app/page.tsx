@@ -696,7 +696,7 @@ export default function Home() {
                 and community outbreak tracking. Built with ❤️ for Ghana's
                 agricultural future.
               </p>
-
+ 
               {/* Enhanced Quick Stats */}
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-green-500/10 to-emerald-600/5 backdrop-blur-sm border border-green-500/20 hover:border-green-400/40 transition-all duration-300 group">
