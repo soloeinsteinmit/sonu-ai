@@ -24,7 +24,7 @@ A comprehensive AI-powered crop disease detection and community outbreak trackin
 
 Sonu addresses critical challenges in Ghana's agricultural sector by providing:
 
-- **Instant Disease Detection**: AI-powered analysis of crop photos with 95% accuracy
+- **Instant Disease Detection**: AI-powered analysis of crop photos with 96% accuracy
 - **Treatment Recommendations**: Localized treatment plans with organic and chemical options
 - **Community Intelligence**: Real-time outbreak mapping and early warning system
 - **Offline Capability**: Full functionality without internet connectivity
@@ -105,7 +105,7 @@ graph TB
 - **📸 Instant Disease Detection**
   - Camera integration with real-time capture
   - Support for 4 major crops (Cassava, Maize, Tomato, Cashew)
-  - 22 disease types with 95% accuracy
+  - 22 disease types with 96% accuracy
   - Batch processing for multiple images
 
 - **💊 Treatment Advisory System**
@@ -237,7 +237,7 @@ The system supports **4 major crops** with **22 disease classes**:
 
 ### Model Performance
 
-- **Accuracy**: 95% on validation set
+- **Accuracy**: 96% on validation set
 - **Inference Time**: <3 seconds on mobile devices
 - **Model Size**: Optimized for web deployment
 - **Confidence Scoring**: Probabilistic output with uncertainty handling

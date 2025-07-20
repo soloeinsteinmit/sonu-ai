@@ -36,16 +36,16 @@ export default function Home() {
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
               </div>
               <div className="ml-4">
-                <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-green-800 to-emerald-700 bg-clip-text text-transparent">
+                <span className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-green-800 to-emerald-700 bg-clip-text text-transparent font-pacifico">
                   Sonu
                 </span>
-                <div className="text-xs text-green-600 font-medium">
-                  AI Powered
+                <div className="text-xs text-green-600 font-medium -mt-1">
+                  AI Crop Guardian
                 </div>
               </div>
             </div>
 
-            <nav className="hidden md:flex items-center space-x-1">
+            <nav className="hidden md:flex items-center space-x-2">
               <Link
                 href="#how-it-works"
                 className="px-4 py-2 text-gray-700 hover:text-green-600 hover:bg-green-50/50 rounded-xl transition-all duration-200 font-medium"
@@ -59,19 +59,44 @@ export default function Home() {
                 For Farmers
               </Link>
               <Link
+                href="/map"
+                className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50/50 rounded-xl transition-all duration-200 font-medium flex items-center gap-2"
+              >
+                <Map className="h-4 w-4" />
+                Disease Map
+              </Link>
+              <Link
                 href="/scan"
                 className="ml-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2"
               >
                 <Camera className="h-4 w-4" />
-                Try Now
+                Scan Now
               </Link>
             </nav>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center gap-2">
+              <Link
+                href="/map"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 rounded-lg font-medium flex items-center gap-1"
+              >
+                <Map className="h-4 w-4" />
+                Map
+              </Link>
+              <Link
+                href="/scan"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+              >
+                <Camera className="h-4 w-4" />
+                Scan
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Revolutionary Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center pt-32 overflow-hidden">
         {/* Dynamic Floating Elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-32 left-16 animate-bounce delay-100">
@@ -91,7 +116,7 @@ export default function Home() {
           </div>
           <div className="absolute bottom-32 right-16 animate-bounce delay-700">
             <div className="w-12 h-12 bg-gradient-to-br from-orange-400/20 to-amber-500/30 rounded-xl backdrop-blur-sm flex items-center justify-center text-lg">
-              🥥
+              🍃
             </div>
           </div>
         </div>
@@ -164,7 +189,7 @@ export default function Home() {
                   <TrendingUp className="h-10 w-10 text-green-600" />
                 </div>
                 <div className="text-3xl font-black text-gray-900 mb-2 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  95%
+                  96%
                 </div>
                 <div className="text-gray-600 font-semibold">
                   Accurate Results
@@ -246,7 +271,7 @@ export default function Home() {
                 <div className="w-32 h-32 bg-gradient-to-br from-green-400 via-emerald-500 to-green-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl group-hover:shadow-3xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
                   <Camera className="h-16 w-16 text-white group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-green-600 to-emerald-700 text-white rounded-2xl flex items-center justify-center text-lg font-black shadow-lg">
+                <div className="hidden md:flex absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-green-600 to-emerald-700 text-white rounded-2xl items-center justify-center text-lg font-black shadow-lg">
                   1
                 </div>
                 {/* Floating particles */}
@@ -278,7 +303,7 @@ export default function Home() {
                     🔍
                   </div>
                 </div>
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-blue-600 to-sky-700 text-white rounded-2xl flex items-center justify-center text-lg font-black shadow-lg">
+                <div className="hidden md:flex absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-blue-600 to-sky-700 text-white rounded-2xl items-center justify-center text-lg font-black shadow-lg">
                   2
                 </div>
                 {/* AI Processing Animation */}
@@ -308,7 +333,7 @@ export default function Home() {
                     💡
                   </div>
                 </div>
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-amber-600 to-yellow-700 text-white rounded-2xl flex items-center justify-center text-lg font-black shadow-lg">
+                <div className="hidden md:flex absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-amber-600 to-yellow-700 text-white rounded-2xl items-center justify-center text-lg font-black shadow-lg">
                   3
                 </div>
                 {/* Success indicators */}
@@ -549,7 +574,7 @@ export default function Home() {
           </div>
           <div className="absolute bottom-16 right-16 animate-bounce delay-700">
             <div className="w-10 h-10 bg-white/20 rounded-xl backdrop-blur-sm flex items-center justify-center text-lg">
-              🥥
+              🍃
             </div>
           </div>
         </div>
@@ -558,7 +583,7 @@ export default function Home() {
           {/* Attention-grabbing badge */}
           <div className="inline-flex items-center px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-semibold mb-8 shadow-lg">
             <Sparkles className="mr-2 h-4 w-4 animate-pulse" />
-            Join 500+ Successful Farmers
+            Join Successful Farmers
           </div>
 
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-8 leading-tight">
@@ -618,7 +643,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-yellow-300" />
-              <span className="font-semibold">95% Accurate</span>
+              <span className="font-semibold">96% Accurate</span>
             </div>
           </div>
 
@@ -633,12 +658,13 @@ export default function Home() {
       {/* Revolutionary Footer */}
       <footer
         id="about"
-        className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white py-20 relative overflow-hidden"
+        className="bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white py-24 relative overflow-hidden"
       >
-        {/* Background Elements */}
+        {/* Enhanced Background Elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-green-500/10 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-20 left-20 w-40 h-40 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl animate-pulse delay-500"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -653,7 +679,7 @@ export default function Home() {
                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
                 </div>
                 <div className="ml-4">
-                  <span className="text-2xl font-black bg-gradient-to-r from-white via-green-200 to-emerald-200 bg-clip-text text-transparent">
+                  <span className="text-2xl font-black bg-gradient-to-r from-white via-green-200 to-emerald-200 bg-clip-text text-transparent font-pacifico">
                     Sonu
                   </span>
                   <div className="text-xs text-green-400 font-semibold">
@@ -667,35 +693,39 @@ export default function Home() {
                 <span className="text-green-400 font-semibold">
                   AI-powered crop disease detection
                 </span>{" "}
-                and community outbreak tracking. Built with love for Ghana's
+                and community outbreak tracking. Built with ❤️ for Ghana's
                 agricultural future.
               </p>
 
-              {/* Quick Stats */}
+              {/* Enhanced Quick Stats */}
               <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="text-center p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                  <div className="text-2xl font-black text-green-400">500+</div>
-                  <div className="text-xs text-gray-400">Farmers Helped</div>
+                <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-green-500/10 to-emerald-600/5 backdrop-blur-sm border border-green-500/20 hover:border-green-400/40 transition-all duration-300 group">
+                  <div className="text-3xl font-black text-green-400 group-hover:scale-110 transition-transform duration-300">500+</div>
+                  <div className="text-xs text-gray-400 font-medium">Farmers Helped</div>
+                  <div className="text-xs text-green-500 mt-1">🌾 Growing Daily</div>
                 </div>
-                <div className="text-center p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                  <div className="text-2xl font-black text-blue-400">95%</div>
-                  <div className="text-xs text-gray-400">Accuracy Rate</div>
+                <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-600/5 backdrop-blur-sm border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 group">
+                  <div className="text-3xl font-black text-blue-400 group-hover:scale-110 transition-transform duration-300">96%</div>
+                  <div className="text-xs text-gray-400 font-medium">Accuracy Rate</div>
+                  <div className="text-xs text-blue-500 mt-1">🎯 AI Powered</div>
                 </div>
               </div>
 
-              {/* Quick Actions */}
-              <div className="flex gap-3">
+              {/* Enhanced Quick Actions */}
+              <div className="flex gap-4">
                 <Link
                   href="/scan"
-                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:from-green-700 hover:to-emerald-700 transition-all duration-200 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-xl text-sm font-bold hover:from-green-700 hover:to-emerald-700 transition-all duration-200 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
                 >
-                  Try Now
+                  <Camera className="h-4 w-4" />
+                  Start Scanning
                 </Link>
                 <Link
                   href="/map"
-                  className="flex-1 bg-white/10 backdrop-blur-sm text-white border border-white/20 px-4 py-3 rounded-xl text-sm font-bold hover:bg-white/20 transition-all duration-200 text-center"
+                  className="flex-1 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-sm text-white border border-blue-500/30 px-6 py-4 rounded-xl text-sm font-bold hover:bg-gradient-to-r hover:from-blue-600/30 hover:to-cyan-600/30 hover:border-blue-400/50 transition-all duration-200 text-center transform hover:-translate-y-1 flex items-center justify-center gap-2"
                 >
-                  View Map
+                  <Map className="h-4 w-4" />
+                  View Outbreaks
                 </Link>
               </div>
             </div>
@@ -711,7 +741,7 @@ export default function Home() {
                   </h3>
                   <div className="space-y-3">
                     <div className="flex items-center p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors duration-200">
-                      <span className="text-2xl mr-3">🥥</span>
+                      <span className="text-2xl mr-3">🍃</span>
                       <div>
                         <div className="font-semibold text-white">Cashew</div>
                         <div className="text-xs text-gray-400">
@@ -807,37 +837,54 @@ export default function Home() {
           </div>
 
           {/* Bottom Section - Enhanced */}
-          <div className="border-t border-gray-700/50 mt-16 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="border-t border-gray-700/50 mt-20 pt-12">
+            <div className="grid md:grid-cols-3 gap-8 items-center">
+              {/* Copyright & Mission */}
               <div className="text-center md:text-left">
-                <p className="text-gray-400 text-sm">
-                  &copy; 2025 Sonu. Built for Ghana AI Hackathon.
+                <p className="text-gray-400 text-sm font-medium">
+                  &copy; 2025 Sonu. Built for Ghana AI Hackathon 2025.
                 </p>
-                <p className="text-gray-500 text-xs mt-1">
+                <p className="text-gray-500 text-xs mt-2 leading-relaxed">
                   Made with{" "}
                   <span className="text-red-400 animate-pulse">❤️</span> for
-                  Ghanaian farmers.
+                  Ghanaian farmers by{" "}
+                  <span className="text-green-400 font-medium">
+                    Mohammed Nuruddin Alhassan & Solomon Eshun
+                  </span>
+                </p>
+                <p className="text-gray-600 text-xs mt-1">
+                  🌾 Protecting Ghana's agricultural future, one crop at a time.
                 </p>
               </div>
 
-              {/* Trust Badges */}
-              <div className="flex items-center gap-4 text-xs text-gray-400">
-                <div className="flex items-center gap-1">
-                  <Shield className="h-3 w-3 text-green-400" />
-                  <span>Secure</span>
+              {/* Trust Badges - Enhanced */}
+              <div className="flex flex-wrap justify-center gap-3 text-xs">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400">
+                  <Shield className="h-3 w-3" />
+                  <span className="font-medium">Secure & Private</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Zap className="h-3 w-3 text-blue-400" />
-                  <span>Fast</span>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">
+                  <Zap className="h-3 w-3" />
+                  <span className="font-medium">Lightning Fast</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <CheckCircle className="h-3 w-3 text-purple-400" />
-                  <span>Reliable</span>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                  <CheckCircle className="h-3 w-3" />
+                  <span className="font-medium">96% Accurate</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-sm">🇬🇭</span>
-                  <span>Made in Ghana</span>
+              </div>
+
+              {/* Ghana Pride Badge */}
+              <div className="text-center md:text-right">
+                <div className="inline-flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-red-500/10 via-yellow-500/10 to-green-500/10 border border-yellow-500/20">
+                  <span className="text-2xl animate-pulse">🇬🇭</span>
+                  <div className="text-left">
+                    <div className="text-sm font-bold text-white">Proudly Ghanaian</div>
+                    <div className="text-xs text-gray-400">Built in Accra, Ghana</div>
+                  </div>
                 </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Supporting local farmers & communities
+                </p>
               </div>
             </div>
           </div>

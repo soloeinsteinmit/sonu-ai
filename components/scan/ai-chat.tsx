@@ -10,7 +10,7 @@
  * - Text-to-speech in Twi
  * - Mobile-optimized interface
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 

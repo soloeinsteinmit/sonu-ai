@@ -5,7 +5,7 @@
  * The order of these names MUST EXACTLY match the order used during model training.
  * This is critical for correctly mapping the model's output index to a human-readable disease name.
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 export const MODEL_CLASS_NAMES = [

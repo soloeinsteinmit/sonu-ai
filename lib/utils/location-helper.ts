@@ -6,7 +6,7 @@
  * - Geolocation services
  * - Location-based permissions
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 

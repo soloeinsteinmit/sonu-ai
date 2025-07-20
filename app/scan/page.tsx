@@ -8,7 +8,7 @@
  * 2. AI processing simulation
  * 3. Results display with treatment recommendations
  *
- * @author Alhassan Mohammed Nuruddin & Solomon Eshun
+ * @author Mohammed Nuruddin Alhassan & Solomon Eshun
  * @version 1.0.0
  */
 

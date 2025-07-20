@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crop Disease Scanner - Instant AI Detection",
-  description: "Scan your crops instantly with AI! Take a photo of cassava, maize, tomato, or cashew plants to detect diseases with 95% accuracy. Get immediate treatment recommendations and protect your harvest.",
+  description: "Scan your crops instantly with AI! Take a photo of cassava, maize, tomato, or cashew plants to detect diseases with 96% accuracy. Get immediate treatment recommendations and protect your harvest.",
   keywords: [
     "crop disease scanner",
     "plant disease camera", 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Crop Disease Scanner - Instant AI Detection | Sonu",
-    description: "📸 Take a photo, get instant results! AI-powered crop disease detection for cassava, maize, tomato & cashew. 95% accuracy + treatment advice.",
+    description: "📸 Take a photo, get instant results! AI-powered crop disease detection for cassava, maize, tomato & cashew. 96% accuracy + treatment advice.",
     url: "https://sonu-ai.vercel.app/scan",
     images: [
       {
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: "Crop Disease Scanner - Instant AI Detection 📸🌾",
-    description: "📸 Snap a photo → Get instant AI diagnosis → Protect your crops! 95% accuracy for Ghana's major crops. #CropScanner #AgTech",
+    description: "📸 Snap a photo → Get instant AI diagnosis → Protect your crops! 96% accuracy for Ghana's major crops. #CropScanner #AgTech",
     images: ["/twitter-scan-card.png"],
   },
   alternates: {

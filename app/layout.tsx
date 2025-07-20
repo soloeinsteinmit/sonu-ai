@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Merriweather, Source_Code_Pro } from "next/font/google";
+import { Montserrat, Merriweather, Source_Code_Pro, Pacifico } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
@@ -22,6 +22,13 @@ const merriweather = Merriweather({
 const sourceCodePro = Source_Code_Pro({
   subsets: ["latin"],
   variable: "--font-source-code-pro",
+  display: "swap",
+});
+
+const pacifico = Pacifico({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-pacifico",
   display: "swap",
 });
 
@@ -119,7 +126,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${merriweather.variable} ${sourceCodePro.variable}`}
+      className={`${montserrat.variable} ${merriweather.variable} ${sourceCodePro.variable} ${pacifico.variable}`}
     >
       <head>
         <meta name="application-name" content="Sonu" />
