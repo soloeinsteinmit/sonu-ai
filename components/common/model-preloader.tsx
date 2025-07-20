@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgriSentry AI - Model Preloader Component
+ * sonu - Model Preloader Component
  *
  * This component preloads the AI model when the app starts,
  * ensuring it's available for offline use.
