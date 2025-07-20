@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://Sonu.vercel.app'
+  const baseUrl = 'https://sonu-ai.vercel.app'
 
   return {
     rules: [

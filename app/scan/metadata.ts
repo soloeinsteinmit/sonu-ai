@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Crop Disease Scanner - Instant AI Detection | Sonu",
     description: "📸 Take a photo, get instant results! AI-powered crop disease detection for cassava, maize, tomato & cashew. 95% accuracy + treatment advice.",
-    url: "https://Sonu.vercel.app/scan",
+    url: "https://sonu-ai.vercel.app/scan",
     images: [
       {
         url: "/og-scan-page.png",

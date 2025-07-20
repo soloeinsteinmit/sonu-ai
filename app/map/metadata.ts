@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Disease Outbreak Map - Community Tracking | Sonu",
     description: "🗺️ Real-time crop disease tracking across Ghana! See outbreaks in your area, get early warnings, and connect with farming community.",
-    url: "https://Sonu.vercel.app/map",
+    url: "https://sonu-ai.vercel.app/map",
     images: [
       {
         url: "/og-map-page.png",

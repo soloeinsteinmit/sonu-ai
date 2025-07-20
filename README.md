@@ -486,7 +486,7 @@ const ScanPage = () => {
 **Category**: Agriculture & Food Security  
 **Technology**: AI/ML, Computer Vision, PWA, Geospatial Analysis  
 
-**Live Demo**: [https://Sonu.vercel.app](https://Sonu.vercel.app)  
+**Live Demo**: [https://sonu-ai.vercel.app](https://sonu-ai.vercel.app)  
 **GitHub**: [https://github.com/soloeinsteinmit/Sonu-ai-frontend](https://github.com/soloeinsteinmit/Sonu-ai-frontend)
 
 ### Judging Criteria Alignment
