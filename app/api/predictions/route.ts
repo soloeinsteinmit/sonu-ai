@@ -163,7 +163,7 @@ export async function GET() {
 
     return NextResponse.json(allOutbreaks);
   } catch (error) {
-    console.error("Error fetching outbreak data:", error);
+    // console.error("Error fetching outbreak data:", error);
     // Return just mock data if CSV reading fails (all are diseased plants)
     // return NextResponse.json(mockOutbreaks);
   }

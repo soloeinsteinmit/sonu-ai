@@ -160,7 +160,7 @@ export async function DELETE(
       const newContent = [header, ...dataLines].join("\n") + "\n";
       fs.writeFileSync(filePath, newContent, "utf-8");
 
-      console.log(
+      // console.log(
         `CSV outbreak ${id} deleted by user at ${userLat}, ${userLon}. Reason: ${
           reason || "No reason provided"
         }`
@@ -175,7 +175,7 @@ export async function DELETE(
     // Non-CSV IDs are considered invalid now that default outbreaks are gone
     return NextResponse.json({ error: "Outbreak not found" }, { status: 404 });
   } catch (error) {
-    console.error("Error deleting outbreak:", error);
+    // console.error("Error deleting outbreak:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -250,7 +250,7 @@ export async function GET(
 
     return NextResponse.json({ error: "Outbreak not found" }, { status: 404 });
   } catch (error) {
-    console.error("Error fetching outbreak:", error);
+    // console.error("Error fetching outbreak:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -28,7 +28,7 @@ async function getNextId(filePath: string): Promise<number> {
         resolve(maxId + 1);
       })
       .on("error", (error) => {
-        console.error("Error reading CSV for ID generation:", error);
+        // console.error("Error reading CSV for ID generation:", error);
         // Fallback to timestamp-based ID if reading fails
         resolve(Date.now() % 10000);
       });
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error saving prediction:", error);
+    // console.error("Error saving prediction:", error);
     return NextResponse.json(
       { message: "Error saving prediction" },
       { status: 500 }

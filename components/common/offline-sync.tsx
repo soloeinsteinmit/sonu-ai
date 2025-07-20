@@ -69,7 +69,7 @@ export function OfflineSync() {
       }
     } catch (error) {
       toast.error("Sync failed. Please try again later.");
-      console.error("Sync error:", error);
+      // console.error("Sync error:", error);
     } finally {
       setIsSyncing(false);
     }

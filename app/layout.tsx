@@ -63,14 +63,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://Sonu-ai.vercel.app"),
+  metadataBase: new URL("https://sonu-ai.vercel.app"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://Sonu-ai.vercel.app",
+    url: "https://sonu-ai.vercel.app",
     title: "Sonu - Crop Disease Detection",
     description:
       "AI-powered crop disease detection and community outbreak tracking for Ghanaian farmers",
@@ -175,7 +175,7 @@ export default function RootLayout({
             // Function to preload the AI model
             async function preloadAIModel() {
               try {
-                console.log('Preloading AI model...');
+                // console.log('Preloading AI model...');
                 
                 // Try to fetch the model to ensure it's cached
                 const modelPaths = [
@@ -184,10 +184,10 @@ export default function RootLayout({
                 
                 for (const modelPath of modelPaths) {
                   try {
-                    console.log('Attempting to preload model:', modelPath);
+                    // console.log('Attempting to preload model:', modelPath);
                     const response = await fetch(modelPath, { cache: 'force-cache' });
                     if (response.ok) {
-                      console.log('Successfully preloaded model:', modelPath);
+                      // console.log('Successfully preloaded model:', modelPath);
                       break; // Stop if one model loads successfully
                     } else {
                       console.warn('Failed to preload model:', modelPath);
@@ -197,7 +197,7 @@ export default function RootLayout({
                   }
                 }
               } catch (error) {
-                console.error('Error in preloadAIModel:', error);
+                // console.error('Error in preloadAIModel:', error);
               }
             }
             
@@ -212,7 +212,7 @@ export default function RootLayout({
                 try {
                   // Register the main service worker
                   const registration = await navigator.serviceWorker.register('/sw.js');
-                  console.log('SW registered successfully');
+                  // console.log('SW registered successfully');
                   
                   // Wait for the service worker to be ready
                   await navigator.serviceWorker.ready;
@@ -231,7 +231,7 @@ export default function RootLayout({
                     // Set up the message handler
                     messageChannel.port1.onmessage = function(event) {
                       if (event.data && event.data.registered) {
-                        console.log('Custom offline handler registered');
+                        // console.log('Custom offline handler registered');
                       }
                     };
                     
@@ -253,14 +253,14 @@ export default function RootLayout({
                     if (newWorker) {
                       newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                          console.log('New service worker installed, reloading for updates');
+                          // console.log('New service worker installed, reloading for updates');
                           // Optional: Show a notification that an update is available
                         }
                       });
                     }
                   });
                 } catch (error) {
-                  console.error('SW registration failed:', error);
+                  // console.error('SW registration failed:', error);
                 }
               });
               
@@ -268,7 +268,7 @@ export default function RootLayout({
               window.addEventListener('online', function() {
                 document.body.classList.remove('is-offline');
                 document.body.classList.add('is-online');
-                console.log('✅ Back online');
+                // console.log('✅ Back online');
                 
                 // Try to preload the model when we come back online
                 if (!isPWA()) {
@@ -279,7 +279,7 @@ export default function RootLayout({
               window.addEventListener('offline', function() {
                 document.body.classList.remove('is-online');
                 document.body.classList.add('is-offline');
-                console.log('⚠️ Gone offline');
+                // console.log('⚠️ Gone offline');
               });
               
               // Set initial state
@@ -292,7 +292,7 @@ export default function RootLayout({
               // Listen for PWA display mode changes
               window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
                 if (evt.matches) {
-                  console.log('App is running as installed PWA');
+                  // console.log('App is running as installed PWA');
                   // Preload model when app is installed
                   preloadAIModel();
                 }
@@ -301,17 +301,17 @@ export default function RootLayout({
             
             // Handle install prompt
             window.addEventListener('beforeinstallprompt', function(e) {
-              console.log('beforeinstallprompt fired');
+              // console.log('beforeinstallprompt fired');
               
               // Check if user has permanently dismissed alerts
               if (localStorage.getItem(PROMPT_KEY) === 'true') {
-                console.log('User has dismissed PWA prompts permanently');
+                // console.log('User has dismissed PWA prompts permanently');
                 return;
               }
               
               // Check if we already showed prompt in this session
               if (promptAlreadyShown) {
-                console.log('Prompt already shown this session');
+                // console.log('Prompt already shown this session');
                 return;
               }
               
@@ -319,7 +319,7 @@ export default function RootLayout({
               deferredPrompt = e;
               promptAlreadyShown = true;
               
-              console.log('Showing install prompt...');
+              // console.log('Showing install prompt...');
               
               // Show install prompt after 3 seconds
               setTimeout(() => {

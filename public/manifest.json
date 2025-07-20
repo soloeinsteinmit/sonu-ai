@@ -1,6 +1,6 @@
 {
-  "name": "sonu - Crop Disease Detection",
-  "short_name": "sonu",
+  "name": "Sonu - Crop Disease Detection",
+  "short_name": "Sonu",
   "description": "AI-powered crop disease detection and community outbreak tracking for Ghanaian farmers",
   "start_url": "/",
   "display": "standalone",

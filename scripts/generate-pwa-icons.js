@@ -19,7 +19,7 @@ const iconTypes = [
 
 async function generateIcons() {
   if (!fs.existsSync(inputPath)) {
-    console.error("Input file not found:", inputPath);
+    // console.error("Input file not found:", inputPath);
     return;
   }
 
@@ -50,7 +50,7 @@ async function generateIcons() {
 
         await image.png().toFile(outputPath);
       } catch (error) {
-        console.error(`Error generating ${filename}:`, error);
+        // console.error(`Error generating ${filename}:`, error);
       }
     }
   }
@@ -58,7 +58,7 @@ async function generateIcons() {
 
 // Run the script
 if (require.main === module) {
-  generateIcons().catch(console.error);
+  generateIcons().catch(// console.error);
 }
 
 module.exports = { generateIcons };

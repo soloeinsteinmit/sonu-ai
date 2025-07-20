@@ -217,7 +217,7 @@ export function OutbreakDetails({
       const errorMessage =
         error instanceof Error ? error.message : "Failed to get your location";
       toast.error(`${errorMessage}. Please enable location services.`);
-      console.error("Location error:", error);
+      // console.error("Location error:", error);
       setUserLocation(null);
       setCanDelete(false);
       setDistanceToOutbreak(null);
@@ -279,7 +279,7 @@ export function OutbreakDetails({
           ? error.message
           : "Failed to delete outbreak. Please try again.";
       toast.error(errorMessage);
-      console.error("Delete error:", error);
+      // console.error("Delete error:", error);
     } finally {
       setIsDeleting(false);
     }

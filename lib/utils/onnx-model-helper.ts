@@ -42,14 +42,14 @@ export async function createInferenceSession(): Promise<ort.InferenceSession> {
   // Try loading each model path in sequence
   for (const modelPath of modelPaths) {
     try {
-      console.log("Attempting to load ONNX model from:", modelPath);
+      // console.log("Attempting to load ONNX model from:", modelPath);
 
       const session = await ort.InferenceSession.create(modelPath, {
         executionProviders: ["wasm"],
         graphOptimizationLevel: "all",
       });
 
-      console.log("ONNX model loaded successfully from:", modelPath);
+      // console.log("ONNX model loaded successfully from:", modelPath);
       return session;
     } catch (error) {
       console.warn(`Failed to load model from ${modelPath}:`, error);
@@ -59,7 +59,7 @@ export async function createInferenceSession(): Promise<ort.InferenceSession> {
   }
 
   // If we get here, all model paths failed
-  console.error("All model loading attempts failed");
+  // console.error("All model loading attempts failed");
   throw new Error(
     `Failed to load AI model: ${
       lastError instanceof Error ? lastError.message : String(lastError)

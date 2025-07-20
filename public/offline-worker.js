@@ -36,7 +36,7 @@ const WASM_FILES = [
 
 // Install event - cache critical resources
 self.addEventListener("install", (event) => {
-  console.log("Service worker installing...");
+  // console.log("Service worker installing...");
 
   // Force the waiting service worker to become the active service worker
   self.skipWaiting();
@@ -45,23 +45,23 @@ self.addEventListener("install", (event) => {
     Promise.all([
       // Cache critical static resources
       caches.open(STATIC_CACHE).then((cache) => {
-        console.log("Caching critical static resources");
+        // console.log("Caching critical static resources");
         return cache.addAll(CRITICAL_RESOURCES);
       }),
 
       // Pre-cache the AI models
       caches.open(MODEL_CACHE).then(async (cache) => {
-        console.log("Pre-caching AI models");
+        // console.log("Pre-caching AI models");
 
         // Try to cache each model file
         const modelPromises = MODEL_FILES.map(async (modelFile) => {
           try {
-            console.log(`Caching model: ${modelFile}`);
+            // console.log(`Caching model: ${modelFile}`);
             await cache.add(new Request(modelFile, { cache: "no-store" }));
-            console.log(`Successfully cached: ${modelFile}`);
+            // console.log(`Successfully cached: ${modelFile}`);
             return true;
           } catch (error) {
-            console.error(`Failed to cache model ${modelFile}:`, error);
+            // console.error(`Failed to cache model ${modelFile}:`, error);
             return false;
           }
         });
@@ -71,16 +71,16 @@ self.addEventListener("install", (event) => {
 
       // Pre-cache WASM files needed for ONNX runtime
       caches.open(STATIC_CACHE).then(async (cache) => {
-        console.log("Pre-caching WASM files");
+        // console.log("Pre-caching WASM files");
 
         const wasmPromises = WASM_FILES.map(async (wasmFile) => {
           try {
-            console.log(`Caching WASM file: ${wasmFile}`);
+            // console.log(`Caching WASM file: ${wasmFile}`);
             await cache.add(new Request(wasmFile, { cache: "no-store" }));
-            console.log(`Successfully cached: ${wasmFile}`);
+            // console.log(`Successfully cached: ${wasmFile}`);
             return true;
           } catch (error) {
-            console.error(`Failed to cache WASM file ${wasmFile}:`, error);
+            // console.error(`Failed to cache WASM file ${wasmFile}:`, error);
             return false;
           }
         });
@@ -106,7 +106,7 @@ self.addEventListener("activate", (event) => {
             cacheName !== API_CACHE &&
             cacheName.startsWith("sonu-")
           ) {
-            console.log("Deleting old cache:", cacheName);
+            // console.log("Deleting old cache:", cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -121,12 +121,12 @@ const handleCustomFetch = async (request) => {
 
   // Handle model files with cache-first strategy
   if (url.pathname.includes("/model/")) {
-    console.log(`Handling model request: ${url.pathname}`);
+    // console.log(`Handling model request: ${url.pathname}`);
     const modelCache = await caches.open(MODEL_CACHE);
     const cachedResponse = await modelCache.match(request);
 
     if (cachedResponse) {
-      console.log(`Serving model from cache: ${url.pathname}`);
+      // console.log(`Serving model from cache: ${url.pathname}`);
       return cachedResponse;
     }
 
@@ -138,7 +138,7 @@ const handleCustomFetch = async (request) => {
         const altCachedResponse = await modelCache.match(altModelRequest);
 
         if (altCachedResponse) {
-          console.log(`Serving alternative model from cache: ${modelPath}`);
+          // console.log(`Serving alternative model from cache: ${modelPath}`);
           return altCachedResponse;
         }
       } catch (err) {
@@ -148,15 +148,15 @@ const handleCustomFetch = async (request) => {
 
     // If no cached models found, try network
     try {
-      console.log(`Fetching model from network: ${url.pathname}`);
+      // console.log(`Fetching model from network: ${url.pathname}`);
       const networkResponse = await fetch(request);
       if (networkResponse.ok) {
-        console.log(`Caching model from network: ${url.pathname}`);
+        // console.log(`Caching model from network: ${url.pathname}`);
         modelCache.put(request, networkResponse.clone());
       }
       return networkResponse;
     } catch (error) {
-      console.error("Failed to fetch model:", error);
+      // console.error("Failed to fetch model:", error);
       return new Response(
         JSON.stringify({
           error: "Failed to load model",
@@ -176,50 +176,50 @@ const handleCustomFetch = async (request) => {
     url.pathname.includes("ort-wasm") ||
     url.pathname.includes("ort.bundle")
   ) {
-    console.log(`Handling WASM request: ${url.pathname}`);
+    // console.log(`Handling WASM request: ${url.pathname}`);
     const staticCache = await caches.open(STATIC_CACHE);
     const cachedResponse = await staticCache.match(request);
 
     if (cachedResponse) {
-      console.log(`Serving WASM from cache: ${url.pathname}`);
+      // console.log(`Serving WASM from cache: ${url.pathname}`);
       return cachedResponse;
     }
 
     try {
-      console.log(`Fetching WASM from network: ${url.pathname}`);
+      // console.log(`Fetching WASM from network: ${url.pathname}`);
       const networkResponse = await fetch(request);
       if (networkResponse.ok) {
-        console.log(`Caching WASM from network: ${url.pathname}`);
+        // console.log(`Caching WASM from network: ${url.pathname}`);
         staticCache.put(request, networkResponse.clone());
       }
       return networkResponse;
     } catch (error) {
-      console.error("Failed to fetch WASM file:", error);
+      // console.error("Failed to fetch WASM file:", error);
       return new Response("Failed to load WASM runtime", { status: 503 });
     }
   }
 
   // Handle scan page with cache-first strategy
   if (url.pathname === "/scan" || url.pathname === "/scan/") {
-    console.log("Handling scan page request");
+    // console.log("Handling scan page request");
     const pageCache = await caches.open(PAGES_CACHE);
     const cachedResponse = await pageCache.match(request);
 
     if (cachedResponse) {
-      console.log("Serving scan page from cache");
+      // console.log("Serving scan page from cache");
       return cachedResponse;
     }
 
     try {
-      console.log("Fetching scan page from network");
+      // console.log("Fetching scan page from network");
       const networkResponse = await fetch(request);
       if (networkResponse.ok) {
-        console.log("Caching scan page from network");
+        // console.log("Caching scan page from network");
         pageCache.put(request, networkResponse.clone());
       }
       return networkResponse;
     } catch (error) {
-      console.error("Failed to fetch scan page:", error);
+      // console.error("Failed to fetch scan page:", error);
       // Return offline page if scan page isn't cached
       const offlineResponse = await caches.match("/offline");
       return (
@@ -230,25 +230,25 @@ const handleCustomFetch = async (request) => {
 
   // Handle home page
   if (url.pathname === "/" || url.pathname === "") {
-    console.log("Handling home page request");
+    // console.log("Handling home page request");
     const pageCache = await caches.open(PAGES_CACHE);
     const cachedResponse = await pageCache.match(request);
 
     if (cachedResponse) {
-      console.log("Serving home page from cache");
+      // console.log("Serving home page from cache");
       return cachedResponse;
     }
 
     try {
-      console.log("Fetching home page from network");
+      // console.log("Fetching home page from network");
       const networkResponse = await fetch(request);
       if (networkResponse.ok) {
-        console.log("Caching home page from network");
+        // console.log("Caching home page from network");
         pageCache.put(request, networkResponse.clone());
       }
       return networkResponse;
     } catch (error) {
-      console.error("Failed to fetch home page:", error);
+      // console.error("Failed to fetch home page:", error);
       // Return offline page if home page isn't cached
       const offlineResponse = await caches.match("/offline");
       return (

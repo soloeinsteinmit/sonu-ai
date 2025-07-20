@@ -42,7 +42,7 @@ export function ModelPreloader() {
         );
         if (cachedResponse) {
           setIsLoaded(true);
-          console.log("✅ AI Model already cached and ready for offline use");
+          // console.log("✅ AI Model already cached and ready for offline use");
         }
       }
     } catch (error) {
@@ -58,7 +58,7 @@ export function ModelPreloader() {
     setError(null);
 
     try {
-      console.log("🤖 Preloading AI model for offline use...");
+      // console.log("🤖 Preloading AI model for offline use...");
 
       const response = await fetch("/model/mobilenet_mobile.onnx", {
         cache: "force-cache",
@@ -70,14 +70,14 @@ export function ModelPreloader() {
 
       // The service worker should cache this automatically
       setIsLoaded(true);
-      console.log("✅ AI Model cached successfully");
+      // console.log("✅ AI Model cached successfully");
 
       // Auto-hide success message after 3 seconds
       setTimeout(() => {
         setShowStatus(false);
       }, 3000);
     } catch (error) {
-      console.error("❌ Error preloading model:", error);
+      // console.error("❌ Error preloading model:", error);
       setError(error instanceof Error ? error.message : "Failed to load model");
 
       // Auto-hide error message after 5 seconds
