@@ -489,14 +489,6 @@ const ScanPage = () => {
 **Live Demo**: [https://sonu-ai.vercel.app](https://sonu-ai.vercel.app)  
 **GitHub**: [https://github.com/soloeinsteinmit/Sonu-ai-frontend](https://github.com/soloeinsteinmit/Sonu-ai-frontend)
 
-### Judging Criteria Alignment
-
-- **Innovation (25%)**: Multi-layered AI system with community outbreak mapping
-- **Technical Complexity (25%)**: Computer vision + geospatial + PWA architecture  
-- **Impact (20%)**: Individual farmer support + community disease prevention
-- **Feasibility (20%)**: PWA deployment, no hardware requirements, scalable
-- **Presentation (10%)**: Clear farmer-focused narrative with live demo
-
 ---
 
 *Sonu - Protecting Ghana's crops, one photo at a time.* 🌾📱🤖
